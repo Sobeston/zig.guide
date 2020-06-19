@@ -314,18 +314,20 @@ test "multi defer" {
 Errdefer is the same as defer, but only runs if the block exits with an error (see the next section).
 
 ```zig
-test "errdefer" {
-	errdefer print("Oh no! Something went wrong!\n", .{});
-	// We can capture the in-flight error
-	errdefer |e| print("Exiting because of {}\n", .{e})
+const print = @import("std").debug.print;
 
-	const b = try trySquare(66000);
+test "errdefer" {
+    errdefer print("Oh no! Something went wrong!\n", .{});
+    // We can capture the in-flight error
+    errdefer |e| print("Exiting because of {}\n", .{e});
+
+    const b = try trySquare(66000);
 }
 
 fn trySquare(n: u32) !u32 {
-	if (n >= 65536) {
-		return error.wontFit;
-	} else return n*n;
+    if (n >= 65536) {
+        return error.wontFit;
+    } else return n*n;
 }
 ```
 
@@ -410,7 +412,7 @@ All cases must be handled - an explicit else is required if the other branches d
 test "switch" {
     const x: u8 = 125;
     const y: f32 = switch (x) {
-    	// Multiple cases can match one branch
+        // Multiple cases can match one branch
         0, 1 => 5,
         // Ranges are also allowed -- these are inclusive
         // on both bounds
