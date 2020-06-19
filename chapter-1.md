@@ -31,7 +31,7 @@ const octal_int: u16 = 0o755;
 const binary_int: u8 = 0b11110000;
 ```
 Underscores may also be placed between digits as a visual separator.
-```
+```zig
 const one_billion: u64 = 1_000_000_000;
 const binary_mask: u64 = 0b1_1111_1111;
 const permissions: u64 = 0o7_5_5;
@@ -123,7 +123,7 @@ test "float widening" {
 ```
 
 Floats support multiple kinds of literal.
-```
+```zig
 const floating_point: f64 = 123.0E+77;
 const another_float: f64 = 123.0;
 const yet_another: f64 = 123.0e+77;
@@ -133,7 +133,7 @@ const another_hex_float: f64 = 0x103.70;
 const yet_another_hex_float: f64 = 0x103.70P-5;
 ```
 Underscores may also be placed between digits.
-```
+```zig
 const lightspeed: f64 = 299_792_458.000_000;
 const nanosecond: f64 = 0.000_000_001;
 const more_hex: f64 = 0x1234_5678.9ABC_CDEFp-10;
@@ -242,7 +242,7 @@ test "while" {
 }
 ```
 With a continue expression:
-```
+```zig
 test "while" {
     var i: u8 = 2;
     while (i < 100) i *= 2;
