@@ -315,9 +315,9 @@ Errdefer is the same as defer, but only runs if the block exits with an error (s
 
 ```zig
 test "errdefer" {
-	errdefer warn("Oh no! Something went wrong!\n", .{});
+	errdefer print("Oh no! Something went wrong!\n", .{});
 	// We can capture the in-flight error
-	errdefer |e| warn("Exiting because of {}\n", .{e})
+	errdefer |e| print("Exiting because of {}\n", .{e})
 
 	const b = try trySquare(66000);
 }
