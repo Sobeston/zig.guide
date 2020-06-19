@@ -60,7 +60,7 @@ test "integer widening" {
 
 # Runtime Safety
 
-Zig provides a level of safety, where problems may be found during execution. Safety can be left on, or turned off. Zig has many cases of so-called __safety-protected undefined behaviour__, meaning that bad behaviour will be caught (causing a panic) with safety on, but will result in undefined behaviour with safety off. Users are strongly recommended to develop and test their software with safety on, despite its speed penalties.
+Zig provides a level of safety, where problems may be found during execution. Safety can be left on, or turned off. Zig has many cases of so-called __detectable illegal behaviour__, meaning that illegal behaviour will be caught (causing a panic) with safety on, but will result in undefined behaviour with safety off. Users are strongly recommended to develop and test their software with safety on, despite its speed penalties.
 
 An example of this is integer overflows - Zig's safety features will stop normal integer operations such as `+` and `-` from causing an integer to overflow.
 
@@ -439,7 +439,7 @@ test "switch on error" {
 
 # Unreachable
 
-The `unreachable` is as an assertion to the compiler that it is not reachable. If it is reached, this is safety protected undefined behaviour (i.e. with safety enabled it will result in a panic, and without safety it will cause undefined behaviour).
+The `unreachable` is as an assertion to the compiler that it is not reachable. If it is reached, this is detectable illegal behaviour (i.e. with safety enabled it will result in a panic, and without safety it will cause undefined behaviour).
 
 Unreachable is often combined with a switch, in order to tell the compiler that a branch is not possible.
 
