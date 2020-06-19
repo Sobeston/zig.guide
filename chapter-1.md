@@ -1,6 +1,6 @@
 ---
 title: "Chapter 1 - Basics"
-weight: 1
+weight: 2
 ---
 
 # Bit Sized integers
