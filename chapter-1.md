@@ -243,10 +243,13 @@ test "while" {
 ```
 With a continue expression:
 ```zig
-test "while" {
+test "while with continue expression" {
+    var count: u64 = 0;
     var i: u8 = 2;
-    while (i < 100) i *= 2;
-    expect(i == 128);
+    while (i < 100) : (i *= 2) {
+        count += i;
+    }
+    expect(count == 126);
 }
 ```
 
