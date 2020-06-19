@@ -48,9 +48,9 @@ const big_address: u64 = 0xFF80_0000_0000_0000;
 const expect = @import("std").testing.expect;
 
 test "integer widening" {
-    var a: u8 = 250;
-    var b: u16 = a;
-    var c: u32 = b;
+    const a: u8 = 250;
+    const b: u16 = a;
+    const c: u32 = b;
     // expect takes in a bool, and will panic if that bool is false.
     // expect is only to be used within tests.
     expect(c == a);
@@ -114,10 +114,10 @@ Zig provides the floats `f16`, `f32`, `f64`, `f128`. These are strictly IEEE com
 
 ```zig
 test "float widening" {
-    var a: f16 = 1;
-    var b: f32 = a;
-    var c: f64 = b;
-    var d: f128 = c;
+    const a: f16 = 1;
+    const b: f32 = a;
+    const c: f64 = b;
+    const d: f128 = c;
     expect(d == a);
 }
 ```
@@ -146,7 +146,7 @@ Arrays use the syntax `[N]T`, where `N` (a natural number) is the number of elem
 A notable feature about Zig is that all values are constructed as literals, or are constructed using `T{}` syntax. Here's an example of creating an array:
 ```zig
 test "array" {
-    var a = [3]u8{ 1, 2, 3 };
+    const a = [3]u8{ 1, 2, 3 };
 }
 ```
 Here, the type is left out of the left hand side of the variable declaration. This is because the type can be inferred from the right hand side.
@@ -157,15 +157,15 @@ Zig's runtime safety protects you from out of bounds indices:
 
 ```zig
 test "out of bounds" {
-    var a = [_]u8{ 1, 2, 3 };
+    const a = [3]u8{ 1, 2, 3 };
     var index: u8 = 5;
-    var b = a[index];
+    const b = a[index];
 }
 ```
 ```
 test "out of bounds"...index out of bounds
 \tests.zig:43:14: 0x7ff698cc1b82 in test "out of bounds" (test.obj)
-    var b = a[index];
+    const b = a[index];
              ^
 ```
 
@@ -175,7 +175,7 @@ Zig's for loops can work over an array, and will provide you the values and indi
 
 ```zig
 test "array sum" {
-    var a = [3]u8{ 1, 2, 3 };
+    const a = [3]u8{ 1, 2, 3 };
     var sum: u8 = 0;
     for (a) |value, index| {
         sum += value;
@@ -263,7 +263,7 @@ fn addFive(x: u32) u32 {
 }
 
 test "function" {
-    var y = addFive(0);
+    const y = addFive(0);
     expect(@TypeOf(y) == u32);
     expect(y == 5);
 }
@@ -345,7 +345,7 @@ fn alphabetIndex(char: u8) !u8 {
 }
 
 test "error" {
-    var index: u8 = alphabetIndex('b') catch 0;
+    const index: u8 = alphabetIndex('b') catch 0;
     expect(index == 1);
 }
 ```
@@ -354,7 +354,7 @@ test "error" {
 
 ```zig
 test "catch payload" {
-    var index: u8 = alphabetIndex('b') catch |err| {
+    const index: u8 = alphabetIndex('b') catch |err| {
         return err;
     };
     expect(index == 1);
@@ -364,7 +364,7 @@ test "catch payload" {
 An error returning from a test results in test failure:
 ```zig
 test "bad catch payload" {
-    var index: u8 = alphabetIndex('1') catch |err| {
+    const index: u8 = alphabetIndex('1') catch |err| {
         return err;
     };
     expect(index == 1);
@@ -381,7 +381,7 @@ The keyword `try` is a shorthand for `catch |err| return err`, and is a common p
 
 ```zig
 test "try" {
-    var index: u8 = try alphabetIndex('a');
+    const index: u8 = try alphabetIndex('a');
     expect(index == 0);
 }
 ```
@@ -396,7 +396,7 @@ fn alphabetIndex2(char: u8) error{InvalidAlphabetCharacter}!u8 {
 }
 
 test "error set" {
-    var index: u8 = try alphabetIndex('a');
+    const index: u8 = try alphabetIndex('a');
     expect(index == 0);
 }
 ```
@@ -408,8 +408,8 @@ Switches in Zig are expressions where all branches must be coercible to the same
 All cases must be handled - an explicit else is required if the other branches do not cover all possibilities.
 ```zig
 test "switch" {
-    var x: u8 = 125;
-    var y: f32 = switch (x) {
+    const x: u8 = 125;
+    const y: f32 = switch (x) {
     	// Multiple cases can match one branch
         0, 1 => 5,
         // Ranges are also allowed -- these are inclusive
@@ -433,7 +433,7 @@ fn errorProne(x: i32) error{Even, Zero, Negative}!i32 {
 }
 
 test "switch on error" {
-    var value = errorProne(11) catch |err| switch (err) {
+    const value = errorProne(11) catch |err| switch (err) {
         error.Even, error.Zero => 0,
         error.Negative => return err
     };
@@ -503,7 +503,7 @@ const Vec3 = struct {
 };
 
 test "struct usage" {
-    var my_vector = Vec3{
+    const my_vector = Vec3{
         .x = 0,
         .y = 100,
         .z = 50,
@@ -514,7 +514,7 @@ test "struct usage" {
 All fields must be given a value:
 ```zig
 test "missing struct field" {
-    var my_vector = Vec3{
+    const my_vector = Vec3{
         .x = 0,
         .z = 50,
     };
@@ -522,7 +522,7 @@ test "missing struct field" {
 ```
 ```
 error: missing field: 'y'
-    var my_vector = Vec3{
+    const my_vector = Vec3{
                         ^
 ```
 
@@ -533,7 +533,7 @@ const Vec4 = struct {
 };
 
 test "struct defaults" {
-    var my_vector = Vec4{
+    const my_vector = Vec4{
         .x = 25,
         .y = -50,
     };
@@ -613,8 +613,8 @@ fn total(values: []const u8) usize {
     return count;
 }
 test "slices" {
-    var array = [_]u8{1, 2, 3, 4, 5};
-    var slice = array[0..3];
+    const array = [_]u8{1, 2, 3, 4, 5};
+    const slice = array[0..3];
     expect(total(slice) == 6);
 }
 ```
@@ -623,8 +623,8 @@ When these `n` and `m` values are both known at compile time, slicing will actua
 
 ```zig
 test "slices 2" {
-    var array = [_]u8{1, 2, 3, 4, 5};
-    var slice = array[0..3];
+    const array = [_]u8{1, 2, 3, 4, 5};
+    const slice = array[0..3];
     expect(@TypeOf(slice) == *[3]u8);
 }
 ```
@@ -638,7 +638,7 @@ Optionals use the syntax `?T` and are used to store the data `null`, or a value 
 ```zig
 test "optional" {
     var found_index: ?usize = null;
-    var data = [_]i32{1, 2, 3, 4, 5, 6, 7, 8, 12};
+    const data = [_]i32{1, 2, 3, 4, 5, 6, 7, 8, 12};
     for (data) |v, i| {
         if (v == 10) found_index = i;
     }
@@ -650,8 +650,8 @@ Optionals support the `orelse` expression, which acts when the optional is `null
 
 ```zig
 test "orelse" {
-    var a: ?f32 = null;
-    var b = a orelse 0;
+    const a: ?f32 = null;
+    const b = a orelse 0;
     expect(b == 0);
     expect(@TypeOf(b) == f32);
 }
@@ -661,9 +661,9 @@ test "orelse" {
 
 ```zig
 test "orelse unreachable" {
-    var a: ?f32 = 5;
-    var b = a orelse unreachable;
-    var c = a.?;
+    const a: ?f32 = 5;
+    const b = a orelse unreachable;
+    const c = a.?;
     expect(b == c);
     expect(@TypeOf(c) == f32);
 }
@@ -675,12 +675,12 @@ Here we use an `if` optional payload; a and b are equivalent here.
 
 ```zig
 test "if optional payload" {
-    var a: ?i32 = 5;
+    const a: ?i32 = 5;
     if (a != null) {
         const value = a.?;
     }
 
-    var b: ?i32 = 5;
+    const b: ?i32 = 5;
     if (b) |value| {
         
     }
@@ -741,7 +741,7 @@ fn add(comptime T: type, a: T, b: T) T {
 }
 
 test "generic add" {
-    var result = add(f128, 100, -10);
+    const result = add(f128, 100, -10);
     expect(result == 90);
     expect(@TypeOf(result) == f128);
 }
@@ -755,7 +755,7 @@ fn mul(a: var, b: @TypeOf(a)) @TypeOf(a) {
 }
 
 test "generic mul" {
-    var result = mul(@as(f32, 20), -10);
+    const result = mul(@as(f32, 20), -10);
     expect(result == -200);
     expect(@TypeOf(result) == f32);
 }
@@ -780,7 +780,7 @@ fn LinkedList(comptime T: type) type {
 }
 
 test "complex generic type" { 
-    var list = LinkedList(i32) {
+    const list = LinkedList(i32) {
         .first = null,
         .last = null,
         .len = 0,
@@ -798,7 +798,7 @@ fn sub(a: var, b: @TypeOf(a)) @TypeOf(a) {
 }
 
 test "restricted generics" {
-    var x = sub(@as(f32, 100), 200);
+    const x = sub(@as(f32, 100), 200);
 }
 ```
 ```
@@ -806,7 +806,7 @@ error: Only ints supported!
     if (@typeInfo(@TypeOf(a)) != .Int) @compileError("Only ints supported!");
                                        ^
 .\tests.zig:426:16: note: called from here
-    var x = sub(@as(f32, 100), 200);
+    const x = sub(@as(f32, 100), 200);
                ^
 .\tests.zig:425:28: note: called from here
 test "restricted generics" {
@@ -868,14 +868,14 @@ Sentinel terminated types coerce to their non-sentinel-terminated counterparts.
 
 ```zig
 test "coercion" {
-    var a: [*:0]u8 = undefined;
-    var b: [*]u8 = a;
+    const a: [*:0]u8 = undefined;
+    const b: [*]u8 = a;
 
-    var c: [5:0]u8 = undefined;
-    var d: [5]u8 = c;
+    const c: [5:0]u8 = undefined;
+    const d: [5]u8 = c;
 
-    var e: [:10]f32 = undefined;
-    var f = e;
+    const e: [:10]f32 = undefined;
+    const f = e;
 }
 ```
 
