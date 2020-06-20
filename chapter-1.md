@@ -824,6 +824,35 @@ test "restricted generics" {
                            ^
 ```
 
+Comptime also introduces the operators `++` and `**` for concatenating and repeating arrays and slices. These operators do not work at runtime.
+
+```zig
+test "++" {
+    const x: [4]u8 = undefined;
+    const y = x[0..];
+
+    const a: [6]u8 = undefined;
+    const b = a[0..];
+
+    const new = y ++ b;
+    expect(new.len == 10);
+}
+```
+
+```zig
+const eql = @import("std").mem.eql;
+
+test "**" {
+    const pattern = [_]u8{ 0xCC, 0xAA };
+    const memory = pattern ** 3;
+    expect(eql(
+        u8,
+        &memory,
+        &[_]u8{ 0xCC, 0xAA, 0xCC, 0xAA, 0xCC, 0xAA }
+    ));
+}
+```
+
 # Imports
 
 The built-in function `@import` takes in a file, and gives you a struct type based on that file. All declarations labelled as `pub` (for public) will end up in this struct type, ready for use.
