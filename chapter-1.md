@@ -867,6 +867,8 @@ test "import std" {
 }
 ```
 
+Standard library documentation can be found [here](https://ziglang.org/documentation/master/std/). Note: as of writing, this documentation is slightly outdated. Installing [ZLS](https://github.com/zigtools/zls/) may help you explore the standard library, whose autocompletions for the standard library will keep up to date.
+
 
 # Sentinel Termination
 
