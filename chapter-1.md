@@ -957,7 +957,7 @@ test "fixed buffer allocator" {
 }
 ```
 
-`std.heap.ArenaAllocator` takes in a child allocator, and allows you to allocate many times and only free once. Here, `.deinit()` is called on the arena which frees all memory. 
+`std.heap.ArenaAllocator` takes in a child allocator, and allows you to allocate many times and only free once. Here, `.deinit()` is called on the arena which frees all memory. Using `allocator.free` in this example would be a no-op (i.e. does nothing).
 
 ```zig
 test "arena allocator" {
