@@ -631,6 +631,15 @@ test "slices 2" {
 }
 ```
 
+The syntax `x[n..]` can also be used for when you want to slice to the end.
+
+```zig
+test "slices 3" {
+    var array = [_]u8{1, 2, 3, 4, 5};
+    var slice = array[0..];
+}
+```
+
 Types that may be sliced are: arrays, multi pointers and slices.
 
 # Optionals
