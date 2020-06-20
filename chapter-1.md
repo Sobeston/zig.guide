@@ -800,6 +800,8 @@ test "complex generic type" {
 }
 ```
 
+The built-in function `@This` returns the inner-most struct, enum or union in which it is called from. This proves useful for many generic functions.
+
 Reflection may be used to restrict types.
 
 ```zig
