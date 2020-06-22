@@ -114,7 +114,7 @@ Zig provides the floats `f16`, `f32`, `f64`, `f128`. These are strictly IEEE com
 
 ```zig
 test "float widening" {
-    const a: f16 = 1;
+    const a: f16 = 0;
     const b: f32 = a;
     const c: f64 = b;
     const d: f128 = c;
@@ -661,8 +661,8 @@ Optionals support the `orelse` expression, which acts when the optional is `null
 
 ```zig
 test "orelse" {
-    const a: ?f32 = null;
-    const b = a orelse 0;
+    var a: ?f32 = null;
+    var b = a orelse 0;
     expect(b == 0);
     expect(@TypeOf(b) == f32);
 }
