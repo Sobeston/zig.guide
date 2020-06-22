@@ -627,7 +627,7 @@ When these `n` and `m` values are both known at compile time, slicing will actua
 test "slices 2" {
     const array = [_]u8{1, 2, 3, 4, 5};
     const slice = array[0..3];
-    expect(@TypeOf(slice) == *[3]u8);
+    expect(@TypeOf(slice) == *const [3]u8);
 }
 ```
 
