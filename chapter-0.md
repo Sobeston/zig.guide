@@ -1,6 +1,8 @@
 ---
 title: "Chapter 0 - Getting Started"
 weight: 1
+date: 2020-06-25 13:34:09
+description: "Ziglearn - A Guide / Tutorial for the zig programming language. Install and get started with ziglang here."
 ---
 
 # Welcome
@@ -11,7 +13,7 @@ Warning: the latest major release is 0.6 - Zig is still pre-1.0; usage in produc
 
 To follow this guide, we assume you have:
    * Prior experience programming
-   * Some understanding of low-level programming
+   * Some understanding of low-level programming concepts
 
 Knowing a language like C, C++, Rust, Go, Pascal or similar will be helpful for following this guide. You should have an editor, terminal and internet connection available to you. This guide is unofficial and unaffiliated with the project, and is designed to be read in order from the start.
 

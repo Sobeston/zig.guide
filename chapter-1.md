@@ -1,237 +1,94 @@
 ---
 title: "Chapter 1 - Basics"
 weight: 2
+date: 2020-06-25 13:34:09
+description: "Chapter 1 - This will get you up to speed with almost all of the zig programming language. This part of the tutorial should be coverable in under an hour."
 ---
-
-# Bit Sized integers
-Zig provides bit-sized integers in the format `iN` (signed), and `uN` (unsigned). Here, `N` can be anywhere in the range 0-65535 (inclusive). Examples: `u8`, `u1`, `i32`, `u64`, `i40`.
 
 # Assignment
 
-Variables and constants can be assigned like so:
+Zig provides bit-sized integers in the format `iN` (signed), and `uN` (unsigned). Here, `N` can be anywhere in the range 0-65535 (inclusive). Examples: `u8`, `u1`, `i32`, `u64`, `i40`.
+
+Variables and constants can be assigned using the syntax `var/const identifier: type = value`. Values which are `const` cannot be changed, and are preferable over `var` where possible. Variables and constants are written as snake_case.
+
 ```zig
 var some_variable: i32 = 5;
 const some_constant: u64 = 5000;
 ```
 
-Here `var` declares a variable of the name `some_variable`, the type `i32`, and the value `5`. The key difference between `var` and `const` is that `var` creates a variable, which allows you to change its value after declaration whilst `const` disallows you from modifying its value.
-
-`const` is preferable over `var` where possible.
-
-A variable cannot be declared without a value, the user must explicitly use `undefined` as its value.
-
-# Integer literals
-
-Zig supports hex, octal and binary integer literals.
-```zig
-const decimal_int: i32 = 98222;
-const hex_int: u8 = 0xff;
-const another_hex_int: u8 = 0xFF;
-const octal_int: u16 = 0o755;
-const binary_int: u8 = 0b11110000;
-```
-Underscores may also be placed between digits as a visual separator.
-```zig
-const one_billion: u64 = 1_000_000_000;
-const binary_mask: u64 = 0b1_1111_1111;
-const permissions: u64 = 0o7_5_5;
-const big_address: u64 = 0xFF80_0000_0000_0000;
-```
-
-
-
-# Integer Widening
-
-"Integer Widening" is allowed, which means that integers of a type may coerce to an integer of another type, providing that the new type can fit all of the values that the old type can.
+The type may be left out in cases where you want the type to be inferred by the value. Here we will use the `@as` built-in function which allows us to perform an explicit coercion to a type.
 
 ```zig
-const expect = @import("std").testing.expect;
-
-test "integer widening" {
-    const a: u8 = 250;
-    const b: u16 = a;
-    const c: u32 = b;
-    // expect takes in a bool, and will panic if that bool is false.
-    // expect is only to be used within tests.
-    expect(c == a);
-}
+var some_variable = @as(i32, 5);
+const some_constant = @as(u64, 5000);
 ```
-###### (These tests can be run by using `zig test file-name.zig`. If we do not display an error, that means that the test passes successfully)
 
-# Runtime Safety
-
-Zig provides a level of safety, where problems may be found during execution. Safety can be left on, or turned off. Zig has many cases of so-called __detectable illegal behaviour__, meaning that illegal behaviour will be caught (causing a panic) with safety on, but will result in undefined behaviour with safety off. Users are strongly recommended to develop and test their software with safety on, despite its speed penalties.
-
-An example of this is integer overflows - Zig's safety features will stop normal integer operations such as `+` and `-` from causing an integer to overflow.
+Variables and constants cannot be declared without a value. The value `undefined` may be used where no known value may be given, which is special in that it coerces to any type.
 
 ```zig
-test "overflow" {
-    var a: u8 = 255;
-    a += 1;
-}
-```
-```
-test "overflow"...integer overflow
-\tests.zig:12:7: 0x7ff64ba31a3f in test "overflow" (test.obj)
-    a += 1;
-      ^
+var x: u8 = undefined;
+const y: i16 = undefined;
 ```
 
-Here, safety caused a panic and stopped execution when it detected the overflow. The user may also choose to disable runtime safety for the current block by using the built-in function `@setRuntimeSafety`. It is worth noting that overflowing here is undefined behaviour - the value of `a` at the end isn't necessarily 0.
+Values can be ignored by using `_` in place of a variable or const declaration.
 
 ```zig
-test "overflow safety off" {
-    @setRuntimeSafety(false);
-    var a: u8 = 255;
-    a += 1;
-}
+_ = 10;
 ```
 
-# Wrapping Operators
-
-Sometimes being able to overflow integers in a well defined manner is wanted behaviour. For this use case, Zig provides overflow operators.
-
-| Normal Operator | Wrapping Operator |
-|-----------------|-------------------|
-| +               | +%                |
-| -               | -%                |
-| *               | *%                |
-| +=              | +%=               |
-| -=              | -%=               |
-| *=              | *%=               |
-
-```zig
-test "well defined overflow" {
-    var a: u8 = 255;
-    a +%= 1;
-    expect(a == 0);
-}
-```
-
-# Floats
-
-Zig provides the floats `f16`, `f32`, `f64`, `f128`. These are strictly IEEE compliant unless `@setFloatMode(.Optimized)` is used, which is equivalent to GCC's `-ffast-math`. Like integers, floats may be "widened" to larger types.
-
-```zig
-test "float widening" {
-    const a: f16 = 0;
-    const b: f32 = a;
-    const c: f64 = b;
-    const d: f128 = c;
-    expect(d == a);
-}
-```
-
-Floats support multiple kinds of literal.
-```zig
-const floating_point: f64 = 123.0E+77;
-const another_float: f64 = 123.0;
-const yet_another: f64 = 123.0e+77;
-
-const hex_floating_point: f64 = 0x103.70p-5;
-const another_hex_float: f64 = 0x103.70;
-const yet_another_hex_float: f64 = 0x103.70P-5;
-```
-Underscores may also be placed between digits.
-```zig
-const lightspeed: f64 = 299_792_458.000_000;
-const nanosecond: f64 = 0.000_000_001;
-const more_hex: f64 = 0x1234_5678.9ABC_CDEFp-10;
-```
+The float types `f16`, `f32`, `f64`, `f128` are also supplied.
 
 # Arrays
 
-Arrays use the syntax `[N]T`, where `N` (a natural number) is the number of elements, and `T` is the type of the elements, the s the so-called "child type" of the array. Examples: `[100]u8`, `[3]f32`, `[4]u32`, `[2]u40`.
+Arrays use the syntax `[N]T`, where `N` (a natural number) is the number of elements, and `T` is the type of the elements, the so-called "child type" of the array. Examples: `[100]u8`, `[3]f32`, `[4]u32`, `[2]u40`.
 
-A notable feature about Zig is that all values are constructed as literals, or are constructed using `T{}` syntax. Here's an example of creating an array:
+A notable feature about Zig is that all values are constructed as literals, or are constructed using `T{}` syntax. Here's an example of creating an array.
 ```zig
-test "array" {
-    const a = [3]u8{ 1, 2, 3 };
-}
+const a = [3]u8{ 1, 2, 3 };
 ```
-Here, the type is left out of the left hand side of the variable declaration. This is because the type can be inferred from the right hand side.
 
-The syntax `[_]` may be used when constructing an array from a literal, and the compiler will set the array type to the correct length.
-
-Zig's runtime safety protects you from out of bounds indices:
-
+The `N` in the case of array literals may be swapped out by `_` for when inferred length is desirable. 
 ```zig
-test "out of bounds" {
-    const a = [3]u8{ 1, 2, 3 };
-    var index: u8 = 5;
-    const b = a[index];
-}
-```
-```
-test "out of bounds"...index out of bounds
-\tests.zig:43:14: 0x7ff698cc1b82 in test "out of bounds" (test.obj)
-    const b = a[index];
-             ^
-```
-
-# For
-
-Zig's for loops can work over an array, and will provide you the values and indices. `break` and `continue` are also available to you.
-
-```zig
-test "array sum" {
-    const a = [3]u8{ 1, 2, 3 };
-    var sum: u8 = 0;
-    for (a) |value, index| {
-        sum += value;
-    }
-    expect(sum == 6);
-}
-```
-
-The value or index can be ignored by replacing it with `_`,
-```zig
-for (a) |value, _| {
-    sum += value;
-}
-```
-and in the case of the index can be left out entirely.
-```zig
-for (a) |value| {
-    sum += value;
-}
-```
-A single statement may be used in place of a block.
-```zig
-for (a) |value| sum += value;
+const a = [_]u8{ 1, 2, 3 };
 ```
 
 # If
 
-Zig provides a normal if statement, which accepts a bool. Notably, unlike other languages, Zig does not have the concept of truthy or falsy values.
+Zig's basic if statement is simple in that it only accepts a `bool` value (of values `true` or `false`). There is no concept of truthy or falsy values.
+
+Here I will introduce testing. Save the below code and compile + run it with `zig test file-name.zig`. We will be using the `expect` function from the standard library, which will cause the test to fail if its given the value `false`. When a test fails, the error and stack trace will be shown.
 
 ```zig
-test "if" {
-    var x: u32 = 0;
-    if (x < 10) {
-        x += 10;
+const expect = @import("std").testing.expect;
+
+test "if statement" {
+    const a = true;
+    var x: u16 = 0;
+    if (a) {
+        x += 1;
+    } else {
+        x += 2;
     }
-    expect(x == 10);
+    expect(x == 1);
 }
 ```
 
-Zig's if statement also works as an expression.
+If statements also work as expressions.
 
 ```zig
-test "if expression" {
-    var x: u32 = 0;
-    x += if (x < 10) @as(u32, 10) else 0;
-    expect(x == 10);
+test "if statement expression" {
+    const a = true;
+    var x: u16 = 0;
+    x += if (a) 1 else 2;
+    expect(x == 1);
 }
 ```
-
-Here, the built-in function `@as` is used to give the value "10" the type `u32`. This will not be necessary in future versions of the compiler.
 
 # While
 
-Zig's while loop has three parts - a condition, a block and a continue expression. Like for loops, `break` and `continue` may be used.
+Zig's while loop has three parts - a condition, a block and a continue expression.
 
-Without a continue expression:
+Without a continue expression.
 ```zig
 test "while" {
     var i: u8 = 2;
@@ -241,21 +98,68 @@ test "while" {
     expect(i == 128);
 }
 ```
-With a continue expression:
+
+With a continue expression.
 ```zig
 test "while with continue expression" {
-    var count: u64 = 0;
-    var i: u8 = 2;
-    while (i < 100) : (i *= 2) {
-        count += i;
+    var sum: u8 = 0;
+    var i: u8 = 1;
+    while (i <= 10) : (i += 1) {
+        sum += i;
     }
-    expect(count == 126);
+    expect(sum == 55);
+}
+```
+
+With a `continue`.
+
+```zig
+test "while with continue" {
+    var sum: u8 = 0;
+    var i: u8 = 0;
+    while (i <= 3) : (i += 1) {
+        if (i == 2) continue;
+        sum += i;
+    }
+    expect(sum == 4);
+}
+```
+
+With a `break`.
+
+```zig
+test "while with break" {
+    var sum: u8 = 0;
+    var i: u8 = 0;
+    while (i <= 3) : (i += 1) {
+        if (i == 2) break;
+        sum += i;
+    }
+    expect(sum == 1);
+}
+```
+
+# For
+For loops are used to iterate over arrays (and other types, to be discussed later). For loops follow this syntax. Like while, for loops can use `break` and `continue`.
+
+```zig
+test "for" {
+    //character literals are equivalent to integer literals
+    const string = [_]u8{ 'a', 'b', 'c' };
+
+    for (string) |character, index| {}
+
+    for (string) |character| {}
+
+    for (string) |_, index| {}
+
+    for (string) |_| {}
 }
 ```
 
 # Functions
 
-__All function arguments are immutable__ - if a copy is desired the user must explicitly make one. Unlike variables which are snake_case, functions are camelCase. Here's an example of declaring and calling a simple function:
+__All function arguments are immutable__ - if a copy is desired the user must explicitly make one. Unlike variables which are snake_case, functions are camelCase. Here's an example of declaring and calling a simple function.
 
 ```zig
 fn addFive(x: u32) u32 {
@@ -282,7 +186,31 @@ test "function recursion" {
     expect(x == 55);
 }
 ```
-When recursion happens, the compiler is no longer able to work out the maximum stack size. This may result in unsafe behaviour - a stack overflow. Doing this safely will be covered later.
+When recursion happens, the compiler is no longer able to work out the maximum stack size. This may result in unsafe behaviour - a stack overflow. Details on how to achieve safe recursion will be covered in future.
+
+<!-- commented out due to https://github.com/ziglang/zig/issues/5692 -->
+
+<!-- The built-in function `@call` may be used to force the compiler to call a function in a certain way. Here we will use `always_tail` modifier to make sure that our recursion doesn't blow up the stack.
+
+```zig
+fn fibonacciTailInternal(n: u16, a: u16, b: u16) u16 {
+    if (n == 0) return a;
+    if (n == 1) return b;
+    return @call(
+        .{ .modifier = .always_tail },
+        fibonacciTailInternal,
+        .{ n - 1, b, a + b }
+    );
+}
+
+fn fibonacciTail(n: u16) u16 {
+    return fibonacciTailInternal(n, 0, 1);
+}
+
+test "forced tail call" {
+    expect(fibonacciTail(10) == 55);
+}
+``` -->
 
 # Defer
 
@@ -311,151 +239,212 @@ test "multi defer" {
     expect(x == 4.5);
 }
 ```
-Errdefer is the same as defer, but only runs if the block exits with an error (see the next section).
-
-```zig
-const print = @import("std").debug.print;
-
-test "errdefer" {
-    errdefer print("Oh no! Something went wrong!\n", .{});
-    // We can capture the in-flight error
-    errdefer |e| print("Exiting because of {}\n", .{e});
-
-    const b = try trySquare(66000);
-}
-
-fn trySquare(n: u32) !u32 {
-    if (n >= 65536) {
-        return error.wontFit;
-    } else return n*n;
-}
-```
 
 # Errors
 
-Zig's errors work via error values rather than exceptions. Functions may return errors.
-
-In this example `!u8` denotes that the function may return `u8` or an error, where the set of errors is inferred by what errors may be returned from the function. The error set here only contains "InvalidAlphabetCharacter". A value which may be either an error or a value, is called an __error union__.
-
-The expression `catch` is also used here, which allows the user to provide a value or other behaviour if an error occurs. Here, it is needed so that "index" can be of type `u8`, and not an error union.
+An error set is like an enum (details on zig's enums later), where each error in the set is a value. There are no exceptions in zig; errors are values. Let's create an error set.
 
 ```zig
-fn alphabetIndex(char: u8) !u8 {
-    if (char >= 'a' and char <= 'z') return char - 'a';
-    if (char >= 'A' and char <= 'Z') return char - 'A';
-    return error.InvalidAlphabetCharacter;
-}
+const FileOpenError = error {
+    AccessDenied,
+    OutOfMemory,
+    FileNotFound,
+};
+```
+Error sets coerce to their supersets.
 
-test "error" {
-    const index: u8 = alphabetIndex('b') catch 0;
-    expect(index == 1);
+```zig
+const AllocationError = error {OutOfMemory};
+
+test "coerce error from a subset to a superset" {
+    const err: FileOpenError = AllocationError.OutOfMemory;
+    expect(err == FileOpenError.OutOfMemory);
 }
 ```
 
-`catch` may also be used with a payload. Here instead of giving a default value, if an error happens the error is returned.
+An error set type and a normal type can be combined with the `!` operator to form an error union type. Values of these types may be an error value, or a value of the normal type.
+
+Let's create a value of an error union type. Here `catch` is used, which is followed by an expression which is evaluated when the value before it is an error. The catch here is used to provide a fallback value, but could instead be a `noreturn` - the type of `return`, `while (true)` and others.
 
 ```zig
-test "catch payload" {
-    const index: u8 = alphabetIndex('b') catch |err| {
-        return err;
+test "error union" {
+    const maybe_error: AllocationError!u16 = 10;
+    const no_error = maybe_error catch 0;
+
+    expect(@TypeOf(no_error) == u16);
+    expect(no_error == 10);
+}
+```
+
+Functions often return error unions. Here's one using a catch with __payload capturing__ to take the value of the error. Side note: some languages use similar syntax for lambdas - this is not the case for zig.
+
+```zig
+fn failingFunction() error{Oops}!void {
+    return error.Oops;
+}
+
+test "returning an error" {
+    failingFunction() catch |err| {
+        expect(err == error.Oops);
+        return;
     };
-    expect(index == 1);
 }
 ```
 
-An error returning from a test results in test failure:
+`try x` is a shortcut for `x catch |err| return err`, and is commonly used in places where handling an error isn't appropriate. Zig's `try` and `catch` are unrelated to try-catch in other languages.
+
 ```zig
-test "bad catch payload" {
-    const index: u8 = alphabetIndex('1') catch |err| {
-        return err;
-    };
-    expect(index == 1);
+fn failFn() error{Oops}!void {
+    try failingFunction();
 }
-```
-```
-test "bad try"...error: InvalidAlphabetCharacter
-\tests.zig:126:5: 0x7ff6f4492861 in alphabetIndex (test.obj)
-    return error.InvalidAlphabetCharacter;
-    ^
-```
 
-The keyword `try` is a shorthand for `catch |err| return err`, and is a common pattern for error handling.
-
-```zig
 test "try" {
-    const index: u8 = try alphabetIndex('a');
-    expect(index == 0);
+    failFn() catch |err| {
+        expect(err == error.Oops);
+        return;
+    };
 }
 ```
 
-Error sets may be explicitly made, rather than inferred. This gives the caller a guarantee (and valuable documentation!) that only errors in the set may be returned.
+`errdefer` works like `defer`, but only executing when the function is returned from with an error inside of the `errdefer`'s block.
 
 ```zig
-fn alphabetIndex2(char: u8) error{InvalidAlphabetCharacter}!u8 {
-    if (char >= 'a' and char <= 'z') return char - 'a';
-    if (char >= 'A' and char <= 'z') return char - 'A';
-    return error.InvalidAlphabetCharacter;
+var problems: u32 = 98;
+
+fn failFnCounter() error{Oops}!void {
+    errdefer problems += 1;
+    try failingFunction();
 }
 
-test "error set" {
-    const index: u8 = try alphabetIndex('a');
-    expect(index == 0);
+test "errdefer" {
+    failFnCounter() catch |err| {
+        expect(err == error.Oops);
+        expect(problems == 99);
+        return;
+    };
 }
 ```
+
+Error unions returned from a function can have their error sets inferred by not having an explicit error set. This inferred error set contains all possible errors which the function may return.
+
+```zig
+fn createFile() !void {
+    return error.AccessDenied;
+}
+
+test "inferred error set" {
+    //type coercion successfully takes place
+    const x: error{AccessDenied}!void = createFile();
+}
+```
+
+Error sets can be merged. 
+
+<!-- TODO: note on how left-hand doc comments on errors override right-hand ones -->
+
+```zig
+const A = error{ NotDir, PathNotFound };
+const B = error{ OutOfMemory, PathNotFound };
+const C = A || B;
+```
+
+`anyerror` is the global error set which due to being the superset of all error sets, can have an error from any set coerce to a value of it. Its usage should be generally avoided.
 
 # Switch
 
-Switches in Zig are expressions where all branches must be coercible to the same type. Branches cannot fall through.
+Zig's `switch` works as both a statement and an expression. The types of all branches must coerce to the type which is being switched upon. All possible values must have an associated branch - values cannot be left out. Cases cannot fall through to other branches.
 
-All cases must be handled - an explicit else is required if the other branches do not cover all possibilities.
+An example of a switch statement. The else is required to satisfy the exhaustiveness of this switch.
+
 ```zig
-test "switch" {
-    const x: u8 = 125;
-    const y: f32 = switch (x) {
-        // Multiple cases can match one branch
-        0, 1 => 5,
-        // Ranges are also allowed -- these are inclusive
-        // on both bounds
-        2...100 => 1000,
-        101...150 => 5000,
-        else => 0,
-    };
-    expect(y == 5000);
+test "switch statement" {
+    var x: i8 = 10;
+    switch (x) {
+        -1...1 => {
+            x = -x;
+        },
+        10, 100 => {
+            //special considerations must be made
+            //when dividing signed integers
+            x = @divExact(x, 10);
+        },
+        else => {},
+    }
+    expect(x == 1);
 }
 ```
 
-Switches are particularly useful for error handling.
-
+Here is the former, but as a switch expression.
 ```zig
-fn errorProne(x: i32) error{Even, Zero, Negative}!i32 {
-    if (@mod(x, 2) == 0) return error.Even;
-    if (x == 0) return error.Zero;
-    if (x < 0) return error.Negative;
-    return -x;
-}
-
-test "switch on error" {
-    const value = errorProne(11) catch |err| switch (err) {
-        error.Even, error.Zero => 0,
-        error.Negative => return err
+test "switch expression" {
+    var x: i8 = 10;
+    x = switch (x) {
+        -1...1 => -x,
+        10, 100 => @divExact(x, 10),
+        else => x,
     };
+    expect(x == 1);
 }
 ```
+
+# Runtime Safety
+
+Zig provides a level of safety, where problems may be found during execution. Safety can be left on, or turned off. Zig has many cases of so-called __detectable illegal behaviour__, meaning that illegal behaviour will be caught (causing a panic) with safety on, but will result in undefined behaviour with safety off. Users are strongly recommended to develop and test their software with safety on, despite its speed penalties.
+
+For example, runtime safety protects you from out of bounds indices.
+
+```zig
+test "out of bounds" {
+    const a = [3]u8{ 1, 2, 3 };
+    var index: u8 = 5;
+    const b = a[index];
+}
+```
+```
+test "out of bounds"...index out of bounds
+.\tests.zig:43:14: 0x7ff698cc1b82 in test "out of bounds" (test.obj)
+    const b = a[index];
+             ^
+```
+
+The user may choose to disable runtime safety for the current block by using the built-in function `@setRuntimeSafety`. 
+
+```zig
+test "out of bounds, no safety" {
+    @setRuntimeSafety(false);
+    const a = [3]u8{ 1, 2, 3 };
+    var index: u8 = 5;
+    const b = a[index];
+}
+```
+
+Safety is off for some build modes (to be discussed later).
 
 # Unreachable
 
-The `unreachable` is as an assertion to the compiler that it is not reachable. If it is reached, this is detectable illegal behaviour (i.e. with safety enabled it will result in a panic, and without safety it will cause undefined behaviour).
+`unreachable` is an assertion to the compiler that this statement will not be reached. It can be used to tell the compiler that a branch is impossible, which the optimiser can then take advantage of. Reaching an `unreachable` is detectable illegal behaviour.
 
-Unreachable is often combined with a switch, in order to tell the compiler that a branch is not possible.
-
+As it is of the type `noreturn`, it is compatible with all other types. Here it coerces to u32.
 ```zig
-test "unreachable switch" {
-    var x: u8 = 100;
-    x = switch (x) {
-        0...15 => x + 1,
-        16...250 => x + 15,
+test "unreachable" {
+    const x: i32 = 1;
+    const y: u32 = if (x == 2) 5 else unreachable;
+}
+```
+
+Here is an unreachable being used in a switch.
+```zig
+fn asciiToUpper(x: u8) u8 {
+    return switch (x) {
+        'a'...'z' => x + 'A' - 'a',
+        'A'...'Z' => x,
         else => unreachable,
     };
+}
+
+test "unreachable switch" {
+    expect(asciiToUpper('a') == 'A');
+    expect(asciiToUpper('A') == 'A');
 }
 ```
 
@@ -477,6 +466,21 @@ test "pointers" {
 }
 ```
 
+Trying to set a `*T` to the value 0 is detectable illegal behaviour.
+
+```zig
+test "naughty pointer" {
+    var x: u16 = 0;
+    var y: *u8 = @intToPtr(*u8, x);
+}
+```
+```
+test "bad pointer"...cast causes pointer to be null
+.\tests.zig:241:18: 0x7ff69ebb22bd in test "bad pointer" (test.obj)
+    var y: *u8 = @intToPtr(*u8, x);
+                 ^
+```
+
 Zig also has const pointers, which cannot be used to modify the referenced data. Referencing a const variable will yield a const pointer.
 
 ```zig
@@ -494,96 +498,6 @@ error: cannot assign to constant
 
 A `*T` coerces to a `*const T`.
 
-# Structs
-
-Zig gives no guarantees about the in-memory order of fields in a struct, or its size. Like arrays, structs are also neatly constructed with `T{}` syntax. Types are written with PascalCase.
-
-Declaring and filling a struct:
-```zig
-const Vec3 = struct {
-    x: f32, y: f32, z: f32
-};
-
-test "struct usage" {
-    const my_vector = Vec3{
-        .x = 0,
-        .y = 100,
-        .z = 50,
-    };
-}
-```
-
-All fields must be given a value:
-```zig
-test "missing struct field" {
-    const my_vector = Vec3{
-        .x = 0,
-        .z = 50,
-    };
-}
-```
-```
-error: missing field: 'y'
-    const my_vector = Vec3{
-                        ^
-```
-
-Fields may be given defaults:
-```zig
-const Vec4 = struct {
-    x: f32, y: f32, z: f32 = 0, w: f32 = undefined
-};
-
-test "struct defaults" {
-    const my_vector = Vec4{
-        .x = 25,
-        .y = -50,
-    };
-}
-```
-
-Structs may contain declarations. This allows structs to work like namespaces. Here, `max_num` and `min_num` are not fields of the struct, but rather namespaced global constants. This also works with `var`.
-
-```zig
-const UnitVector = struct {
-    const max_num: f32 = 1;
-    const min_num: f32 = -1;
-    x: f32,
-    y: f32,
-    z: f32
-};
-
-test "namespaced constant" {
-    expect(UnitVector.max_num == 1);
-}
-```
-
-As structs may contain declarations, they may also have methods. Methods are not special - they are just namespaced functions that may be called with dot syntax.
-
-```zig
-const Vec = struct {
-    x: f32,
-    y: f32,
-    z: f32,
-    fn init(x: f32, y: f32, z: f32) Vec {
-        return Vec{
-            .x = x,
-            .y = y,
-            .z = z,
-        };
-    }
-    pub fn dot(self: Vec, other: Vec) f32 {
-        return self.x * other.x + self.y * other.y + self.z * other.z;
-    }
-};
-
-test "methods" {
-    const v1 = Vec.init(1.0, 0.0, 0.0);
-    const v2 = Vec.init(0.0, 1.0, 0.0);
-    expect(v1.dot(v2) == 0.0);
-    expect(Vec.dot(v1, v2) == 0.0);
-}
-```
 
 # Pointer sized integers
 
@@ -602,9 +516,7 @@ Sometimes you may have a pointer to an unknown amount of elements. `[*]T` is the
 
 # Slices
 
-Slices can be thought of as structs with a field containing a multi pointer, and a field containing the count of elements (which is of type `usize`). Their syntax is given as `[]T`, with `T` being the child type. Slices are used heavily throughout Zig for when you need to operate on arbitrary amounts of data. Slices have the same attributes as pointers, meaning that there also exists const slices. For loops also operate over slices. String literals in zig coerce to `[]const u8`.
-
-
+Slices can be thought of as a pair of `[*]T` (the pointer to the data) and a `usize` (the element count). Their syntax is given as `[]T`, with `T` being the child type. Slices are used heavily throughout Zig for when you need to operate on arbitrary amounts of data. Slices have the same attributes as pointers, meaning that there also exists const slices. For loops also operate over slices. String literals in zig coerce to `[]const u8`.
 
 Here, the syntax `x[n..m]` is used to create a slice from an array. This is called __slicing__, and creates a slice of the elements starting at `x[n]` and ending at `x[m - 1]`. This example uses a const slice as the values which the slice points to do not need to be modified.
 
@@ -642,6 +554,364 @@ test "slices 3" {
 
 Types that may be sliced are: arrays, multi pointers and slices.
 
+# Enums
+
+Let's declare an enum.
+```zig
+const Direction = enum { North, South, East, West };
+```
+
+Enums types may have specified (integer) tag types.
+```zig
+const Value = enum(u2) { Zero, One, Two };
+```
+
+Enum's ordinal values start at 0. They can be accessed with the built-in function `@enumToInt`.
+```zig
+test "enum ordinal value" {
+    expect(@enumToInt(Value.Zero) == 0);
+    expect(@enumToInt(Value.One) == 1);
+    expect(@enumToInt(Value.Two) == 2);
+}
+```
+
+Values can be overridden, with the next values continuing from there.
+```zig
+const Value2 = enum(u32) {
+    Hundred = 100,
+    Thousand = 1000,
+    Million = 1000000,
+    Next,
+};
+
+test "set enum ordinal value" {
+    expect(@enumToInt(Value2.Hundred) == 100);
+    expect(@enumToInt(Value2.Thousand) == 1000);
+    expect(@enumToInt(Value2.Million) == 1000000);
+    expect(@enumToInt(Value2.Next) == 1000001);
+}
+```
+
+Methods can be given to enums. These act as namespaced functions that can be called with dot syntax.
+
+```zig
+const Suit = enum {
+    clubs,
+    spades,
+    diamonds,
+    hearts,
+    pub fn isClubs(self: Suit) bool {
+        return self == Suit.clubs;
+    }
+};
+
+test "enum method" {
+   expect(Suit.spades.isClubs() == Suit.isClubs(.spades));
+}
+```
+
+Enums can also be given `var` and `const` declarations. These act as namespaced globals, and their values are unrelated and unattached to instances of the enum type. 
+
+```zig
+const Mode = enum {
+    var count: u32 = 0;
+    on,
+    off,
+};
+
+test "hmm" {
+    Mode.count += 1;
+    expect(Mode.count == 1);
+}
+```
+
+
+# Structs
+
+Zig gives no guarantees about the in-memory order of fields in a struct, or its size. Like arrays, structs are also neatly constructed with `T{}` syntax. Here is an example of declaring and filling a struct.
+```zig
+const Vec3 = struct {
+    x: f32, y: f32, z: f32
+};
+
+test "struct usage" {
+    const my_vector = Vec3{
+        .x = 0,
+        .y = 100,
+        .z = 50,
+    };
+}
+```
+
+All fields must be given a value.
+```zig
+test "missing struct field" {
+    const my_vector = Vec3{
+        .x = 0,
+        .z = 50,
+    };
+}
+```
+```
+error: missing field: 'y'
+    const my_vector = Vec3{
+                        ^
+```
+
+Fields may be given defaults:
+```zig
+const Vec4 = struct {
+    x: f32, y: f32, z: f32 = 0, w: f32 = undefined
+};
+
+test "struct defaults" {
+    const my_vector = Vec4{
+        .x = 25,
+        .y = -50,
+    };
+}
+```
+
+Like enums, structs may also contain functions and declarations.
+
+Structs have the unique property that when given a pointer to a struct, one level of dereferencing is done automatically when accessing fields. Notice how in this example, self.x and self.y are accessed in the swap function without needing to dereference the self pointer.
+
+```zig
+const Stuff = struct {
+    x: i32,
+    y: i32,
+    fn swap(self: *Stuff) void {
+        const tmp = self.x;
+        self.x = self.y;
+        self.y = tmp;
+    }
+};
+
+test "automatic dereference" {
+    var thing = Stuff{ .x = 10, .y = 20 };
+    thing.swap();
+    expect(thing.x == 20);
+    expect(thing.y == 10);
+}
+```
+
+# Unions
+
+Bare union types do not have a guaranteed memory layout. Because of this, bare unions cannot be used to reinterpret memory. Accessing a field in a union which is not active is detectable illegal behaviour.
+
+
+```zig
+const Payload = union {
+    Int: i64,
+    Float: f64,
+    Bool: bool,
+};
+
+test "simple union" {
+    var payload = Payload{ .Int = 1234 };
+    payload.Float = 12.34;
+}
+```
+```
+test "simple union"...access of inactive union field
+.\tests.zig:342:12: 0x7ff62c89244a in test "simple union" (test.obj)
+    payload.Float = 12.34;
+           ^
+```
+
+Tagged unions are unions which use an enum used to detect which field is active. Here we make use of a switch with payload capturing; captured values are immutable so pointers must be taken to mutate the values.
+
+```zig
+const Tag = enum { a, b, c };
+
+const Tagged = union(Tag) { a: u8, b: f32, c: bool };
+
+test "switch on tagged union" {
+    var value = Tagged{ .b = 1.5 };
+    switch (value) {
+        .a => |*byte| byte.* += 1,
+        .b => |*float| float.* *= 2,
+        .c => |*b| b.* = !b.*,
+    }
+    expect(value.b == 3);
+}
+```
+
+The tag type of a tagged union can also be inferred. This is equivalent to the Tagged type above.
+
+```zig
+const Tagged = union(enum) { a: u8, b: f32, c: bool };
+```
+
+`void` member types can have their type omitted from the syntax. Here, none is of type `void`.
+
+```zig
+const Tagged2 = union(enum) { a: u8, b: f32, c: bool, none };
+```
+
+# Integer Rules
+
+Zig supports hex, octal and binary integer literals.
+```zig
+const decimal_int: i32 = 98222;
+const hex_int: u8 = 0xff;
+const another_hex_int: u8 = 0xFF;
+const octal_int: u16 = 0o755;
+const binary_int: u8 = 0b11110000;
+```
+Underscores may also be placed between digits as a visual separator.
+```zig
+const one_billion: u64 = 1_000_000_000;
+const binary_mask: u64 = 0b1_1111_1111;
+const permissions: u64 = 0o7_5_5;
+const big_address: u64 = 0xFF80_0000_0000_0000;
+```
+
+"Integer Widening" is allowed, which means that integers of a type may coerce to an integer of another type, providing that the new type can fit all of the values that the old type can.
+
+```zig
+const expect = @import("std").testing.expect;
+
+test "integer widening" {
+    const a: u8 = 250;
+    const b: u16 = a;
+    const c: u32 = b;
+    expect(c == a);
+}
+```
+
+If you have a value stored in an integer that cannot coerce to the type that you want, `@intCast` may be used to explicitly convert from one type to the other. If the value given is out of the range of the destination type, this is detectable illegal behaviour.
+
+```zig
+test "@intCast" {
+    const x: u64 = 200;
+    const y = @intCast(u8, x);
+    expect(@TypeOf(y) == u8);
+}
+```
+
+Integers by default are not allowed to overflow. Overflows are detectable illegal behaviour. Sometimes being able to overflow integers in a well defined manner is wanted behaviour. For this use case, Zig provides overflow operators.
+
+| Normal Operator | Wrapping Operator |
+|-----------------|-------------------|
+| +               | +%                |
+| -               | -%                |
+| *               | *%                |
+| +=              | +%=               |
+| -=              | -%=               |
+| *=              | *%=               |
+
+```zig
+test "well defined overflow" {
+    var a: u8 = 255;
+    a +%= 1;
+    expect(a == 0);
+}
+```
+
+# Floats
+
+Zig's floats are strictly IEEE compliant unless `@setFloatMode(.Optimized)` is used, which is equivalent to GCC's `-ffast-math`. Floats coerce to other float types.
+
+```zig
+test "float coercion" {
+    const a: f16 = 0;
+    const b: f128 = a;
+    const c: f32 = b;
+    expect(c == a);
+}
+```
+
+Floats support multiple kinds of literal.
+```zig
+const floating_point: f64 = 123.0E+77;
+const another_float: f64 = 123.0;
+const yet_another: f64 = 123.0e+77;
+
+const hex_floating_point: f64 = 0x103.70p-5;
+const another_hex_float: f64 = 0x103.70;
+const yet_another_hex_float: f64 = 0x103.70P-5;
+```
+Underscores may also be placed between digits.
+```zig
+const lightspeed: f64 = 299_792_458.000_000;
+const nanosecond: f64 = 0.000_000_001;
+const more_hex: f64 = 0x1234_5678.9ABC_CDEFp-10;
+```
+
+Integers and floats may be converted using the built-in functions `@intToFloat` and `@floatToInt`. `@intToFloat` is always safe, whereas `@floatToInt` is detectable illegal behaviour if the float value cannot fit in the integer destination type.
+
+```zig
+test "int-float conversion" {
+    const a: i32 = 0;
+    const b = @intToFloat(f32, a);
+    const c = @floatToInt(i32, b);
+    expect(c == a);
+}
+```
+
+# Labelled Blocks
+
+Blocks in Zig are expressions and can be given labels, which are used to yield values. Here, we are using a label called blk. These can be used in anywhere expecting a value.
+
+```zig
+test "labelled blocks" {
+    const count = blk: {
+        var sum: u32 = 0;
+        var i: u32 = 0;
+        while (i < 10) : (i += 1) sum += i;
+        break :blk sum;
+    };
+    expect(count == 45);
+    expect(@TypeOf(count) == u32);
+}
+```
+
+This can be seen as being equivalent to C's `i++`.
+```zig
+blk: {
+    const tmp = i;
+    i += 1;
+    break :blk tmp;
+}
+```
+
+# Labelled Loops
+
+Loops can be given labels, allowing you to `break` and `continue` to outer loops.
+
+```zig
+test "nested continue" {
+    var count: usize = 0;
+    outer: for ([_]i32{ 1, 2, 3, 4, 5, 6, 7, 8 }) |_| {
+        for ([_]i32{ 1, 2, 3, 4, 5 }) |_| {
+            count += 1;
+            continue :outer;
+        }
+    }
+    expect(count == 8);
+}
+```
+
+# Loops as expressions
+
+Like `return`, `break` accepts a value. This can be used to yield a value from a loop. Loops in Zig also have an `else` branch on loops, which is evaluated when the loop is not exited from with a `break`.
+
+```zig
+fn rangeHasNumber(begin: usize, end: usize, number: usize) bool {
+    var i = begin;
+    return while (i < end) : (i += 1) {
+        if (i == number) {
+            break true;
+        }
+    } else false;
+}
+
+test "while loop expression" {
+    expect(rangeHasNumber(0, 10, 3));
+}
+```
+
 # Optionals
 
 Optionals use the syntax `?T` and are used to store the data `null`, or a value of type `T`.
@@ -668,7 +938,7 @@ test "orelse" {
 }
 ```
 
-`.?` is a shorthand for `orelse unreachable`. This is used for when you know it is impossible for an optional value to be null, and has the same implications as using `unreachable` normally.
+`.?` is a shorthand for `orelse unreachable`. This is used for when you know it is impossible for an optional value to be null, and using this to unwrap a `null` value is detectable illegal behaviour.
 
 ```zig
 test "orelse unreachable" {
@@ -680,12 +950,12 @@ test "orelse unreachable" {
 }
 ```
 
-__Optional payloads__ work in many places.
+Payload capturing works in many places for optionals.
 
-Here we use an `if` optional payload; a and b are equivalent here.
+Here we use an `if` optional payload capture; a and b are equivalent here.
 
 ```zig
-test "if optional payload" {
+test "if optional payload capture" {
     const a: ?i32 = 5;
     if (a != null) {
         const value = a.?;
@@ -716,114 +986,149 @@ test "while null capture" {
 }
 ```
 
-Optional pointer and optional slice types do not take up any extra memory, compared to non-optional ones. This is because internally they use the 0 value of the pointer for `null`. This is how null pointers in zig work - they must be unwrapped to a non-optional before dereferencing, which stops null pointer dereferences from happening accidentally.
+Optional pointer and optional slice types do not take up any extra memory, compared to non-optional ones. This is because internally they use the 0 value of the pointer for `null`. 
 
-# Comptime, Generics
+This is how null pointers in zig work - they must be unwrapped to a non-optional before dereferencing, which stops null pointer dereferences from happening accidentally.
 
-Zig allows the programmer to perform arbitrary calculations before runtime, using the `comptime` keyword:
+# Comptime
 
-```zig
-test "comptime" {
-    comptime {
-        expect(fibonacci(10) == 5);
-    }
-}
-```
-```
-error: encountered @panic at compile-time
-    if (!ok) @panic("test failure");
-             ^
-.\tests.zig:373:15: note: called from here
-        expect(fibonacci(10) == 5);
-              ^
-.\tests.zig:371:17: note: called from here
-test "comptime" {
-                ^
-.\tests.zig:373:15: note: referenced here
-        expect(fibonacci(10) == 5);
-              ^
-``` 
-
-In zig, `type` is a type which can work at compile time. This allows us to easily achieve generics. Function parameters must have `comptime` as an attribute if they only work at compile time.
+Blocks of code may be forcibly executed at compile time using the `comptime` keyword. In this example, the variables x and y are equivalent.
 
 ```zig
-fn add(comptime T: type, a: T, b: T) T {
-    return a + b;
-}
+test "comptime blocks" {
+    var x = comptime fibonacci(10);
 
-test "generic add" {
-    const result = add(f128, 100, -10);
-    expect(result == 90);
-    expect(@TypeOf(result) == f128);
+    var y = comptime blk: {
+        break :blk fibonacci(10);
+    };
 }
 ```
 
-Using a `var` function parameter allows a value of any type to be passed into it. Here, we make use of the `@TypeOf` built-in to perform comptime reflection.
+Integer literals are of the type `comptime_int`. These are special in that they have no size (they cannot be used at runtime!), and they have arbitrary precision. `comptime_int` values coerce to any integer type that can hold them. They also coerce to floats. Character literals are of this type.
 
 ```zig
-fn mul(a: var, b: @TypeOf(a)) @TypeOf(a) {
-    return a * b;
-}
+test "comptime_int" {
+    const a = 12;
+    const b = a + 10;
 
-test "generic mul" {
-    const result = mul(@as(f32, 20), -10);
-    expect(result == -200);
-    expect(@TypeOf(result) == f32);
+    const c: u4 = a;
+    const d: f32 = b;
 }
 ```
 
-`const` declarations at the global scope must have their values evaluated at compile time.
+`comptime_float` is also available, which internally is an `f128`. These cannot be coerced to integers, even if they hold an integer value.
 
-Types may be returned from functions, allowing for the creation of generic data types. It is convention to use PascalCase for functions that return types. It is important to note that these types are memoized.
+Types in zig are values of the type `type`. These are available at compile time. We have previously encountered them by checking `@TypeOf` and comparing with other types, but we can do more.
 
 ```zig
-fn LinkedList(comptime T: type) type {
+test "branching on types" {
+    const a = 5;
+    const b: if (a < 10) f32 else i32 = 5;
+}
+```
+
+Function parameters in Zig can be tagged as being `comptime`. This means that the value passed to that function parameter must be known at compile time. Let's make a function that returns a type. Notice how this function is PascalCase, as it returns a type.
+
+```zig
+fn Matrix(
+    comptime T: type,
+    comptime width: comptime_int,
+    comptime height: comptime_int,
+) type {
+    return [height][width]T;
+}
+
+test "returning a type" {
+    expect(Matrix(f32, 4, 4) == [4][4]f32);
+}
+```
+
+We can reflect upon types using the built-in `@typeInfo`, which takes in a `type` and returns a tagged union. This tagged union type can be found in `std.builtin.TypeInfo` (info on how to make use of imports and std later).
+
+```zig
+fn addSmallInts(comptime T: type, a: T, b: T) T {
+    return switch (@typeInfo(T)) {
+        .ComptimeInt => a + b,
+        .Int => |info| if (info.bits <= 16)
+            a + b
+        else
+            @compileError("ints too large"),
+        else => @compileError("only ints accepted"),
+    };
+}
+
+test "typeinfo switch" {
+    const x = addSmallInts(u16, 20, 30);
+    expect(@TypeOf(x) == u16);
+    expect(x == 50);
+}
+```
+
+We can use the `@Type` function to create a type from a `@typeInfo`. `@Type` is implemented for most types but is notably unimplemented for enums, unions, functions, and structs.
+
+Here anonymous struct syntax is used with `.{}`, because the `T` in `T{}` can be inferred. Anonymous structs will be covered in detail later. In this example we will get a compile error if the `Int` tag isn't set.
+
+```zig
+fn getBiggerInt(comptime T: type) type {
+    return @Type(.{ .Int = .{
+        .bits = @typeInfo(T).Int.bits + 1, 
+        .is_signed = @typeInfo(T).Int.is_signed 
+    }});
+}
+
+test "@Type" {
+    expect(getBiggerInt(u8) == u9);
+    expect(getBiggerInt(i31) == i32);
+}
+```
+
+Returning a struct type is how you make generic data structures in zig. The usage of `@This` is required here, which gets the type of the innermost struct, union, or enum. Here `std.mem.eql` is also used which compares two slices.
+
+```zig
+fn Vec(
+    comptime count: comptime_int,
+    comptime T: type,
+) type {
     return struct {
-        pub const Node = struct {
-            prev: ?*Node,
-            next: ?*Node,
-            data: T,
-        };
-        first: ?*Node,
-        last:  ?*Node,
-        len:   usize,
+        data: [count]T,
+        const Self = @This();
+
+        fn abs(self: Self) Self {
+            var tmp = Self{ .data = undefined };
+            for (self.data) |elem, i| {
+                tmp.data[i] = if (elem < 0)
+                    -elem
+                else
+                    elem;
+            }
+            return tmp;
+        }
+
+        fn init(data: [count]T) Self {
+            return Self{ .data = data };
+        }
     };
 }
 
-test "complex generic type" { 
-    const list = LinkedList(i32) {
-        .first = null,
-        .last = null,
-        .len = 0,
-    };
-    expect(@TypeOf(list) == LinkedList(i32));
+const eql = @import("std").mem.eql;
+
+test "generic vector" {
+    const x = Vec(3, f32).init([_]f32{ 10, -10, 5 });
+    const y = x.abs();
+    expect(eql(f32, &y.data, &[_]f32{ 10, 10, 5 }));
 }
 ```
 
-The built-in function `@This` returns the inner-most struct, enum or union in which it is called from. This proves useful for many generic functions.
-
-Reflection may be used to restrict types.
+The types of function parameters can also be inferred by using `var` in place of a type. `@TypeOf` can then be used on the parameter.
 
 ```zig
-fn sub(a: var, b: @TypeOf(a)) @TypeOf(a) {
-    if (@typeInfo(@TypeOf(a)) != .Int) @compileError("Only ints supported!");
-    return a - b;
+fn increment(x: var) @TypeOf(x) {
+    return x + 1;
 }
 
-test "restricted generics" {
-    const x = sub(@as(f32, 100), 200);
+test "inferred function parameter" {
+    expect(increment(@as(u32, 1)) == 2);
 }
-```
-```
-error: Only ints supported!
-    if (@typeInfo(@TypeOf(a)) != .Int) @compileError("Only ints supported!");
-                                       ^
-.\tests.zig:426:16: note: called from here
-    const x = sub(@as(f32, 100), 200);
-               ^
-.\tests.zig:425:28: note: called from here
-test "restricted generics" {
-                           ^
 ```
 
 Comptime also introduces the operators `++` and `**` for concatenating and repeating arrays and slices. These operators do not work at runtime.
@@ -839,10 +1144,6 @@ test "++" {
     const new = y ++ b;
     expect(new.len == 10);
 }
-```
-
-```zig
-const eql = @import("std").mem.eql;
 
 test "**" {
     const pattern = [_]u8{ 0xCC, 0xAA };
@@ -855,22 +1156,79 @@ test "**" {
 }
 ```
 
-# Imports
+# Inline Loops
 
-The built-in function `@import` takes in a file, and gives you a struct type based on that file. All declarations labelled as `pub` (for public) will end up in this struct type, ready for use.
-
-`@import("std")` is a special case in the compiler, and gives you access to the standard library. Other `@import`s will take in a file path, or a package name (more on packages in a later chapter).
-
-Here, an `_` is used to discard the value of `std.fs.File`. This is used so that the compiler evaluates `std.fs.File`, allowing us to make sure that it exists.
+`inline` loops are unrolled, and allow some things to happen which only work at compile time. Here we use a `for`, but a `while` works similarly.
 ```zig
-test "import std" {
-    const std = @import("std");
-    _ = std.fs.File;
+test "inline for" {
+    const types = [_]type{ i32, f32, u8, bool };
+    var sum: usize = 0;
+    inline for (types) |T| sum += @sizeOf(T);
+    expect(sum == 10);
 }
 ```
 
-Standard library documentation can be found [here](https://ziglang.org/documentation/master/std/). Note: as of writing, this documentation is slightly outdated. Installing [ZLS](https://github.com/zigtools/zls/) may help you explore the standard library, whose autocompletions for the standard library will keep up to date.
+Using these for performance reasons is inadvisable unless you've tested that explicitly unrolling is faster; the compiler tends to make better decisions here than you.
 
+# Anonymous Structs
+
+The struct type may be omitted from a struct literal. These literals may coerce to other struct types.
+
+```zig
+test "anonymous struct literal" {
+    const Point = struct {x: i32, y: i32};
+    
+    var pt: Point = .{
+        .x = 13,
+        .y = 67,
+    };
+    expect(pt.x == 13);
+    expect(pt.y == 67);
+}
+```
+
+Anonymous structs may be completely anonymous i.e. without being coerced to another struct type.
+
+```zig
+test "fully anonymous struct" {
+    dump(.{
+        .int = @as(u32, 1234),
+        .float = @as(f64, 12.34),
+        .b = true,
+        .s = "hi",
+    });
+}
+
+fn dump(args: var) void {
+    expect(args.int == 1234);
+    expect(args.float == 12.34);
+    expect(args.b);
+    expect(args.s[0] == 'h');
+    expect(args.s[1] == 'i');
+}
+```
+<!-- TODO: mention tuple slicing when it's implemented -->
+
+Anonymous structs without field names may be created, and are referred to as __tuples__. These have many of the properties that arrays do; tuples can be iterated over, indexed, can be used with the `++` and `**` operators, and have a len field. Internally, these have numbered field names starting at `"0"`, which may be accessed with the special syntax `@"0"` which acts as an escape for the syntax - things inside `@""` are always recognised as identifiers.
+
+```zig
+test "tuple" {
+    const values = .{ 
+        @as(u32, 1234),
+        @as(f64, 12.34),
+        true,
+        "hi"
+    } ++ .{ false } ** 2;
+    expect(values[0] == 1234);
+    expect(values[4] == false);
+    inline for (values) |v, i| {
+        if (i != 2) continue;
+        expect(v);
+    }
+    expect(values.len == 6);
+    expect(values.@"3"[0] == 'h');
+}
+```
 
 # Sentinel Termination
 
@@ -923,89 +1281,78 @@ test "coercion" {
 }
 ```
 
-# Allocators
-
-The zig standard library provides a pattern for allocating memory, which allows the programmer to choose exactly how memory allocations are done within the standard library - no allocations happen behind your back in the standard library.
-
-The most basic allocator is `std.heap.page_allocator`. Whenever this allocator makes an allocation it will ask your OS for an entire page of memory, which may be multiple kilobytes of memory even if only a single byte is used. As asking the OS for memory requires a system call, this is also extremely inefficient for speed.
-
-Here, we allocate 100 bytes as a []u8. Notice how defer is used in conjunction with a free - this is a common pattern for memory management in zig.
+Sentinel terminated slicing is provided which can be used to create a sentinel terminated slice with the syntax `x[n..m:t]`, where `t` is the terminator value. Doing this is an assertion from the programmer that the memory is terminated where it should be - getting this wrong is detectable illegal behaviour.
 
 ```zig
-const std = @import("std");
-
-test "allocation" {
-    const allocator = std.heap.page_allocator;
-
-    const memory = try allocator.alloc(u8, 100);
-    defer allocator.free(memory);
-
-    expect(memory.len == 100);
-    expect(@TypeOf(memory) == []u8);
+test "sentinel terminated slicing" {
+    var x = [_:0]u8{255} ** 3;
+    const y = x[0..3:0];
 }
 ```
 
-The `std.heap.FixedBufferAllocator` is an allocator that allocates memory into a fixed buffer, and does not make any heap allocations. This is useful when heap usage is not wanted, for example when writing a kernel. It may also be considered for performance reasons. It will give you the error `OutOfMemory` if it has run out of bytes.
+# Vectors
+
+Zig provides vector types for SIMD. These are not to be conflated with vectors in a mathematical sense, or vectors like C++'s std::vector. Vectors may be created using the `@Type` built-in we used earlier, and `std.meta.Vector` provides a shorthand for this.
+
+Operations between vectors with the same child type and length can take place. These operations are performed on each of the values in the vector.`std.meta.eql` is used here to check for equality between two vectors (also useful for other types like structs).
 
 ```zig
-test "fixed buffer allocator" {
-    var buffer: [1000]u8 = undefined;
-    var fba = std.heap.FixedBufferAllocator.init(&buffer);
-    var allocator = &fba.allocator;
+const meta = @import("std").meta;
+const Vector = meta.Vector;
 
-    const memory = try allocator.alloc(u8, 100);
-    defer allocator.free(memory);
-
-    expect(memory.len == 100);
-    expect(@TypeOf(memory) == []u8);
+test "vector add" {
+    const x: Vector(4, f32) = .{ 1, -10, 20, -1 };
+    const y: Vector(4, f32) = .{ 2, 10, 0, 1 };
+    const z = x + y;
+    expect(meta.eql(z, Vector(4, f32){ 3, 0, 20, 0 }));
 }
 ```
 
-`std.heap.ArenaAllocator` takes in a child allocator, and allows you to allocate many times and only free once. Here, `.deinit()` is called on the arena which frees all memory. Using `allocator.free` in this example would be a no-op (i.e. does nothing).
-
+Vectors are indexable.
 ```zig
-test "arena allocator" {
-    var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
-    defer arena.deinit();
-    var allocator = &arena.allocator;
-
-    const m1 = try allocator.alloc(u8, 1);
-    const m2 = try allocator.alloc(u8, 10);
-    const m3 = try allocator.alloc(u8, 100);
+test "vector indexing" {
+    const x: Vector(4, u8) = .{ 255, 0, 255, 0 };
+    expect(x[0] == 255);
 }
 ```
 
-# Arraylist
-
-The `std.ArrayList` is commonly used throughout Zig, and serves as a buffer which can change in size. `std.ArrayList(T)` is similar to C++'s `std::vector<T>` and Rust's `Vec<T>`. `.deinit()` frees all of the ArrayList's memory, which is another common pattern. The memory can be read from and written to via its slice field - `.items`.
+The built-in function `@splat` may be used to construct a vector where all of the values are the same. Here I am using it to multiply a vector by a scalar.
 
 ```zig
-test "arraylist" {
-    var list = std.ArrayList(u8).init(std.heap.page_allocator);
-    defer list.deinit();
-    try list.append('H');
-    try list.append('e');
-    try list.append('l');
-    try list.append('l');
-    try list.append('o');
-    try list.appendSlice(" World!");
-
-    expect(std.mem.eql(u8, list.items, "Hello World!"));
+test "vector * scalar" {
+    const x: Vector(3, f32) = .{ 12.5, 37.5, 2.5 };
+    const y = x * @splat(3, @as(f32, 2));
+    expect(meta.eql(y, Vector(3, f32){ 25, 75, 5 }));
 }
 ```
 
+Vectors can be looped over. As vectors do not have a `len` field like arrays, their length must be obtained from their `TypeInfo`. Let's get the sum of a vector.
+
+```zig
+test "vector looping" {
+    const x = Vector(4, u8){ 255, 0, 255, 0 };
+    var sum = blk :{
+        var tmp: u10 = 0;
+        var i: u8 = 0;
+        const len = @typeInfo(@TypeOf(x)).Vector.len;
+        while (i < len) : (i += 1) tmp += x[i];
+        break :blk tmp;
+    };
+    expect(sum == 510);
+}
+```
+
+It is worth noting that using explicit vectors may result in slower software if you do not make the right decisions - the compiler's auto-vectorisation is fairly smart as-is.
+
+# Imports
+
+The built-in function `@import` takes in a file, and gives you a struct type based on that file. All declarations labelled as `pub` (for public) will end up in this struct type, ready for use.
+
+`@import("std")` is a special case in the compiler, and gives you access to the standard library. Other `@import`s will take in a file path, or a package name (more on packages in a later chapter).
+
+We will explore more of the standard library in later chapters.
 
 # End Of Chapter 1
-In the future we will cover things such as:
-   - Anonymous structs
-   - Areas of standard library
-   - Zig fmt
-   - Build system
-   - C data types, libc, FFI, memory layout features
-   - Zig cc, Zig c++, translate-c, cimport
-   - Advanced comptime patterns and features
-   - Async
-   - SIMD
-   - Inline and global assembly
+In the next chapter we will cover standard patterns, including many useful areas of the standard library.
 
 Feedback and PRs are welcome.
