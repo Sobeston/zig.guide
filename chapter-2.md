@@ -377,6 +377,30 @@ test "random numbers" {
 }
 ```
 
+# Threads
+
+While zig provides more advanced ways or writing concurrent and parallel code, `std.Thread` is available for making use of OS threads. Let's make use of an OS thread.
+
+```zig
+fn ticker(step: u8) void {
+    while(true) {
+        std.time.sleep(1 * std.time.ns_per_s);
+        tick += @as(isize, step);
+    }
+}
+
+var tick: isize = 0;
+
+test "threading" {
+    var thread = try std.Thread.spawn(@as(u8, 1), ticker);
+    expect(tick == 0);
+    std.time.sleep(3 * std.time.ns_per_s / 2);
+    expect(tick == 1);
+}
+```
+
+Threads, however, aren't particularly useful without strategies for thread safety.
+
 # End of Chapter 2
 
 This chapter is incomplete. In the future it will contain things such as:
@@ -387,7 +411,6 @@ This chapter is incomplete. In the future it will contain things such as:
 - Crypto
 - Stacks
 - Queues
-- Threads
 - Mutexes
 - Atomics
 - Searching
