@@ -1,7 +1,7 @@
 ---
 title: "Chapter 2 - Standard Patterns"
 weight: 3
-date: 2020-06-25 13:34:09
+date: 2020-07-04 16:01:09
 description: "Chapter 2 - This section of the tutorial will cover the zig programming language's standard library in detail."
 ---
 
@@ -226,10 +226,154 @@ Take a moment to appreciate that you now know from top to bottom how printing he
 ```zig
 test "hello world" {
     const out_file = std.io.getStdOut();
-    try out_file.outStream().print(
+    try out_file.writer().print(
         "Hello, {}!\n", 
         .{"World"}
     );
+}
+```
+
+Let's create a type with custom formatting by giving it a `format` function. This function must be marked as `pub` so that std.fmt can access it (more on packages later).
+
+```zig
+const Person = struct {
+    name: []const u8,
+    birth_year: i32,
+    death_year: ?i32,
+    pub fn format(
+        self: Person,
+        comptime fmt: []const u8,
+        options: std.fmt.FormatOptions,
+        writer: var,
+    ) !void {
+        try writer.print("{} ({}-", .{
+            self.name, self.birth_year,
+        });
+
+        if (self.death_year) |year| {
+            try writer.print("{}", .{year});
+        }
+
+        try writer.writeAll(")");
+    }
+};
+
+test "custom fmt" {
+    const john = Person{
+        .name = "John Carmack",
+        .birth_year = 1970,
+        .death_year = null,
+    };
+
+    expect(eql(
+        u8,
+        try std.fmt.allocPrint(
+            heap.page_allocator,
+            "{}",
+            .{john},
+        ),
+        "John Carmack (1970-)",
+    ));
+
+    const claude = Person{
+        .name = "Claude Shannon",
+        .birth_year = 1916,
+        .death_year = 2001,
+    };
+
+    expect(eql(
+        u8,
+        try std.fmt.allocPrint(
+            heap.page_allocator,
+            "{}",
+            .{claude},
+        ),
+        "Claude Shannon (1916-2001)",
+    ));
+}
+```
+
+# JSON
+
+Let's parse a json string into a struct type, using the streaming parser.
+
+```zig
+const Place = struct { lat: f32, long: f32 };
+
+test "json parse" {
+    var stream = std.json.TokenStream.init(
+        \\{ "lat": 40.684540, "long": -74.401422 }
+    );
+    const x = try std.json.parse(Place, &stream, .{});
+
+    expect(x.lat == 40.684540);
+    expect(x.long == -74.401422);
+}
+```
+
+And using stringify to turn arbitrary data into a string.
+
+```zig
+test "json stringify" {
+    const x = Place{
+        .lat = 51.997664,
+        .long = -0.740687,
+    };
+
+    var buf: [100]u8 = undefined;
+    var fba = std.heap.FixedBufferAllocator.init(&buf);
+    var string = std.ArrayList(u8).init(&fba.allocator);
+    try std.json.stringify(x, .{}, string.writer());
+
+    expect(eql(
+        u8,
+        string.items,
+        \\{"lat":5.19976654e+01,"long":-7.40687012e-01}
+    ));
+}
+```
+
+The json parser requires an allocator for javascript's string, array, and map types. This memory may be freed using `std.json.parseFree`.
+
+```zig
+test "json parse with strings" {
+    var stream = std.json.TokenStream.init(
+        \\{ "name": "Joe", "age": 25 }
+    );
+
+    const User = struct { name: []u8, age: u16};
+
+    const x = try std.json.parse(
+        User,
+        &stream,
+        .{ .allocator = std.heap.page_allocator },
+    );
+
+    defer std.json.parseFree(
+        User,
+        x,
+        .{ .allocator = std.heap.page_allocator },
+    );
+
+    expect(eql(u8, x.name, "Joe"));
+    expect(x.age == 25);
+}
+```
+
+# Random Numbers
+
+Here we create a new prng using a 64 bit random seed. a, b, c, and are given random values via this prng. The expressions giving c and d values are equivalent. `DefaultPrng` is `Xoroshiro128`; there are other prngs available in std.rand.
+
+```zig
+test "random numbers" {
+    var seed: u64 = undefined;
+    try std.crypto.randomBytes(std.mem.asBytes(&seed));
+    var rand = std.rand.DefaultPrng.init(seed);
+
+    const a = rand.random.float(f32);
+    const b = rand.random.boolean();
+    const c = rand.random.int(u8);
+    const d = rand.random.intRangeAtMost(u8, 0, 255);
 }
 ```
 
@@ -237,11 +381,9 @@ test "hello world" {
 
 This chapter is incomplete. In the future it will contain things such as:
 
-- Json
 - Hash maps
 - Arbitrary Precision Maths
 - Linked Lists
-- Randomness
 - Crypto
 - Stacks
 - Queues
@@ -252,4 +394,4 @@ This chapter is incomplete. In the future it will contain things such as:
 - Sorting
 - Logging
 
-The nest chapter is planned to cover the build system. Feedback and PRs are welcome.
+The next chapter is planned to cover the build system. Feedback and PRs are welcome.
