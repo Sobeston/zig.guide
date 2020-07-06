@@ -9,7 +9,7 @@ description: "Chapter 1 - This will get you up to speed with almost all of the z
 
 Zig provides bit-sized integers in the format `iN` (signed), and `uN` (unsigned). Here, `N` can be anywhere in the range 0-65535 (inclusive). Examples: `u8`, `u1`, `i32`, `u64`, `i40`.
 
-Variables and constants can be assigned using the syntax `var/const identifier: type = value`. Values which are `const` cannot be changed, and are preferable over `var` where possible. Variables and constants are written as snake_case.
+Variables and constants can be declared using the syntax `var/const identifier: type = value`. Values which are `const` cannot be changed, and are preferable over `var` where possible. Variables and constants are written as snake_case.
 
 ```zig
 var some_variable: i32 = 5;
@@ -23,14 +23,14 @@ var some_variable = @as(i32, 5);
 const some_constant = @as(u64, 5000);
 ```
 
-Variables and constants cannot be declared without a value. The value `undefined` may be used where no known value may be given, which is special in that it coerces to any type.
+Variables and constants cannot be declared without an initial value. The value `undefined` may be used where no known value may be given, which is special in that it coerces to any type. Zig prevents uninitialized access errors by making it an error to evaluate `undefined`.
 
 ```zig
 var x: u8 = undefined;
-const y: i16 = undefined;
+x = 7;
 ```
 
-Values can be ignored by using `_` in place of a variable or const declaration.
+Values can be ignored by assigning to `_`.
 
 ```zig
 _ = 10;
