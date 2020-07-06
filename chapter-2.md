@@ -1,7 +1,7 @@
 ---
 title: "Chapter 2 - Standard Patterns"
 weight: 3
-date: 2020-07-04 15:01:09
+date: 2020-07-06 16:15:30
 description: "Chapter 2 - This section of the tutorial will cover the zig programming language's standard library in detail."
 ---
 
@@ -401,11 +401,78 @@ test "threading" {
 
 Threads, however, aren't particularly useful without strategies for thread safety.
 
+# Hash Maps
+
+The standard library provides `std.AutoHashMap`, which lets you easily create a hash map type from a key type and a value type. These must be initiated with an allocator.
+
+Let's put some values in a hash map. It is worth noting that the order of insertion is retained.
+
+```zig
+test "hashing" {
+    const Point = struct { x: i32, y: i32 };
+
+    var map = std.AutoHashMap(f32, Point).init(
+        heap.page_allocator,
+    );
+
+    try map.put(1.525, .{ .x = 1, .y = -4 });
+    try map.put(1.550, .{ .x = 2, .y = -3 });
+    try map.put(1.575, .{ .x = 3, .y = -2 });
+    try map.put(1.600, .{ .x = 4, .y = -1 });
+
+    expect(map.count() == 4);
+
+    var sum = Point{ .x = 0, .y = 0 };
+    for (map.items()) |entry| {
+        sum.x += entry.value.x;
+        sum.y += entry.value.y;
+    }
+
+    expect(sum.x == 10);
+    expect(sum.y == -10);
+}
+```
+
+`.fetchPut` puts a value in the hash map, returning a value if there was previously a value for that key.
+
+```zig
+test "fetchPut" {
+    var map = std.AutoHashMap(u8, f32).init(
+        heap.page_allocator,
+    );
+
+    try map.put(255, 10);
+    const old = try map.fetchPut(255, 100);
+
+    expect(old.?.value == 10);
+    expect(map.get(255).? == 100);
+}
+```
+
+`std.StringHashMap` is also provided for when you need strings as keys.
+
+```zig
+test "string hashmap" {
+    var map = std.StringHashMap(enum { cool, uncool }).init(
+        heap.page_allocator,
+    );
+
+    try map.put("loris", .uncool);
+    try map.put("me", .cool);
+
+    expect(map.get("me").? == .cool);
+    expect(map.get("loris").? == .uncool);
+}
+```
+
+`std.StringHashMap` and `std.AutoHashMap` are just wrappers for `std.HashMap`. If these two do not fulfil your needs, using HashMap directly gives you much more control.
+
+
+
 # End of Chapter 2
 
 This chapter is incomplete. In the future it will contain things such as:
 
-- Hash maps
 - Arbitrary Precision Maths
 - Linked Lists
 - Crypto
