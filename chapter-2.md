@@ -1,7 +1,7 @@
 ---
 title: "Chapter 2 - Standard Patterns"
 weight: 3
-date: 2020-07-06 16:15:30
+date: 2020-07-06 17:38:10
 description: "Chapter 2 - This section of the tutorial will cover the zig programming language's standard library in detail."
 ---
 
@@ -467,7 +467,40 @@ test "string hashmap" {
 
 `std.StringHashMap` and `std.AutoHashMap` are just wrappers for `std.HashMap`. If these two do not fulfil your needs, using HashMap directly gives you much more control.
 
+# Stacks
 
+`std.ArrayList` provides the methods necessary to use it as a stack. Here's an example of creating a list of matched brackets.
+
+```zig
+test "stack" {  
+    const string = "(()())";
+    var stack = std.ArrayList(usize).init(
+        heap.page_allocator,
+    );
+
+    const Pair = struct { open: usize, close: usize};
+    var pairs = std.ArrayList(Pair).init(
+        heap.page_allocator
+    );
+
+    for (string) |char, i| {
+        if (char == '(') try stack.append(i);
+        if (char == ')') try pairs.append(.{
+            .open = stack.pop(),
+            .close = i,
+        });
+    }
+
+    for (pairs.items) |pair, i| {
+        expect(meta.eql(pair, switch (i) {
+            0 => Pair{ .open = 1, .close = 2 },
+            1 => Pair{ .open = 3, .close = 4 },
+            2 => Pair{ .open = 0, .close = 5 },
+            else => unreachable          
+        }));
+    }
+}
+```
 
 # End of Chapter 2
 
@@ -476,7 +509,6 @@ This chapter is incomplete. In the future it will contain things such as:
 - Arbitrary Precision Maths
 - Linked Lists
 - Crypto
-- Stacks
 - Queues
 - Mutexes
 - Atomics
