@@ -65,13 +65,15 @@ The Zig standard library does not yet have a general-purpose allocator. For a ge
 
 The `std.ArrayList` is commonly used throughout Zig, and serves as a buffer which can change in size. `std.ArrayList(T)` is similar to C++'s `std::vector<T>` and Rust's `Vec<T>`. The `deinit()` method frees all of the ArrayList's memory. The memory can be read from and written to via its slice field - `.items`.
 
+Here we will introduce the usage of the testing allocator. This is a special allocator that only works in tests, and can detect memory leaks. In your code, use whatever allocator is appropriate.
+
 ```zig
-const eql = std.mem.eql;
-const heap = std.heap;
+const std = @import("std");
 const ArrayList = std.ArrayList;
+const test_allocator = std.testing.allocator;
 
 test "arraylist" {
-    var list = ArrayList(u8).init(heap.page_allocator);
+    var list = ArrayList(u8).init(test_allocator);
     defer list.deinit();
     try list.append('H');
     try list.append('e');
@@ -116,7 +118,8 @@ The functions `std.fs.openFileAbsolute` and similar absolute functions exist, bu
 
 ```zig
 test "io writer usage" {
-    var list = ArrayList(u8).init(heap.page_allocator);
+    var list = ArrayList(u8).init(test_allocator);
+    defer list.deinit();
     const bytes_written = try list.writer().write(
         "Hello World!",
     );
@@ -138,7 +141,8 @@ test "io reader usage" {
     _ = try file.writeAll("Hello File!");
     try file.seekTo(0);
 
-    var list = ArrayList(u8).init(heap.page_allocator);
+    var list = ArrayList(u8).init(test_allocator);
+    defer list.deinit();
     try file.reader().readAllArrayList(&list, 16 * 1024);
 
     expect(eql(u8, list.items, "Hello File!"));
@@ -198,11 +202,11 @@ A basic example of creating a formatted string. The format string must be compil
 ```zig
 test "fmt" {
     const string = try std.fmt.allocPrint(
-        heap.page_allocator,
+        test_allocator,
         "{} + {} = {}",
         .{ 9, 10, 19 },
     );
-    defer heap.page_allocator.free(string);
+    defer test_allocator.free(string);
 
     expect(eql(u8, string, "9 + 10 = 19"));
 }
@@ -212,10 +216,11 @@ Writers conveniently have a `print` method, which works similarly.
 
 ```zig
 test "print" {
-    var list = std.ArrayList(u8).init(heap.page_allocator);
+    var list = std.ArrayList(u8).init(test_allocator);
+    defer list.deinit();
     try list.writer().print(
         "{} + {} = {}",
-        .{ 9, 10, 19 }
+        .{ 9, 10, 19 },
     );
     expect(eql(u8, list.items, "9 + 10 = 19"));
 }
@@ -227,8 +232,8 @@ Take a moment to appreciate that you now know from top to bottom how printing he
 test "hello world" {
     const out_file = std.io.getStdOut();
     try out_file.writer().print(
-        "Hello, {}!\n", 
-        .{"World"}
+        "Hello, {}!\n",
+        .{"World"},
     );
 }
 ```
@@ -265,13 +270,16 @@ test "custom fmt" {
         .death_year = null,
     };
 
+    const john_string = try std.fmt.allocPrint(
+        test_allocator,
+        "{}",
+        .{john},
+    );
+    defer test_allocator.free(john_string);
+
     expect(eql(
         u8,
-        try std.fmt.allocPrint(
-            heap.page_allocator,
-            "{}",
-            .{john},
-        ),
+        john_string,
         "John Carmack (1970-)",
     ));
 
@@ -281,13 +289,16 @@ test "custom fmt" {
         .death_year = 2001,
     };
 
+    const claude_string = try std.fmt.allocPrint(
+        test_allocator,
+        "{}",
+        .{claude},
+    );
+    defer test_allocator.free(claude_string);
+
     expect(eql(
         u8,
-        try std.fmt.allocPrint(
-            heap.page_allocator,
-            "{}",
-            .{claude},
-        ),
+        claude_string,
         "Claude Shannon (1916-2001)",
     ));
 }
@@ -341,18 +352,18 @@ test "json parse with strings" {
         \\{ "name": "Joe", "age": 25 }
     );
 
-    const User = struct { name: []u8, age: u16};
+    const User = struct { name: []u8, age: u16 };
 
     const x = try std.json.parse(
         User,
         &stream,
-        .{ .allocator = std.heap.page_allocator },
+        .{ .allocator = test_allocator },
     );
 
     defer std.json.parseFree(
         User,
         x,
-        .{ .allocator = std.heap.page_allocator },
+        .{ .allocator = test_allocator },
     );
 
     expect(eql(u8, x.name, "Joe"));
@@ -412,8 +423,9 @@ test "hashing" {
     const Point = struct { x: i32, y: i32 };
 
     var map = std.AutoHashMap(f32, Point).init(
-        heap.page_allocator,
+        test_allocator,
     );
+    defer map.deinit();
 
     try map.put(1.525, .{ .x = 1, .y = -4 });
     try map.put(1.550, .{ .x = 2, .y = -3 });
@@ -438,8 +450,9 @@ test "hashing" {
 ```zig
 test "fetchPut" {
     var map = std.AutoHashMap(u8, f32).init(
-        heap.page_allocator,
+        test_allocator,
     );
+    defer map.deinit();
 
     try map.put(255, 10);
     const old = try map.fetchPut(255, 100);
@@ -454,8 +467,9 @@ test "fetchPut" {
 ```zig
 test "string hashmap" {
     var map = std.StringHashMap(enum { cool, uncool }).init(
-        heap.page_allocator,
+        test_allocator,
     );
+    defer map.deinit();
 
     try map.put("loris", .uncool);
     try map.put("me", .cool);
@@ -472,23 +486,26 @@ test "string hashmap" {
 `std.ArrayList` provides the methods necessary to use it as a stack. Here's an example of creating a list of matched brackets.
 
 ```zig
-test "stack" {  
+test "stack" {
     const string = "(()())";
     var stack = std.ArrayList(usize).init(
-        heap.page_allocator,
+        test_allocator,
     );
+    defer stack.deinit();
 
-    const Pair = struct { open: usize, close: usize};
+    const Pair = struct { open: usize, close: usize };
     var pairs = std.ArrayList(Pair).init(
-        heap.page_allocator
+        test_allocator,
     );
+    defer pairs.deinit();
 
     for (string) |char, i| {
         if (char == '(') try stack.append(i);
-        if (char == ')') try pairs.append(.{
-            .open = stack.pop(),
-            .close = i,
-        });
+        if (char == ')')
+            try pairs.append(.{
+                .open = stack.pop(),
+                .close = i,
+            });
     }
 
     for (pairs.items) |pair, i| {
@@ -496,7 +513,7 @@ test "stack" {
             0 => Pair{ .open = 1, .close = 2 },
             1 => Pair{ .open = 3, .close = 4 },
             2 => Pair{ .open = 0, .close = 5 },
-            else => unreachable          
+            else => unreachable,
         }));
     }
 }
