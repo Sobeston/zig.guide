@@ -1,3 +1,3 @@
 # ziglearn
 
-Repo for ziglearn.org's contents. Feedback and PRs welcome.
+Repo for https://ziglearn.org content. Feedback and PRs welcome.
