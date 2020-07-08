@@ -1,7 +1,7 @@
 ---
 title: "Chapter 1 - Basics"
 weight: 2
-date: 2020-06-25 13:34:09
+date: 2020-07-08 16:00:30
 description: "Chapter 1 - This will get you up to speed with almost all of the zig programming language. This part of the tutorial should be coverable in under an hour."
 ---
 
@@ -431,6 +431,12 @@ test "unreachable" {
     const y: u32 = if (x == 2) 5 else unreachable;
 }
 ```
+```
+test "unreachable"...reached unreachable code
+.\tests.zig:211:39: 0x7ff7e29b2049 in test "unreachable" (test.obj)
+    const y: u32 = if (x == 2) 5 else unreachable;
+                                      ^
+```
 
 Here is an unreachable being used in a switch.
 ```zig
@@ -770,8 +776,6 @@ const big_address: u64 = 0xFF80_0000_0000_0000;
 "Integer Widening" is allowed, which means that integers of a type may coerce to an integer of another type, providing that the new type can fit all of the values that the old type can.
 
 ```zig
-const expect = @import("std").testing.expect;
-
 test "integer widening" {
     const a: u8 = 250;
     const b: u16 = a;
@@ -1122,12 +1126,12 @@ test "generic vector" {
 The types of function parameters can also be inferred by using `var` in place of a type. `@TypeOf` can then be used on the parameter.
 
 ```zig
-fn increment(x: var) @TypeOf(x) {
+fn plusOne(x: var) @TypeOf(x) {
     return x + 1;
 }
 
 test "inferred function parameter" {
-    expect(increment(@as(u32, 1)) == 2);
+    expect(plusOne(@as(u32, 1)) == 2);
 }
 ```
 
@@ -1348,7 +1352,7 @@ test "vector looping" {
 Vectors coerce to their respective arrays.
 
 ```zig
-const x: [4]f32 = @Vector(4, f32){ 1, 2, 3, 4 };
+const arr: [4]f32 = @Vector(4, f32){ 1, 2, 3, 4 };
 ```
 
 It is worth noting that using explicit vectors may result in slower software if you do not make the right decisions - the compiler's auto-vectorisation is fairly smart as-is.
