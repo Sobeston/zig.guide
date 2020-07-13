@@ -46,4 +46,4 @@ pub fn main() void {
 ```
 ###### (note: make sure your file is using spaces for indentation, LF line endings and UTF-8 encoding!)
 
-Use `zig build-exe main.zig` to build. An executable called main will appear in your current working directory, which you may run. In this example `Hello, World!` will be written to stderr, and is assumed to never fail.
+Use `zig run main.zig` to build and run it. In this example `Hello, World!` will be written to stderr, and is assumed to never fail.
