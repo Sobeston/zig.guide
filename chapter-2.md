@@ -532,4 +532,4 @@ This chapter is incomplete. In the future it will contain things such as:
 - Sorting
 - Logging
 
-The next chapter is planned to cover the build system. Feedback and PRs are welcome.
+Feedback and PRs are welcome.
