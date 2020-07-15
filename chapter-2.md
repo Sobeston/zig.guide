@@ -249,7 +249,7 @@ const Person = struct {
         self: Person,
         comptime fmt: []const u8,
         options: std.fmt.FormatOptions,
-        writer: var,
+        writer: anytype,
     ) !void {
         try writer.print("{} ({}-", .{
             self.name, self.birth_year,

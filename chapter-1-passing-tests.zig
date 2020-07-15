@@ -199,6 +199,8 @@ test "switch expression" {
     expect(x == 1);
 }
 
+
+
 test "out of bounds, no safety" {
     @setRuntimeSafety(false);
     const a = [3]u8{ 1, 2, 3 };
@@ -571,7 +573,7 @@ test "generic vector" {
     expect(eql(f32, &y.data, &[_]f32{ 10, 10, 5 }));
 }
 
-fn plusOne(x: var) @TypeOf(x) {
+fn plusOne(x: anytype) @TypeOf(x) {
     return x + 1;
 }
 
@@ -627,7 +629,7 @@ test "fully anonymous struct" {
     });
 }
 
-fn dump(args: var) void {
+fn dump(args: anytype) void {
     expect(args.int == 1234);
     expect(args.float == 12.34);
     expect(args.b);

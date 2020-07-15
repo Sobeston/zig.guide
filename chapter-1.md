@@ -1123,10 +1123,10 @@ test "generic vector" {
 }
 ```
 
-The types of function parameters can also be inferred by using `var` in place of a type. `@TypeOf` can then be used on the parameter.
+The types of function parameters can also be inferred by using `anytype` in place of a type. `@TypeOf` can then be used on the parameter.
 
 ```zig
-fn plusOne(x: var) @TypeOf(x) {
+fn plusOne(x: anytype) @TypeOf(x) {
     return x + 1;
 }
 
@@ -1203,7 +1203,7 @@ test "fully anonymous struct" {
     });
 }
 
-fn dump(args: var) void {
+fn dump(args: anytype) void {
     expect(args.int == 1234);
     expect(args.float == 12.34);
     expect(args.b);
