@@ -83,6 +83,23 @@ test "if statement expression" {
     expect(x == 1);
 }
 ```
+To evaluate multiple conditions `else if` statement can be used. Like `else`, using `else if` without `if` statement will produce compiler error. 
+
+```Zig
+const print = @import("std").debug.print;
+
+pub fn main() void {
+    const number = 1;
+    if (number == 0){
+        print("empty", .{});
+    } else if (number == 1){
+        print("it is one", .{});
+    } else {
+        print("not a binary number", .{});
+    }
+}
+```
+If you run above program, zig first evaluate the if statement and compare the value of const number with 0. The `==` relational operator check if the both values are same or not. In this case they are not same, so the compiler contiue to check the second statement which is `else if`. This time the condition is true so you will get `it is one` output in your terminal. Another important thing is, if a condition becomes true, zig will ignore other conditions within that `if` scope. 
 
 # While
 
