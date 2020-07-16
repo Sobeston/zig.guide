@@ -74,6 +74,8 @@ Let's compile a binary for a sandybridge CPU (Intel x86_64, circa 2011), so we c
 
 `zig build-exe .\tiny-hello.zig -target x86_64-native -mcpu sandybridge`
 
+Details on what architectures, OSes, CPUs and ABIs (details on ABIs in the next chapter) are available can be found by running `zig targets`. Note: the output is long, and you may want to pipe it to a file, e.g. `zig targets > targets.json`.
+
 # Zig Build
 
 The `zig build` command allows users to compile based on a `build.zig` file. `zig init-exe` and `zig-init-lib` can be used to give you a baseline project.
