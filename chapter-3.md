@@ -1,7 +1,7 @@
 ---
 title: "Chapter 3 - Build system"
 weight: 4
-date: 2020-07-15 22:03:20
+date: 2020-07-17 07:02:20
 description: "Chapter 3 - Ziglang's build system in detail."
 ---
 
@@ -126,9 +126,32 @@ pub fn main() anyerror!void {
 }
 ```
 
+Upon using the `zig build` command, the executable will appear in the install path. Here we have not specified an install path, so the executable will be saved in `./zig-cache/bin`.
+
 # Builder
 
-Zig's `std.build.Builder` type contains the
+Zig's `std.build.Builder` type contains the information used by the build runner. This includes information such as:
+
+- the build target
+- the release mode
+- locations of libraries
+- the install path
+- build steps
+
+# LibExeObjStep
+
+The `std.build.LibExeObjStep` type contains information required to build a library, executable, object, or test.
+
+Let's make use of our `Builder` and create a `LibExeObjStep` using `Builder.addExecutable`, which takes in a name and a path to the root of the source. `exe.install()` is used here to tell the builder to install the executable, meaning to save it in its install path.
+
+```zig
+const Builder = @import("std").build.Builder;
+
+pub fn build(b: *Builder) void {
+    const exe = b.addExecutable("program", "src/main.zig");
+    exe.install();
+}
+```
 
 # End of Chapter 3
 
