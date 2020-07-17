@@ -16,7 +16,7 @@ Zig provides four build modes, with debug being the default as it produces the s
 | Release-Small | No             | Yes, Size     |
 | Release-Fast  | No             | Yes, Speed    |
 
-These may be enabled in `zig run` and `zig test` with the arguments `--release-safe`, `--release-small` and `--release-fast`, respectively.
+These may be enabled in `zig run` and `zig test` with the arguments `--release-safe`, `--release-small` and `--release-fast`.
 
 Users are recommended to develop their software with runtime safety enabled, despite its small speed disadvantage.
 
@@ -87,7 +87,7 @@ Let's use `zig init-exe` inside a new folder. This is what you will find.
 └── src
     └── main.zig
 ```
-`build.zig`
+`build.zig` contains our build script. The *build runner* will use this `pub fn build` function as its entry point - this is what is executed when you run `zig build`.
 
 ```zig
 const Builder = @import("std").build.Builder;
@@ -116,7 +116,7 @@ pub fn build(b: *Builder) void {
 }
 ```
 
-`main.zig`
+`main.zig` contains our executable's entry point.
 
 ```zig
 const std = @import("std");
@@ -125,6 +125,10 @@ pub fn main() anyerror!void {
     std.debug.warn("All your codebase are belong to us.\n", .{});
 }
 ```
+
+# Builder
+
+Zig's `std.build.Builder` type contains the
 
 # End of Chapter 3
 
