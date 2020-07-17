@@ -1298,7 +1298,7 @@ test "sentinel terminated slicing" {
 
 Zig provides vector types for SIMD. These are not to be conflated with vectors in a mathematical sense, or vectors like C++'s std::vector. Vectors may be created using the `@Type` built-in we used earlier, and `std.meta.Vector` provides a shorthand for this.
 
-Vectors can only have child types of integers, floats and pointers.
+Vectors can only have child types of booleans, integers, floats and pointers.
 
 Operations between vectors with the same child type and length can take place. These operations are performed on each of the values in the vector.`std.meta.eql` is used here to check for equality between two vectors (also useful for other types like structs).
 
