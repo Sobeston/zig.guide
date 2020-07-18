@@ -5,7 +5,7 @@ date: 2020-07-06 17:38:10
 description: "Chapter 2 - This section of the tutorial will cover the zig programming language's standard library in detail."
 ---
 
-Standard library documentation can be found [here](https://ziglang.org/documentation/master/std/). Note: as of writing, this documentation is slightly outdated. Installing [ZLS](https://github.com/zigtools/zls/) may help you explore the standard library, whose autocompletions for the standard library will keep up to date.
+Automatically generated standard library documentation can be found [here](https://ziglang.org/documentation/master/std/). Installing [ZLS](https://github.com/zigtools/zls/) may also help you explore the standard library, which provides completions for it.
 
 # Allocators
 
