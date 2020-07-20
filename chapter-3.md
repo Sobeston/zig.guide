@@ -1,7 +1,7 @@
 ---
 title: "Chapter 3 - Build system"
 weight: 4
-date: 2020-07-17 07:02:20
+date: 2020-07-20 10:56:00
 description: "Chapter 3 - Ziglang's build system in detail."
 ---
 
@@ -175,6 +175,6 @@ We called `exe.install()` earlier - this adds a build step which tells the build
 
 # End of Chapter 3
 
-This chapter is incomplete. In the future it will contain information on how to make use of `zig build`.
+This chapter is incomplete. In the future it will contain advanced usage of `zig build`.
 
-The next chapter is planned to cover usage with C. Feedback and PRs are welcome.
+Feedback and PRs are welcome.
