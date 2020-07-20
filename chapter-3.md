@@ -142,7 +142,7 @@ Zig's `std.build.Builder` type contains the information used by the build runner
 
 The `std.build.LibExeObjStep` type contains information required to build a library, executable, object, or test.
 
-Let's make use of our `Builder` and create a `LibExeObjStep` using `Builder.addExecutable`, which takes in a name and a path to the root of the source. `exe.install()` is used here to tell the builder to install the executable, meaning to save it in its install path.
+Let's make use of our `Builder` and create a `LibExeObjStep` using `Builder.addExecutable`, which takes in a name and a path to the root of the source.
 
 ```zig
 const Builder = @import("std").build.Builder;
@@ -152,6 +152,26 @@ pub fn build(b: *Builder) void {
     exe.install();
 }
 ```
+
+# Build steps
+
+Build steps are a way of providing tasks for the build runner to  execute. Let's create a build step, and make it the default. When you run `zig build` this will output `Hello!`. 
+
+```zig
+const std = @import("std");
+
+pub fn build(b: *std.build.Builder) void {
+    const step = b.step("task", "do something");
+    step.makeFn = myTask;
+    b.default_step = step;
+}
+
+fn myTask(self: *std.build.Step) !void {
+    std.debug.print("Hello!\n", .{});
+}
+```
+
+We called `exe.install()` earlier - this adds a build step which tells the builder to build the executable.
 
 # End of Chapter 3
 
