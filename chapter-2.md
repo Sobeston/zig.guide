@@ -410,7 +410,43 @@ test "threading" {
 }
 ```
 
-Threads, however, aren't particularly useful without strategies for thread safety.
+Threads, however, aren't particularly useful without strategies for
+thread safety.
+
+# Mutexes
+
+`std.Mutex` provides a lock that can only be held by one thread at a
+time. Here's an example of a function that spawns 100 threads to
+modify some global memory.
+
+```zig
+const std = @import("std");
+const Mutex = std.Mutex;
+const Thread = std.Thread;
+const expectEqual = std.testing.expectEqual;
+
+var num: u32 = 0;
+
+pub fn touch(m: *Mutex) void {
+    const lock = m.acquire();
+    defer lock.release();
+    num += 1;
+    num -= 1;
+}
+
+test "mutex" {
+    var m = Mutex.init();
+    var threads: [100]*Thread = undefined;
+    for (threads) |*thread| {
+        thread.* = try Thread.spawn(&m, touch);
+    }
+    for (threads) |thread| {
+        expectEqual(num, 0);
+        thread.wait();
+    }
+    expectEqual(num, 0);
+}
+```
 
 # Hash Maps
 
@@ -517,7 +553,6 @@ test "stack" {
     }
 }
 ```
-
 # End of Chapter 2
 
 This chapter is incomplete. In the future it will contain things such as:
@@ -526,7 +561,6 @@ This chapter is incomplete. In the future it will contain things such as:
 - Linked Lists
 - Crypto
 - Queues
-- Mutexes
 - Atomics
 - Searching
 - Sorting
