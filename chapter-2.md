@@ -422,15 +422,15 @@ Let's put some values in a hash map. It is worth noting that the order of insert
 test "hashing" {
     const Point = struct { x: i32, y: i32 };
 
-    var map = std.AutoHashMap(f32, Point).init(
+    var map = std.AutoHashMap(u32, Point).init(
         test_allocator,
     );
     defer map.deinit();
 
-    try map.put(1.525, .{ .x = 1, .y = -4 });
-    try map.put(1.550, .{ .x = 2, .y = -3 });
-    try map.put(1.575, .{ .x = 3, .y = -2 });
-    try map.put(1.600, .{ .x = 4, .y = -1 });
+    try map.put(1525, .{ .x = 1, .y = -4 });
+    try map.put(1550, .{ .x = 2, .y = -3 });
+    try map.put(1575, .{ .x = 3, .y = -2 });
+    try map.put(1600, .{ .x = 4, .y = -1 });
 
     expect(map.count() == 4);
 
