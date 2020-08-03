@@ -501,10 +501,11 @@ test "stack" {
 
     for (string) |char, i| {
         if (char == '(') try stack.append(i);
-        if (char == ')') try pairs.append(.{
-            .open = stack.pop(),
-            .close = i,
-        });
+        if (char == ')')
+            try pairs.append(.{
+                .open = stack.pop(),
+                .close = i,
+            });
     }
 
     for (pairs.items) |pair, i| {
