@@ -33,16 +33,24 @@ https://ziglang.org/download/
       a) System wide (admin powershell)
 
       ```powershell
-      Set-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment'-Name PATH -Value ((Get-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment' -Name PATH).path + ";C:\example\zig-windows-x86_64")
+      [Environment]::SetEnvironmentVariable(
+         "Path",
+         [Environment]::GetEnvironmentVariable("Path", "Machine") + ";C:\your-path\zig-windows-x86_64-your-version",
+         "Machine"
+      )
       ```
 
       b) User level (powershell)
 
       ```powershell
-      Set-ItemProperty -Path 'Registry::HKEY_CURRENT_USER\Environment'-Name PATH -Value ((Get-ItemProperty -Path 'Registry::HKEY_CURRENT_USER\Environment' -Name PATH).path + ";C:\example\zig-windows-x86_64")
+      [Environment]::SetEnvironmentVariable(
+         "Path",
+         [Environment]::GetEnvironmentVariable("Path", "User") + ";C:\your-path\zig-windows-x86_64-your-version",
+         "User"
+      )
       ```
 
-      Restart `explorer.exe` and create a new terminal. *(This is extremely silly - if anyone knows a method that doesn't require restarting explorer.exe, let me know!)*
+      Close your terminal and create a new one.
 
 3. Verify your install with `zig version`. The output should be `0.6.0+` followed by some hex digits.
 
