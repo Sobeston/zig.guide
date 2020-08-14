@@ -1,7 +1,7 @@
 ---
 title: "Chapter 1 - Basics"
 weight: 2
-date: 2020-07-08 16:00:30
+date: 2020-08-14 08:34:30
 description: "Chapter 1 - This will get you up to speed with almost all of the zig programming language. This part of the tutorial should be coverable in under an hour."
 ---
 
@@ -815,14 +815,14 @@ test "well defined overflow" {
 
 # Floats
 
-Zig's floats are strictly IEEE compliant unless `@setFloatMode(.Optimized)` is used, which is equivalent to GCC's `-ffast-math`. Floats coerce to other float types.
+Zig's floats are strictly IEEE compliant unless `@setFloatMode(.Optimized)` is used, which is equivalent to GCC's `-ffast-math`. Floats coerce to larger float types.
 
 ```zig
-test "float coercion" {
+test "float widening" {
     const a: f16 = 0;
-    const b: f128 = a;
-    const c: f32 = b;
-    expect(c == a);
+    const b: f32 = a;
+    const c: f128 = b;
+    expect(c == @as(f128, a));
 }
 ```
 

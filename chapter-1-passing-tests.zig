@@ -380,8 +380,8 @@ test "well defined overflow" {
 
 test "float coercion" {
     const a: f16 = 0;
-    const b: f128 = a;
-    const c: f32 = b;
+    const b: f32 = a;
+    const c: f128 = b;
     expect(c == a);
 }
 
