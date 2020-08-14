@@ -59,6 +59,16 @@ test "arena allocator" {
 }
 ```
 
+`alloc` and `free` are used for slices. For single items, consider using `create` and `destroy`.
+
+```zig
+test "allocator create/destroy" {
+    const byte = try std.heap.page_allocator.create(u8);
+    defer std.heap.page_allocator.destroy(byte);
+    byte.* = 128;
+}
+```
+
 The Zig standard library does not yet have a general-purpose allocator. For a general-purpose allocator consider `std.heap.c_allocator`, which is fast but requires linking libc. Libc can be linked to by adding `-lc`, eg: `zig build-exe main.zig -lc`. Libc will be covered in detail in later chapters.
 
 # Arraylist
