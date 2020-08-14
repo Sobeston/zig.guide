@@ -69,7 +69,21 @@ test "allocator create/destroy" {
 }
 ```
 
-The Zig standard library does not yet have a general-purpose allocator. For a general-purpose allocator consider `std.heap.c_allocator`, which is fast but requires linking libc. Libc can be linked to by adding `-lc`, eg: `zig build-exe main.zig -lc`. Libc will be covered in detail in later chapters.
+The Zig standard library also has a general purpose allocator. This is a safe allocator which can prevent double-free, use-after-free and can detect leaks. Safety checks and thread safety can be turned off via its configuration struct (left empty below). Zig's GPA is designed for safety over performance, but may still be many times faster than page_allocator.
+
+```zig
+test "GPA" {
+    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    defer {
+        const leaked = gpa.deinit();
+        if (leaked) expect(false); //fail test
+    } 
+    const bytes = try gpa.allocator.alloc(u8, 100);
+    defer gpa.allocator.free(bytes);
+}
+```
+
+For high performance (but very few safety features!), `std.heap.c_allocator` may be considered. This however has the disadvantage of requiring linking Libc, which can be done with `-lc`.
 
 # Arraylist
 
