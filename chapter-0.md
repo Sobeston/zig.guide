@@ -1,13 +1,13 @@
 ---
 title: "Chapter 0 - Getting Started"
 weight: 1
-date: 2020-06-25 13:34:09
+date: 2020-08-14 13:04:30
 description: "Ziglearn - A Guide / Tutorial for the zig programming language. Install and get started with ziglang here."
 ---
 
 # Welcome
 
-[Zig](https://ziglang.org) is a general-purpose programming language and toolchain for maintaining __robust__, __optimal__, and __reusable__ software. 
+[Zig](https://ziglang.org) is a general-purpose programming language and toolchain for maintaining __robust__, __optimal__, and __reusable__ software.
 
 Warning: the latest major release is 0.6 - Zig is still pre-1.0; usage in production is still not recommended and you may run into compiler bugs.
 
@@ -19,14 +19,32 @@ Knowing a language like C, C++, Rust, Go, Pascal or similar will be helpful for 
 
 # Installation
 
-1.  Download a prebuilt master binary of zig from:
+1.  Download and extract a prebuilt master binary of zig from:
 ```
 https://ziglang.org/download/
 ```
 
 2. Add zig to your path
+   - linux, macos, bsd
 
-3. Verify your install with `zig version`
+		Add the location of your zig binary to your `PATH` environment variable. For an installation, add `export PATH=$PATH:~/zig/zig` or similar to your `/etc/profile` (system-wide) or `$HOME/.profile`. If these changes do not apply immediately, run the line from your shell.
+   - windows
+
+		a) System wide (admin powershell)
+
+		```powershell
+		Set-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment'-Name PATH -Value ((Get-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment' -Name PATH).path + ";C:\example\zig-windows-x86_64")
+		```
+
+		b) User level (powershell)
+
+		```powershell
+		Set-ItemProperty -Path 'Registry::HKEY_CURRENT_USER\Environment'-Name PATH -Value ((Get-ItemProperty -Path 'Registry::HKEY_CURRENT_USER\Environment' -Name PATH).path + ";C:\example\zig-windows-x86_64")
+		```
+
+		Restart `explorer.exe` and create a new terminal. *(This is extremely silly - if anyone knows a method that doesn't require restarting explorer.exe, let me know!)*
+
+3. Verify your install with `zig version`. The output should be `0.6.0+` followed by some hex digits.
 
 4. (optional) Install ZLS (unofficial) from:
 ```
