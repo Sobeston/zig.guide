@@ -27,22 +27,22 @@ https://ziglang.org/download/
 2. Add zig to your path
    - linux, macos, bsd
 
-		Add the location of your zig binary to your `PATH` environment variable. For an installation, add `export PATH=$PATH:~/zig/zig` or similar to your `/etc/profile` (system-wide) or `$HOME/.profile`. If these changes do not apply immediately, run the line from your shell.
+      Add the location of your zig binary to your `PATH` environment variable. For an installation, add `export PATH=$PATH:~/zig/zig` or similar to your `/etc/profile` (system-wide) or `$HOME/.profile`. If these changes do not apply immediately, run the line from your shell.
    - windows
 
-		a) System wide (admin powershell)
+      a) System wide (admin powershell)
 
-		```powershell
-		Set-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment'-Name PATH -Value ((Get-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment' -Name PATH).path + ";C:\example\zig-windows-x86_64")
-		```
+      ```powershell
+      Set-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment'-Name PATH -Value ((Get-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment' -Name PATH).path + ";C:\example\zig-windows-x86_64")
+      ```
 
-		b) User level (powershell)
+      b) User level (powershell)
 
-		```powershell
-		Set-ItemProperty -Path 'Registry::HKEY_CURRENT_USER\Environment'-Name PATH -Value ((Get-ItemProperty -Path 'Registry::HKEY_CURRENT_USER\Environment' -Name PATH).path + ";C:\example\zig-windows-x86_64")
-		```
+      ```powershell
+      Set-ItemProperty -Path 'Registry::HKEY_CURRENT_USER\Environment'-Name PATH -Value ((Get-ItemProperty -Path 'Registry::HKEY_CURRENT_USER\Environment' -Name PATH).path + ";C:\example\zig-windows-x86_64")
+      ```
 
-		Restart `explorer.exe` and create a new terminal. *(This is extremely silly - if anyone knows a method that doesn't require restarting explorer.exe, let me know!)*
+      Restart `explorer.exe` and create a new terminal. *(This is extremely silly - if anyone knows a method that doesn't require restarting explorer.exe, let me know!)*
 
 3. Verify your install with `zig version`. The output should be `0.6.0+` followed by some hex digits.
 
