@@ -1,7 +1,7 @@
 ---
 title: "Chapter 2 - Standard Patterns"
 weight: 3
-date: 2020-07-06 17:38:10
+date: 2020-08-14 10:52:00
 description: "Chapter 2 - This section of the tutorial will cover the zig programming language's standard library in detail."
 ---
 
@@ -520,7 +520,7 @@ test "stack" {
 ```
 
 # Formatting specifiers
-`std.fmt` provides many options for formatting various data types.
+`std.fmt` provides options for formatting various data types.
 
 `{X}` and `{x}` provide hex formatting.
 ```zig
@@ -642,6 +642,71 @@ test "terminated fmt" {
         u8,
         try bufPrint(&b, "{}", .{hello}),
         "hello!",
+    ));
+}
+```
+
+# Advanced Formatting
+
+So far we have only covered formatting specifiers. Format strings actually follow this format, where between each pair of square brackets is a parameter you have to replace with something.
+
+`{[position][specifier]:[fill][alignment][width].[precision]}`
+
+| Name      | Meaning                                                                                 |
+|-----------|-----------------------------------------------------------------------------------------|
+| Position  | The index of the argument that should be inserted                                       |
+| Specifier | A type-dependent formatting option                                                      |
+| Fill      | A single character used for padding                                                     |
+| Alignment | One of three characters '<', '^' or '>'; these are for left, middle and right alignment |
+| Width     | The total width of the field (characters)                                               |
+| Precision | How many decimals a formatted number should have                                        |
+
+
+Position usage.
+```zig
+test "position" {
+    var b: [3]u8 = undefined;
+    expect(eql(
+        u8,
+        try bufPrint(&b, "{0}{0}{1}", .{"a", "b"}),
+        "aab",
+    ));
+}
+```
+
+Fill, alignment and width being used.
+```zig
+test "fill, alignment, width" {
+    var b: [5]u8 = undefined;
+
+    expect(eql(
+        u8,
+        try bufPrint(&b, "{: <5}", .{"hi!"}),
+        "hi!  ",
+    ));
+
+    expect(eql(
+        u8,
+        try bufPrint(&b, "{:_^5}", .{"hi!"}),
+        "_hi!_",
+    ));
+
+    expect(eql(
+        u8,
+        try bufPrint(&b, "{:!>4}", .{"hi!"}),
+        "!hi!",
+    ));
+}
+```
+
+Using a specifier with precision.
+```zig
+test "precision" {
+    var b: [4]u8 = undefined;
+    expect(eql(
+        u8,
+        try bufPrint(&b, "{d:.2}", .{3.14159}),
+        "3.14",
     ));
 }
 ```
