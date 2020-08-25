@@ -85,6 +85,8 @@ test "GPA" {
 
 For high performance (but very few safety features!), `std.heap.c_allocator` may be considered. This however has the disadvantage of requiring linking Libc, which can be done with `-lc`.
 
+Benjamin Feng's talk [*What's a Memory Allocator Anyway?*](https://www.youtube.com/watch?v=vHWiDx_l4V0) goes into more detail on this topic, and covers the implementation of allocators.
+
 # Arraylist
 
 The `std.ArrayList` is commonly used throughout Zig, and serves as a buffer which can change in size. `std.ArrayList(T)` is similar to C++'s `std::vector<T>` and Rust's `Vec<T>`. The `deinit()` method frees all of the ArrayList's memory. The memory can be read from and written to via its slice field - `.items`.
