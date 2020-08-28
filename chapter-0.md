@@ -66,8 +66,8 @@ Create a file called `main.zig`, with the following contents:
 ```zig
 const std = @import("std");
 
-pub fn main() void {
-    std.debug.print("Hello, {}!\n", .{"World"});
+pub fn main() !void {
+    try std.debug.getStderrStream().print("Hello, {}!\n", .{"World"});
 }
 ```
 ###### (note: make sure your file is using spaces for indentation, LF line endings and UTF-8 encoding!)
