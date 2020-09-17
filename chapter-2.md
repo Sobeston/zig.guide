@@ -442,7 +442,7 @@ Threads, however, aren't particularly useful without strategies for thread safet
 
 The standard library provides `std.AutoHashMap`, which lets you easily create a hash map type from a key type and a value type. These must be initiated with an allocator.
 
-Let's put some values in a hash map. It is worth noting that the order of insertion is retained.
+Let's put some values in a hash map.
 
 ```zig
 test "hashing" {
@@ -461,7 +461,9 @@ test "hashing" {
     expect(map.count() == 4);
 
     var sum = Point{ .x = 0, .y = 0 };
-    for (map.items()) |entry| {
+    var iterator = map.iterator();
+
+    while (iterator.next()) |entry| {
         sum.x += entry.value.x;
         sum.y += entry.value.y;
     }
@@ -505,7 +507,9 @@ test "string hashmap" {
 }
 ```
 
-`std.StringHashMap` and `std.AutoHashMap` are just wrappers for `std.HashMap`. If these two do not fulfil your needs, using HashMap directly gives you much more control.
+`std.StringHashMap` and `std.AutoHashMap` are just wrappers for `std.HashMap`. If these two do not fulfil your needs, using `std.HashMap` directly gives you much more control.
+
+If having your elements backed by an array is wanted behaviour, try `std.ArrayHashMap` and its wrapper `std.AutoArrayHashMap`.
 
 # Stacks
 
