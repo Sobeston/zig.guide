@@ -29,7 +29,7 @@ Some common arguments:
 - `--strip`, which removes debug info from the binary.
 - `--dynamic`, which is used in conjunction with `zig build-lib` to output a dynamic/shared library.
 
-Let's create a tiny hello world. Save this as `tiny-hello.zig`, and run `zig build-exe --release-small --strip --singlethreaded`. Currently for `x86_64-windows`, this produces a 2.5KiB executable.
+Let's create a tiny hello world. Save this as `tiny-hello.zig`, and run `zig build-exe --release-small --strip --single-threaded`. Currently for `x86_64-windows`, this produces a 2.5KiB executable.
 
 ```zig
 const std = @import("std");
