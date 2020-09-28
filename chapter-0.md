@@ -19,6 +19,8 @@ Knowing a language like C, C++, Rust, Go, Pascal or similar will be helpful for 
 
 # Installation
 
+**This guide assumes you're using a master build** of Zig as opposed to the latest major release, which means downloading a binary from the site or compiling from source; **the version of Zig in your package manager is likely outdated**. This guide does not support the 0.6 build of Zig.
+
 1.  Download and extract a prebuilt master binary of zig from:
 ```
 https://ziglang.org/download/
