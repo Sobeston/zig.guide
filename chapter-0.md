@@ -56,7 +56,7 @@ https://ziglang.org/download/
 
 3. Verify your install with `zig version`. The output should be `0.6.0+` followed by some hex digits.
 
-4. (optional) Install ZLS (unofficial) from:
+4. (optional, third party) For completions and go-to-definition in your editor, install the Zig Language Server from:
 ```
 https://github.com/zigtools/zls/
 ```
