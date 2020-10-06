@@ -1,7 +1,7 @@
 ---
 title: "Chapter 1 - Basics"
 weight: 2
-date: 2020-08-14 08:34:30
+date: 2020-10-06 16:12:00
 description: "Chapter 1 - This will get you up to speed with almost all of the zig programming language. This part of the tutorial should be coverable in under an hour."
 ---
 
@@ -294,15 +294,17 @@ test "returning an error" {
 `try x` is a shortcut for `x catch |err| return err`, and is commonly used in places where handling an error isn't appropriate. Zig's `try` and `catch` are unrelated to try-catch in other languages.
 
 ```zig
-fn failFn() error{Oops}!void {
+fn failFn() error{Oops}!i32 {
     try failingFunction();
+    return 12;
 }
 
 test "try" {
-    failFn() catch |err| {
+    var v = failFn() catch |err| {
         expect(err == error.Oops);
         return;
     };
+    expect(v == 12); // is never reached
 }
 ```
 

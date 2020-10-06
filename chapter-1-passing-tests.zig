@@ -138,15 +138,17 @@ test "returning an error" {
     };
 }
 
-fn failFn() error{Oops}!void {
+fn failFn() error{Oops}!i32 {
     try failingFunction();
+    return 12;
 }
 
 test "try" {
-    failFn() catch |err| {
+    var v = failFn() catch |err| {
         expect(err == error.Oops);
         return;
     };
+    expect(v == 12); // is never reached
 }
 
 var problems: u32 = 98;
