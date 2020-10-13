@@ -245,7 +245,7 @@ test "multi defer" {
 An error set is like an enum (details on zig's enums later), where each error in the set is a value. There are no exceptions in zig; errors are values. Let's create an error set.
 
 ```zig
-const FileOpenError = error {
+const FileOpenError = error{
     AccessDenied,
     OutOfMemory,
     FileNotFound,
@@ -254,7 +254,7 @@ const FileOpenError = error {
 Error sets coerce to their supersets.
 
 ```zig
-const AllocationError = error {OutOfMemory};
+const AllocationError = error{OutOfMemory};
 
 test "coerce error from a subset to a superset" {
     const err: FileOpenError = AllocationError.OutOfMemory;
@@ -535,7 +535,7 @@ fn total(values: []const u8) usize {
     return count;
 }
 test "slices" {
-    const array = [_]u8{1, 2, 3, 4, 5};
+    const array = [_]u8{ 1, 2, 3, 4, 5 };
     const slice = array[0..3];
     expect(total(slice) == 6);
 }
@@ -545,7 +545,7 @@ When these `n` and `m` values are both known at compile time, slicing will actua
 
 ```zig
 test "slices 2" {
-    const array = [_]u8{1, 2, 3, 4, 5};
+    const array = [_]u8{ 1, 2, 3, 4, 5 };
     const slice = array[0..3];
     expect(@TypeOf(slice) == *const [3]u8);
 }
@@ -555,7 +555,7 @@ The syntax `x[n..]` can also be used for when you want to slice to the end.
 
 ```zig
 test "slices 3" {
-    var array = [_]u8{1, 2, 3, 4, 5};
+    var array = [_]u8{ 1, 2, 3, 4, 5 };
     var slice = array[0..];
 }
 ```
@@ -614,7 +614,7 @@ const Suit = enum {
 };
 
 test "enum method" {
-   expect(Suit.spades.isClubs() == Suit.isClubs(.spades));
+    expect(Suit.spades.isClubs() == Suit.isClubs(.spades));
 }
 ```
 
@@ -925,7 +925,7 @@ Optionals use the syntax `?T` and are used to store the data `null`, or a value 
 ```zig
 test "optional" {
     var found_index: ?usize = null;
-    const data = [_]i32{1, 2, 3, 4, 5, 6, 7, 8, 12};
+    const data = [_]i32{ 1, 2, 3, 4, 5, 6, 7, 8, 12 };
     for (data) |v, i| {
         if (v == 10) found_index = i;
     }
@@ -968,9 +968,7 @@ test "if optional payload capture" {
     }
 
     const b: ?i32 = 5;
-    if (b) |value| {
-        
-    }
+    if (b) |value| {}
 }
 ```
 
@@ -1076,10 +1074,12 @@ Here anonymous struct syntax is used with `.{}`, because the `T` in `T{}` can be
 
 ```zig
 fn getBiggerInt(comptime T: type) type {
-    return @Type(.{ .Int = .{
-        .bits = @typeInfo(T).Int.bits + 1, 
-        .is_signed = @typeInfo(T).Int.is_signed 
-    }});
+    return @Type(.{
+        .Int = .{
+            .bits = @typeInfo(T).Int.bits + 1,
+            .is_signed = @typeInfo(T).Int.is_signed,
+        },
+    });
 }
 
 test "@Type" {
@@ -1182,7 +1182,7 @@ The struct type may be omitted from a struct literal. These literals may coerce 
 
 ```zig
 test "anonymous struct literal" {
-    const Point = struct {x: i32, y: i32};
+    const Point = struct { x: i32, y: i32 };
     
     var pt: Point = .{
         .x = 13,
@@ -1219,12 +1219,12 @@ Anonymous structs without field names may be created, and are referred to as __t
 
 ```zig
 test "tuple" {
-    const values = .{ 
+    const values = .{
         @as(u32, 1234),
         @as(f64, 12.34),
         true,
-        "hi"
-    } ++ .{ false } ** 2;
+        "hi",
+    } ++ .{false} ** 2;
     expect(values[0] == 1234);
     expect(values[4] == false);
     inline for (values) |v, i| {
@@ -1244,9 +1244,9 @@ An example of a sentinel terminated array. The built-in `@bitCast` is used to pe
 
 ```zig
 test "sentinel termination" {
-    const terminated = [3:0]u8 { 3, 2, 1 };
+    const terminated = [3:0]u8{ 3, 2, 1 };
     expect(terminated.len == 3);
-    expect(@bitCast([4]u8, terminated)[3] == 0); 
+    expect(@bitCast([4]u8, terminated)[3] == 0);
 }
 ```
 
@@ -1292,7 +1292,7 @@ Sentinel terminated slicing is provided which can be used to create a sentinel t
 ```zig
 test "sentinel terminated slicing" {
     var x = [_:0]u8{255} ** 3;
-    const y = x[0..3:0];
+    const y = x[0..3 :0];
 }
 ```
 
@@ -1341,7 +1341,7 @@ const len = @import("std").mem.len;
 
 test "vector looping" {
     const x = Vector(4, u8){ 255, 0, 255, 0 };
-    var sum = blk :{
+    var sum = blk: {
         var tmp: u10 = 0;
         var i: u8 = 0;
         while (i < len(x)) : (i += 1) tmp += x[i];
