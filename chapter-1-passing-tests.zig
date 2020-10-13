@@ -106,13 +106,13 @@ test "multi defer" {
     expect(x == 4.5);
 }
 
-const FileOpenError = error {
+const FileOpenError = error{
     AccessDenied,
     OutOfMemory,
     FileNotFound,
 };
 
-const AllocationError = error {OutOfMemory};
+const AllocationError = error{OutOfMemory};
 
 test "coerce error from a subset to a superset" {
     const err: FileOpenError = AllocationError.OutOfMemory;
@@ -201,8 +201,6 @@ test "switch expression" {
     expect(x == 1);
 }
 
-
-
 test "out of bounds, no safety" {
     @setRuntimeSafety(false);
     const a = [3]u8{ 1, 2, 3 };
@@ -244,19 +242,19 @@ fn total(values: []const u8) usize {
     return count;
 }
 test "slices" {
-    const array = [_]u8{1, 2, 3, 4, 5};
+    const array = [_]u8{ 1, 2, 3, 4, 5 };
     const slice = array[0..3];
     expect(total(slice) == 6);
 }
 
 test "slices 2" {
-    const array = [_]u8{1, 2, 3, 4, 5};
+    const array = [_]u8{ 1, 2, 3, 4, 5 };
     const slice = array[0..3];
     expect(@TypeOf(slice) == *const [3]u8);
 }
 
 test "slices 3" {
-    var array = [_]u8{1, 2, 3, 4, 5};
+    var array = [_]u8{ 1, 2, 3, 4, 5 };
     var slice = array[0..];
 }
 
@@ -293,7 +291,7 @@ const Suit = enum {
 };
 
 test "enum method" {
-   expect(Suit.spades.isClubs() == Suit.isClubs(.spades));
+    expect(Suit.spades.isClubs() == Suit.isClubs(.spades));
 }
 
 const Mode = enum {
@@ -431,7 +429,7 @@ test "while loop expression" {
 
 test "optional" {
     var found_index: ?usize = null;
-    const data = [_]i32{1, 2, 3, 4, 5, 6, 7, 8, 12};
+    const data = [_]i32{ 1, 2, 3, 4, 5, 6, 7, 8, 12 };
     for (data) |v, i| {
         if (v == 10) found_index = i;
     }
@@ -460,9 +458,7 @@ test "if optional payload capture" {
     }
 
     const b: ?i32 = 5;
-    if (b) |value| {
-        
-    }
+    if (b) |value| {}
 }
 
 var numbers_left: u32 = 4;
@@ -531,10 +527,12 @@ test "typeinfo switch" {
 }
 
 fn getBiggerInt(comptime T: type) type {
-    return @Type(.{ .Int = .{
-        .bits = @typeInfo(T).Int.bits + 1, 
-        .is_signed = @typeInfo(T).Int.is_signed 
-    }});
+    return @Type(.{
+        .Int = .{
+            .bits = @typeInfo(T).Int.bits + 1,
+            .is_signed = @typeInfo(T).Int.is_signed,
+        },
+    });
 }
 
 test "@Type" {
@@ -597,11 +595,7 @@ test "++" {
 test "**" {
     const pattern = [_]u8{ 0xCC, 0xAA };
     const memory = pattern ** 3;
-    expect(eql(
-        u8,
-        &memory,
-        &[_]u8{ 0xCC, 0xAA, 0xCC, 0xAA, 0xCC, 0xAA }
-    ));
+    expect(eql(u8, &memory, &[_]u8{ 0xCC, 0xAA, 0xCC, 0xAA, 0xCC, 0xAA }));
 }
 
 test "inline for" {
@@ -612,8 +606,8 @@ test "inline for" {
 }
 
 test "anonymous struct literal" {
-    const Point = struct {x: i32, y: i32};
-    
+    const Point = struct { x: i32, y: i32 };
+
     var pt: Point = .{
         .x = 13,
         .y = 67,
@@ -640,12 +634,12 @@ fn dump(args: anytype) void {
 }
 
 test "tuple" {
-    const values = .{ 
+    const values = .{
         @as(u32, 1234),
         @as(f64, 12.34),
         true,
-        "hi"
-    } ++ .{ false } ** 2;
+        "hi",
+    } ++ .{false} ** 2;
     expect(values[0] == 1234);
     expect(values[4] == false);
     inline for (values) |v, i| {
@@ -657,9 +651,9 @@ test "tuple" {
 }
 
 test "sentinel termination" {
-    const terminated = [3:0]u8 { 3, 2, 1 };
+    const terminated = [3:0]u8{ 3, 2, 1 };
     expect(terminated.len == 3);
-    expect(@bitCast([4]u8, terminated)[3] == 0); 
+    expect(@bitCast([4]u8, terminated)[3] == 0);
 }
 
 test "string literal" {
@@ -689,7 +683,7 @@ test "coercion" {
 
 test "sentinel terminated slicing" {
     var x = [_:0]u8{255} ** 3;
-    const y = x[0..3:0];
+    const y = x[0..3 :0];
 }
 
 const meta = @import("std").meta;
@@ -717,7 +711,7 @@ const len = @import("std").mem.len;
 
 test "vector looping" {
     const x = Vector(4, u8){ 255, 0, 255, 0 };
-    var sum = blk :{
+    var sum = blk: {
         var tmp: u10 = 0;
         var i: u8 = 0;
         while (i < len(x)) : (i += 1) tmp += x[i];
