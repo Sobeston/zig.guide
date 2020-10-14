@@ -566,37 +566,37 @@ Types that may be sliced are: arrays, multi pointers and slices.
 
 Let's declare an enum.
 ```zig
-const Direction = enum { North, South, East, West };
+const Direction = enum { north, south, east, west };
 ```
 
 Enums types may have specified (integer) tag types.
 ```zig
-const Value = enum(u2) { Zero, One, Two };
+const Value = enum(u2) { zero, one, two };
 ```
 
 Enum's ordinal values start at 0. They can be accessed with the built-in function `@enumToInt`.
 ```zig
 test "enum ordinal value" {
-    expect(@enumToInt(Value.Zero) == 0);
+    expect(@enumToInt(Value.zero) == 0);
     expect(@enumToInt(Value.One) == 1);
-    expect(@enumToInt(Value.Two) == 2);
+    expect(@enumToInt(Value.two) == 2);
 }
 ```
 
 Values can be overridden, with the next values continuing from there.
 ```zig
 const Value2 = enum(u32) {
-    Hundred = 100,
-    Thousand = 1000,
-    Million = 1000000,
-    Next,
+    hundred = 100,
+    thousand = 1000,
+    million = 1000000,
+    next,
 };
 
 test "set enum ordinal value" {
-    expect(@enumToInt(Value2.Hundred) == 100);
-    expect(@enumToInt(Value2.Thousand) == 1000);
-    expect(@enumToInt(Value2.Million) == 1000000);
-    expect(@enumToInt(Value2.Next) == 1000001);
+    expect(@enumToInt(Value2.hundred) == 100);
+    expect(@enumToInt(Value2.thousand) == 1000);
+    expect(@enumToInt(Value2.million) == 1000000);
+    expect(@enumToInt(Value2.next) == 1000001);
 }
 ```
 
@@ -710,20 +710,20 @@ Bare union types do not have a guaranteed memory layout. Because of this, bare u
 
 ```zig
 const Payload = union {
-    Int: i64,
-    Float: f64,
-    Bool: bool,
+    int: i64,
+    float: f64,
+    bool: bool,
 };
 
 test "simple union" {
-    var payload = Payload{ .Int = 1234 };
-    payload.Float = 12.34;
+    var payload = Payload{ .int = 1234 };
+    payload.float = 12.34;
 }
 ```
 ```
 test "simple union"...access of inactive union field
 .\tests.zig:342:12: 0x7ff62c89244a in test "simple union" (test.obj)
-    payload.Float = 12.34;
+    payload.float = 12.34;
            ^
 ```
 

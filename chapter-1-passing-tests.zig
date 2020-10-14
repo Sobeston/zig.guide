@@ -258,26 +258,26 @@ test "slices 3" {
     var slice = array[0..];
 }
 
-const Value = enum(u2) { Zero, One, Two };
+const Value = enum(u2) { zero, one, two };
 
 test "enum ordinal value" {
-    expect(@enumToInt(Value.Zero) == 0);
-    expect(@enumToInt(Value.One) == 1);
-    expect(@enumToInt(Value.Two) == 2);
+    expect(@enumToInt(Value.zero) == 0);
+    expect(@enumToInt(Value.one) == 1);
+    expect(@enumToInt(Value.two) == 2);
 }
 
 const Value2 = enum(u32) {
-    Hundred = 100,
-    Thousand = 1000,
-    Million = 1000000,
-    Next,
+    hundred = 100,
+    thousand = 1000,
+    million = 1000000,
+    next,
 };
 
 test "set enum ordinal value" {
-    expect(@enumToInt(Value2.Hundred) == 100);
-    expect(@enumToInt(Value2.Thousand) == 1000);
-    expect(@enumToInt(Value2.Million) == 1000000);
-    expect(@enumToInt(Value2.Next) == 1000001);
+    expect(@enumToInt(Value2.hundred) == 100);
+    expect(@enumToInt(Value2.thousand) == 1000);
+    expect(@enumToInt(Value2.million) == 1000000);
+    expect(@enumToInt(Value2.next) == 1000001);
 }
 
 const Suit = enum {
