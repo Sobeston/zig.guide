@@ -16,7 +16,7 @@ Zig provides four build modes, with debug being the default as it produces the s
 | Release-Small | No             | Yes, Size     |
 | Release-Fast  | No             | Yes, Speed    |
 
-These may be enabled in `zig run` and `zig test` with the arguments `--release-safe`, `--release-small` and `--release-fast`.
+These may be enabled in `zig run` and `zig test` with the arguments `-O ReleaseSafe`, `-O ReleaseSmall` and `-O ReleaseFast`.
 
 Users are recommended to develop their software with runtime safety enabled, despite its small speed disadvantage.
 
@@ -29,7 +29,7 @@ Some common arguments:
 - `--strip`, which removes debug info from the binary.
 - `--dynamic`, which is used in conjunction with `zig build-lib` to output a dynamic/shared library.
 
-Let's create a tiny hello world. Save this as `tiny-hello.zig`, and run `zig build-exe --release-small --strip --single-threaded`. Currently for `x86_64-windows`, this produces a 2.5KiB executable.
+Let's create a tiny hello world. Save this as `tiny-hello.zig`, and run `zig build-exe -O ReleaseSmall --strip --single-threaded`. Currently for `x86_64-windows`, this produces a 2.5KiB executable.
 
 ```zig
 const std = @import("std");
@@ -45,7 +45,7 @@ pub fn main() void {
 
 By default, Zig will compile for your combination of CPU and OS. This can be overridden by `-target`. Let's compile our tiny hello world to a 64 bit arm linux platform.
 
-`zig build-exe .\tiny-hello.zig --release-small --strip --single-threaded -target aarch64-linux`
+`zig build-exe .\tiny-hello.zig -O ReleaseSmall --strip --single-threaded -target aarch64-linux`
 
 [QEMU](https://www.qemu.org/) or similar may be used to conveniently test executables made for foreign platforms.
 
