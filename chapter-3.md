@@ -59,7 +59,7 @@ Some CPU architectures that you can cross-compile for:
 
 Some operating systems you can cross-compile for:
 - `linux`
-- `macosx`
+- `macos`
 - `windows`
 - `freebsd`
 - `netbsd`
