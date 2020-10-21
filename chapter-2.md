@@ -741,6 +741,37 @@ test "precision" {
 }
 ```
 
+# Advanced Function Invocation
+Zig offers a `@call` builtin function which gives you more flexibility with which how a function is
+invoked. There are options to enable or disable tail call optimizations, enable or disalbe inlining,
+as well as force compile time generation.
+
+Example:
+
+```zig
+const assert = @import("std").debug.assert;
+
+// These functions are effectively the same but are defined and invoked differently.
+
+test "force a compile time evaluation" {
+    assert(@call(.{ .modifier = .compile_time }, isOddModified, .{7}));
+}
+
+test "invoke with the default modifier of 'auto'" {
+    assert(@call(.{}, isOddNotModified, .{7}));
+}
+
+// With the compile_time modifier, we need to use the @mod builtin.
+fn isOddModified(i: i32) bool {
+    return @mod(i, 2) != 0;
+}
+
+// The comptime keyword lets us use the regular modulo operator.
+fn isOddNotModified(comptime i: i32) bool {
+    return i % 2 != 0;
+}
+```
+
 # End of Chapter 2
 
 This chapter is incomplete. In the future it will contain things such as:
