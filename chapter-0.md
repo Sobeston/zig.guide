@@ -29,7 +29,7 @@ https://ziglang.org/download/
 2. Add zig to your path
    - linux, macos, bsd
 
-      Add the location of your zig binary to your `PATH` environment variable. For an installation, add `export PATH=$PATH:~/zig/zig` or similar to your `/etc/profile` (system-wide) or `$HOME/.profile`. If these changes do not apply immediately, run the line from your shell.
+      Add the location of your zig binary to your `PATH` environment variable. For an installation, add `export PATH=$PATH:~/zig` or similar to your `/etc/profile` (system-wide) or `$HOME/.profile`. If these changes do not apply immediately, run the line from your shell.
    - windows
 
       a) System wide (admin powershell)
