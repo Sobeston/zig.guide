@@ -1,7 +1,7 @@
 ---
 title: "Chapter 2 - Standard Patterns"
 weight: 3
-date: 2020-08-14 10:52:00
+date: 2020-12-05 16:00:00
 description: "Chapter 2 - This section of the tutorial will cover the zig programming language's standard library in detail."
 ---
 
@@ -154,24 +154,28 @@ test "io writer usage" {
 }
 ```
 
-Here we will use a reader to copy the file's contents into an arraylist.
+Here we will use a reader to copy the file's contents into an allocated buffer. The second argument of `readAllAlloc` is the maximum size that it may allocate; if the file is larger than this, it will return `error.StreamTooLong`.
 
 ```zig
 test "io reader usage" {
+    const message = "Hello File!";
+
     const file = try std.fs.cwd().createFile(
         "junk_file2.txt",
         .{ .read = true },
     );
     defer file.close();
 
-    _ = try file.writeAll("Hello File!");
+    try file.writeAll(message);
     try file.seekTo(0);
 
-    var list = ArrayList(u8).init(test_allocator);
-    defer list.deinit();
-    try file.reader().readAllArrayList(&list, 16 * 1024);
+    const contents = try file.reader().readAllAlloc(
+        test_allocator,
+        message.len,
+    );
+    defer test_allocator.free(contents);
 
-    expect(eql(u8, list.items, "Hello File!"));
+    expect(eql(u8, contents, message));
 }
 ```
 
