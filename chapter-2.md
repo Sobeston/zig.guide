@@ -674,7 +674,7 @@ test "terminated fmt" {
 
     expect(eql(
         u8,
-        try bufPrint(&b, "{}", .{hello}),
+        try bufPrint(&b, "{s}", .{hello}),
         "hello!",
     ));
 }
