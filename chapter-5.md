@@ -22,7 +22,7 @@ The style of Zig's async may be described as suspendible stackless coroutines. Z
 
 # Suspend / Resume
 
-In the previous section we talked of how async functions can give control back to the caller, and how the async function can later take control back. This functionality is provided by the keywords `suspend`, and `resume`. When a function suspends, control flow returns to wherever it was last resumed; when a function is called via an `async` invocation, this is an implicit suspend and resume.
+In the previous section we talked of how async functions can give control back to the caller, and how the async function can later take control back. This functionality is provided by the keywords `suspend`, and `resume`. When a function suspends, control flow returns to wherever it was last resumed; when a function is called via an `async` invocation, this is an implicit resume.
 
 In these examples, I have commented the order of execution. There are a few things to take in here:
 *  The `async` keyword is used to invoke functions in an async context.
@@ -70,7 +70,7 @@ fn func2() void {
 
 Similar to how well formed code has a suspend for every resume, each `async` function invocation with a return value must be matched with an `await`. The value yielded by `await` on the async frame corresponds to the function's return.
 
-You may notice that `func3` here is a normal function, and no part of it implies that it is an async function. Regardless, you may call it from an async context as Zig's async does not suffer from the [colored function problem](https://journal.stuffwithstuff.com/2015/02/01/what-color-is-your-function/).
+You may notice that `func3` here is a normal function (i.e. it has no suspend points - it is not an async function). Despite this, `func3` can work as an async function when called from an async invocation. 
 
 ```zig
 fn func3() u32 {
@@ -164,7 +164,7 @@ test "@Frame" {
 
 `@frame()` returns a pointer to the frame of the current function. Similar to `suspend` points, if this call is found in a function then it is inferred as being async. All pointers to frames coerce to the special type `anyframe`, which you can use `resume` upon.
 
-This allows us to, for example, write a function that suspends itself.
+This allows us to, for example, write a function that resumes itself.
 ```zig
 fn double(value: u8) u9 {
     suspend {
