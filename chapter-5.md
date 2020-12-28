@@ -70,7 +70,7 @@ fn func2() void {
 
 Similar to how well formed code has a suspend for every resume, each `async` function invocation with a return value must be matched with an `await`. The value yielded by `await` on the async frame corresponds to the function's return.
 
-You may notice that `func3` here is a normal function (i.e. it has no suspend points - it is not an async function). Despite this, `func3` can work as an async function when called from an async invocation. 
+You may notice that `func3` here is a normal function (i.e. it has no suspend points - it is not an async function). Despite this, `func3` can work as an async function when called from an async invocation; the calling convention of `func3` doesn't have to be changed to async - `func3` can be of any calling convention.
 
 ```zig
 fn func3() u32 {
