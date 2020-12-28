@@ -578,7 +578,7 @@ Enum's ordinal values start at 0. They can be accessed with the built-in functio
 ```zig
 test "enum ordinal value" {
     expect(@enumToInt(Value.zero) == 0);
-    expect(@enumToInt(Value.One) == 1);
+    expect(@enumToInt(Value.one) == 1);
     expect(@enumToInt(Value.two) == 2);
 }
 ```
