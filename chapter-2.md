@@ -95,6 +95,7 @@ Here we will introduce the usage of the testing allocator. This is a special all
 
 ```zig
 const std = @import("std");
+const eql = std.mem.eql;
 const ArrayList = std.ArrayList;
 const test_allocator = std.testing.allocator;
 
