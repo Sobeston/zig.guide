@@ -743,7 +743,7 @@ test "precision" {
 
 # Advanced Function Invocation
 Zig offers a `@call` builtin function which gives you more flexibility with which how a function is
-invoked. There are options to enable or disable tail call optimizations, enable or disalbe inlining,
+invoked. There are options to enable or disable tail call optimizations, enable or disable inlining,
 as well as force compile time generation.
 
 Example:
