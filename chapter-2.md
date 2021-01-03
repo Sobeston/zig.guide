@@ -155,7 +155,28 @@ test "file stat" {
 }
 ```
 
-<!-- TODO: directory walking -->
+We can make directories and iterate over their contents. Here we will use an iterator (discussed later).
+
+test "make dir" {
+    try std.fs.cwd().makeDir("test-tmp");
+    const dir = try std.fs.cwd().openDir(
+        "test-tmp",
+        .{ .iterate = true },
+    );
+
+    _ = try dir.createFile("x", .{});
+    _ = try dir.createFile("y", .{});
+    _ = try dir.createFile("z", .{});
+
+    var file_count: usize = 0;
+    var iter = dir.iterate();
+    while (try iter.next()) |entry| {
+        if (entry.kind == .File) file_count += 1;
+    }
+
+    expect(file_count == 3);
+}
+
 
 # Readers and Writers
 
