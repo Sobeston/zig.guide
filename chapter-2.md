@@ -157,6 +157,7 @@ test "file stat" {
 
 We can make directories and iterate over their contents. Here we will use an iterator (discussed later).
 
+```zig
 test "make dir" {
     try std.fs.cwd().makeDir("test-tmp");
     const dir = try std.fs.cwd().openDir(
@@ -176,7 +177,7 @@ test "make dir" {
 
     expect(file_count == 3);
 }
-
+```
 
 # Readers and Writers
 
