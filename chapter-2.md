@@ -137,6 +137,24 @@ test "createFile, write, seekTo, read" {
 
 The functions `std.fs.openFileAbsolute` and similar absolute functions exist, but we will not test them here.
 
+We can get various information about files by using `.stat()` on them. `Stat` also contains fields for .inode and .mode, but they are not tested here as they rely on the current OS' types.
+
+```zig
+test "file stat" {
+    const file = try std.fs.cwd().createFile(
+        "junk_file2.txt",
+        .{},
+    );
+    defer file.close();
+    const stat = try file.stat();
+    expect(stat.size == 0);
+    expect(stat.kind == .File);
+    expect(stat.ctime <= std.time.nanoTimestamp());
+    expect(stat.mtime <= std.time.nanoTimestamp());
+    expect(stat.atime <= std.time.nanoTimestamp());
+}
+```
+
 <!-- TODO: directory walking -->
 
 # Readers and Writers
