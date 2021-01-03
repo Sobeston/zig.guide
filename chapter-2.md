@@ -223,7 +223,7 @@ test "read until next line" {
 
     var buffer: [100]u8 = undefined;
     const input = (try nextLine(stdin.reader(), &buffer)).?;
-    try stdout.reader().print(
+    try stdout.writer().print(
         "Your name is: \"{s}\"\n",
         .{input},
     );
