@@ -180,6 +180,38 @@ test "io reader usage" {
 }
 ```
 
+A common usecase for readers is to read until the next line (e.g. for user input). Here we will do this with the `std.io.getStdIn()` file.
+
+```zig
+fn nextLine(reader: anytype, buffer: []u8) !?[]const u8 {
+    var line = (try reader.readUntilDelimiterOrEof(
+        buffer,
+        '\n',
+    )) orelse return null;
+    // trim annoying windows-only carriage return character
+    if (std.builtin.Target.current.os.tag == .windows) {
+        line = std.mem.trimRight(u8, line, "\r");
+    }
+    return line;
+}
+
+test "read until next line" {
+    const stdout = std.io.getStdOut();
+    const stdin = std.io.getStdIn();
+
+    try stdout.writeAll(
+        \\ Enter your name: 
+    );
+
+    var buffer: [100]u8 = undefined;
+    const input = (try nextLine(stdin.reader(), &buffer)).?;
+    try stdout.reader().print(
+        "Your name is: \"{s}\"\n",
+        .{input},
+    );
+}
+```
+
 An `std.io.Writer` type consists of a context type, error set, and a write function. The write function must take in the context type and a byte slice. The write function must also return an error union of the Writer type's error set and the amount of bytes written. Let's create a type that implements a writer.
 
 ```zig
