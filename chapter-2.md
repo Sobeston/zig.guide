@@ -649,7 +649,7 @@ Some iterators have a `!?T` return type, as opposed to ?T. `!?T` requires that w
 ```zig
 test "iterator looping" {
     var iter = (try std.fs.cwd().openDir(
-        "",
+        ".",
         .{ .iterate = true },
     )).iterate();
 
