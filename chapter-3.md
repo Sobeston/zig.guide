@@ -31,6 +31,7 @@ Some common arguments:
 
 Let's create a tiny hello world. Save this as `tiny-hello.zig`, and run `zig build-exe -O ReleaseSmall --strip --single-threaded`. Currently for `x86_64-windows`, this produces a 2.5KiB executable.
 
+<!--no_test-->
 ```zig
 const std = @import("std");
 
@@ -89,6 +90,7 @@ Let's use `zig init-exe` inside a new folder. This is what you will find.
 ```
 `build.zig` contains our build script. The *build runner* will use this `pub fn build` function as its entry point - this is what is executed when you run `zig build`.
 
+<!--no_test-->
 ```zig
 const Builder = @import("std").build.Builder;
 
@@ -118,6 +120,7 @@ pub fn build(b: *Builder) void {
 
 `main.zig` contains our executable's entry point.
 
+<!--no_test-->
 ```zig
 const std = @import("std");
 
@@ -144,6 +147,7 @@ The `std.build.LibExeObjStep` type contains information required to build a libr
 
 Let's make use of our `Builder` and create a `LibExeObjStep` using `Builder.addExecutable`, which takes in a name and a path to the root of the source.
 
+<!--no_test-->
 ```zig
 const Builder = @import("std").build.Builder;
 
@@ -157,6 +161,7 @@ pub fn build(b: *Builder) void {
 
 Build steps are a way of providing tasks for the build runner to  execute. Let's create a build step, and make it the default. When you run `zig build` this will output `Hello!`. 
 
+<!--no_test-->
 ```zig
 const std = @import("std");
 

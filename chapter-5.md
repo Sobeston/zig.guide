@@ -34,35 +34,35 @@ This example has a suspend, but no matching resume.
 ```zig
 const expect = @import("std").testing.expect;
 
-var x: i32 = 1;
+var foo: i32 = 1;
 
 test "suspend with no resume" {
     var frame = async func();   //1
-    expect(x == 2);             //4
+    expect(foo == 2);             //4
 }
 
 fn func() void {
-    x += 1;                     //2
+    foo += 1;                     //2
     suspend;                    //3
-    x += 1;                     //never reached!
+    foo += 1;                     //never reached!
 }
 ```
 
 In well formed code, each suspend is matched with a resume.
 
 ```zig
-var y: i32 = 1;
+var bar: i32 = 1;
 
 test "suspend with resume" {
     var frame = async func2();  //1
     resume frame;               //4
-    expect(y == 3);             //6
+    expect(bar == 3);             //6
 }
 
 fn func2() void {
-    y += 1;                     //2
+    bar += 1;                     //2
     suspend;                    //3
-    y += 1;                     //5
+    bar += 1;                     //5
 }
 ```
 
@@ -89,6 +89,7 @@ Using `await` on an async frame of a function which may suspend is only possible
 
 When calling a function which is determined to be async (i.e. it may suspend) without an `async` invocation, the function which called it is also treated as being async. When a function of a concrete (non-async) calling convention is determined to have suspend points, this is a compile error as async requires its own calling convention. This means, for example, that main cannot be async.
 
+<!--no_test-->
 ```zig
 pub fn main() !void {
     suspend;
@@ -115,6 +116,7 @@ C:\zig\lib\zig\std\start.zig:334:37: note: async function call here
 
 If you want to call an async function without using an `async` invocation, and without the caller of the function also being async, the `nosuspend` keyword comes in handy. This allows the caller of the async function to not also be async, by asserting that the potential suspends do not happen.
 
+<!--no_test-->
 ```zig
 const std = @import("std");
 
@@ -239,6 +241,7 @@ Here we will implement a basic event loop. This one will allow us to submit task
 
 Here is the implementation.
 
+<!--no_test-->
 ```zig
 const std = @import("std");
 

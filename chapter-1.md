@@ -11,6 +11,7 @@ Zig provides bit-sized integers in the format `iN` (signed), and `uN` (unsigned)
 
 Variables and constants can be assigned using the syntax `var/const identifier: type = value`. Values which are `const` cannot be changed, and are preferable over `var` where possible. Variables and constants are written as snake_case.
 
+<!--no_test-->
 ```zig
 var some_variable: i32 = 5;
 const some_constant: u64 = 5000;
@@ -18,6 +19,7 @@ const some_constant: u64 = 5000;
 
 The type may be left out in cases where you want the type to be inferred by the value. Here we will use the `@as` built-in function which allows us to perform an explicit coercion to a type.
 
+<!--no_test-->
 ```zig
 var some_variable = @as(i32, 5);
 const some_constant = @as(u64, 5000);
@@ -25,6 +27,7 @@ const some_constant = @as(u64, 5000);
 
 Variables and constants cannot be declared without a value. The value `undefined` may be used where no known value may be given, which is special in that it coerces to any type.
 
+<!--no_test-->
 ```zig
 var x: u8 = undefined;
 const y: i16 = undefined;
@@ -32,6 +35,7 @@ const y: i16 = undefined;
 
 Values can be ignored by using `_` in place of a variable or const declaration.
 
+<!--no_test-->
 ```zig
 _ = 10;
 ```
@@ -43,11 +47,13 @@ The float types `f16`, `f32`, `f64`, `f128` are also supplied.
 Arrays use the syntax `[N]T`, where `N` (a natural number) is the number of elements, and `T` is the type of the elements, the so-called "child type" of the array. Examples: `[100]u8`, `[3]f32`, `[4]u32`, `[2]u40`.
 
 A notable feature about Zig is that all values are constructed as literals, or are constructed using `T{}` syntax. Here's an example of creating an array.
+<!--no_test-->
 ```zig
 const a = [3]u8{ 1, 2, 3 };
 ```
 
 The `N` in the case of array literals may be swapped out by `_` for when inferred length is desirable. 
+<!--no_test-->
 ```zig
 const a = [_]u8{ 1, 2, 3 };
 ```
@@ -187,30 +193,6 @@ test "function recursion" {
 }
 ```
 When recursion happens, the compiler is no longer able to work out the maximum stack size. This may result in unsafe behaviour - a stack overflow. Details on how to achieve safe recursion will be covered in future.
-
-<!-- commented out due to https://github.com/ziglang/zig/issues/5692 -->
-
-<!-- The built-in function `@call` may be used to force the compiler to call a function in a certain way. Here we will use `always_tail` modifier to make sure that our recursion doesn't blow up the stack.
-
-```zig
-fn fibonacciTailInternal(n: u16, a: u16, b: u16) u16 {
-    if (n == 0) return a;
-    if (n == 1) return b;
-    return @call(
-        .{ .modifier = .always_tail },
-        fibonacciTailInternal,
-        .{ n - 1, b, a + b }
-    );
-}
-
-fn fibonacciTail(n: u16) u16 {
-    return fibonacciTailInternal(n, 0, 1);
-}
-
-test "forced tail call" {
-    expect(fibonacciTail(10) == 55);
-}
-``` -->
 
 # Defer
 
@@ -395,6 +377,7 @@ Zig provides a level of safety, where problems may be found during execution. Sa
 
 For example, runtime safety protects you from out of bounds indices.
 
+<!--fail_test-->
 ```zig
 test "out of bounds" {
     const a = [3]u8{ 1, 2, 3 };
@@ -427,6 +410,7 @@ Safety is off for some build modes (to be discussed later).
 `unreachable` is an assertion to the compiler that this statement will not be reached. It can be used to tell the compiler that a branch is impossible, which the optimiser can then take advantage of. Reaching an `unreachable` is detectable illegal behaviour.
 
 As it is of the type `noreturn`, it is compatible with all other types. Here it coerces to u32.
+<!--fail_test-->
 ```zig
 test "unreachable" {
     const x: i32 = 1;
@@ -476,6 +460,7 @@ test "pointers" {
 
 Trying to set a `*T` to the value 0 is detectable illegal behaviour.
 
+<!--fail_test-->
 ```zig
 test "naughty pointer" {
     var x: u16 = 0;
@@ -491,6 +476,7 @@ test "bad pointer"...cast causes pointer to be null
 
 Zig also has const pointers, which cannot be used to modify the referenced data. Referencing a const variable will yield a const pointer.
 
+<!--fail_test-->
 ```zig
 test "const pointers" {
     const x: u8 = 1;
@@ -652,6 +638,8 @@ test "struct usage" {
 ```
 
 All fields must be given a value.
+
+<!--fail_test-->
 ```zig
 test "missing struct field" {
     const my_vector = Vec3{
@@ -707,7 +695,7 @@ test "automatic dereference" {
 
 Bare union types do not have a guaranteed memory layout. Because of this, bare unions cannot be used to reinterpret memory. Accessing a field in a union which is not active is detectable illegal behaviour.
 
-
+<!--fail_test-->
 ```zig
 const Payload = union {
     int: i64,
@@ -747,6 +735,7 @@ test "switch on tagged union" {
 
 The tag type of a tagged union can also be inferred. This is equivalent to the Tagged type above.
 
+<!--no_test-->
 ```zig
 const Tagged = union(enum) { a: u8, b: f32, c: bool };
 ```
@@ -874,6 +863,7 @@ test "labelled blocks" {
 ```
 
 This can be seen as being equivalent to C's `i++`.
+<!--no_test-->
 ```zig
 blk: {
     const tmp = i;
