@@ -17,6 +17,7 @@ Here, we allocate 100 bytes as a `[]u8`. Notice how defer is used in conjunction
 
 ```zig
 const std = @import("std");
+const expect = std.testing.expect;
 
 test "allocation" {
     const allocator = std.heap.page_allocator;
