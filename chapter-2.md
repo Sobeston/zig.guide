@@ -481,7 +481,7 @@ Here we create a new prng using a 64 bit random seed. a, b, c, and are given ran
 ```zig
 test "random numbers" {
     var seed: u64 = undefined;
-    try std.os.getRandom(std.mem.asBytes(&seed));
+    try std.os.getrandom(std.mem.asBytes(&seed));
     var rand = std.rand.DefaultPrng.init(seed);
 
     const a = rand.random.float(f32);
