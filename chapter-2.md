@@ -616,7 +616,7 @@ test "stack" {
     }
 
     for (pairs.items) |pair, i| {
-        expect(meta.eql(pair, switch (i) {
+        expect(std.meta.eql(pair, switch (i) {
             0 => Pair{ .open = 1, .close = 2 },
             1 => Pair{ .open = 3, .close = 4 },
             2 => Pair{ .open = 0, .close = 5 },
