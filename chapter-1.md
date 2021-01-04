@@ -1077,7 +1077,7 @@ fn getBiggerInt(comptime T: type) type {
     return @Type(.{
         .Int = .{
             .bits = @typeInfo(T).Int.bits + 1,
-            .is_signed = @typeInfo(T).Int.is_signed,
+            .signedness = @typeInfo(T).Int.signedness,
         },
     });
 }
