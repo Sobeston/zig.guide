@@ -155,7 +155,7 @@ test "file stat" {
 }
 ```
 
-We can make directories and iterate over their contents. Here we will use an iterator (discussed later).
+We can make directories and iterate over their contents. Here we will use an iterator (discussed later). This directory (and its contents) will be deleted after this test finishes.
 
 ```zig
 test "make dir" {
@@ -164,6 +164,9 @@ test "make dir" {
         "test-tmp",
         .{ .iterate = true },
     );
+    defer {
+        std.fs.cwd().deleteTree("test-tmp") catch unreachable;
+    }
 
     _ = try dir.createFile("x", .{});
     _ = try dir.createFile("y", .{});
