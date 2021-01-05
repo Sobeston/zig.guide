@@ -19,7 +19,7 @@ Knowing a language like C, C++, Rust, Go, Pascal or similar will be helpful for 
 
 # Installation
 
-**This guide assumes you're using a master build** of Zig as opposed to the latest major release, which means downloading a binary from the site or compiling from source; **the version of Zig in your package manager is likely outdated**. This guide does not support the 0.7 build of Zig.
+**This guide assumes you're using a master build** of Zig as opposed to the latest major release, which means downloading a binary from the site or compiling from source; **the version of Zig in your package manager is likely outdated**. This guide does not support the 0.7 or 0.7.1 build of Zig.
 
 1.  Download and extract a prebuilt master binary of zig from:
 ```
@@ -54,7 +54,7 @@ https://ziglang.org/download/
 
       Close your terminal and create a new one.
 
-3. Verify your install with `zig version`. The output should be `0.7.0+` followed by some hex digits.
+3. Verify your install with `zig version`. The output should start with `0.8.0-dev.`.
 
 4. (optional, third party) For completions and go-to-definition in your editor, install the Zig Language Server from:
 ```
