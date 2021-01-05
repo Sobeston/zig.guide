@@ -279,14 +279,14 @@ fn waitUntilAndPrint(
     // suspend self, to be woken up when time1 has passed
     waitForTime(time1);
     std.debug.print(
-        "[{}] it is now {} ms since start!\n",
+        "[{s}] it is now {} ms since start!\n",
         .{ name, (nanotime() - start) / std.time.ns_per_ms },
     );
 
     // suspend self, to be woken up when time2 has passed
     waitForTime(time2);
     std.debug.print(
-        "[{}] it is now {} ms since start!\n",
+        "[{s}] it is now {} ms since start!\n",
         .{ name, (nanotime() - start) / std.time.ns_per_ms },
     );
 }

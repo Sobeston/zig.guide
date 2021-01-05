@@ -338,13 +338,13 @@ Take a moment to appreciate that you now know from top to bottom how printing he
 test "hello world" {
     const out_file = std.io.getStdOut();
     try out_file.writer().print(
-        "Hello, {}!\n",
+        "Hello, {s}!\n",
         .{"World"},
     );
 }
 ```
 
-Let's create a type with custom formatting by giving it a `format` function. This function must be marked as `pub` so that std.fmt can access it (more on packages later).
+Let's create a type with custom formatting by giving it a `format` function. This function must be marked as `pub` so that std.fmt can access it (more on packages later). You may notice the usage of `{s}` instead of `{}` - this is the format specifier for strings (more on format specifiers later). This is used here as `{}` defaults to array printing over string printing.
 
 ```zig
 const Person = struct {
@@ -357,7 +357,7 @@ const Person = struct {
         options: std.fmt.FormatOptions,
         writer: anytype,
     ) !void {
-        try writer.print("{} ({}-", .{
+        try writer.print("{s} ({}-", .{
             self.name, self.birth_year,
         });
 
@@ -378,7 +378,7 @@ test "custom fmt" {
 
     const john_string = try std.fmt.allocPrint(
         test_allocator,
-        "{}",
+        "{s}",
         .{john},
     );
     defer test_allocator.free(john_string);
@@ -397,7 +397,7 @@ test "custom fmt" {
 
     const claude_string = try std.fmt.allocPrint(
         test_allocator,
-        "{}",
+        "{s}",
         .{claude},
     );
     defer test_allocator.free(claude_string);
