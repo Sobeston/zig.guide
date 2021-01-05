@@ -860,7 +860,7 @@ test "position" {
     var b: [3]u8 = undefined;
     expect(eql(
         u8,
-        try bufPrint(&b, "{0}{0}{1}", .{"a", "b"}),
+        try bufPrint(&b, "{0s}{0s}{1s}", .{"a", "b"}),
         "aab",
     ));
 }
@@ -873,19 +873,19 @@ test "fill, alignment, width" {
 
     expect(eql(
         u8,
-        try bufPrint(&b, "{: <5}", .{"hi!"}),
+        try bufPrint(&b, "{s: <5}", .{"hi!"}),
         "hi!  ",
     ));
 
     expect(eql(
         u8,
-        try bufPrint(&b, "{:_^5}", .{"hi!"}),
+        try bufPrint(&b, "{s:_^5}", .{"hi!"}),
         "_hi!_",
     ));
 
     expect(eql(
         u8,
-        try bufPrint(&b, "{:!>4}", .{"hi!"}),
+        try bufPrint(&b, "{s:!>4}", .{"hi!"}),
         "!hi!",
     ));
 }
