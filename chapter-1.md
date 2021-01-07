@@ -1,7 +1,7 @@
 ---
 title: "Chapter 1 - Basics"
 weight: 2
-date: 2020-10-06 16:12:00
+date: 2021-01-07 22:44:00
 description: "Chapter 1 - This will get you up to speed with almost all of the zig programming language. This part of the tutorial should be coverable in under an hour."
 ---
 
@@ -847,7 +847,7 @@ test "int-float conversion" {
 
 # Labelled Blocks
 
-Blocks in Zig are expressions and can be given labels, which are used to yield values. Here, we are using a label called blk. These can be used in anywhere expecting a value.
+Blocks in Zig are expressions and can be given labels, which are used to yield values. Here, we are using a label called blk. Blocks yield values, meaning that they can be used in place of a value. The value of an empty block `{}` is a value of the type `void`.
 
 ```zig
 test "labelled blocks" {
