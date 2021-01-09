@@ -344,6 +344,29 @@ test "hello world" {
 }
 ```
 
+We have used the `{s}` format specifier up until this point to print strings. This is as the default formatting for slices is printing the element values.
+
+```zig
+test "array printing" {
+    const string = try std.fmt.allocPrint(
+        test_allocator,
+        "{} + {} = {}",
+        .{
+            @as([]const u8, &[_]u8{ 1, 4 }),
+            @as([]const u8, &[_]u8{ 2, 5 }),
+            @as([]const u8, &[_]u8{ 3, 9 }),
+        },
+    );
+    defer test_allocator.free(string);
+
+    expect(eql(
+        u8,
+        string,
+        "{ 1, 4 } + { 2, 5 } = { 3, 9 }",
+    ));
+}
+```
+
 Let's create a type with custom formatting by giving it a `format` function. This function must be marked as `pub` so that std.fmt can access it (more on packages later). You may notice the usage of `{s}` instead of `{}` - this is the format specifier for strings (more on format specifiers later). This is used here as `{}` defaults to array printing over string printing.
 
 ```zig
