@@ -42,7 +42,7 @@ pub fn main() !void {
                 "<!--fail_test-->\n", // this test should fail TODO: actually check that these tests fail
             }) |skip_prefix| {
                 const offset = @ptrToInt(token.ptr) - @ptrToInt(text.ptr);
-                if (offset >= skip_prefix.len) {
+                if (offset >= skip_prefix.len + "```".len) {
                     if (std.mem.eql(
                         u8,
                         skip_prefix,
