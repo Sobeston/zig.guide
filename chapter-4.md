@@ -157,10 +157,12 @@ Create the file `main.c` with the following contents.
 
 void int_sort(int* array, size_t count) {
     for (int i = 0; i < count - 1; i++) {
-        for (int j = 0; i < count - i - 1; j++) {
-            int temp = array[j];
-            array[j] = array[j+1];
-            array[j+1] = temp;
+        for (int j = 0; j < count - i - 1; j++) {
+            if (array[j] > array[j+1]) {
+                int temp = array[j];
+                array[j] = array[j+1];
+                array[j+1] = temp;
+            }
         }
     }
 }
@@ -175,7 +177,6 @@ Currently the code produced may be unnecessarily verbose, though translate-c suc
 
 This chapter is incomplete. In the future it will contain things such as:
 - Packed structs, bit aligned pointers
-- Cimports
 - Calling C code from Zig and vice versa
 - Zig cc, Zig c++
 - Using `zig build` with a mixture of C and Zig code
