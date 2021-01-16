@@ -33,13 +33,6 @@ var x: u8 = undefined;
 const y: i16 = undefined;
 ```
 
-Values can be ignored by using `_` in place of a variable or const declaration.
-
-<!--no_test-->
-```zig
-_ = 10;
-```
-
 The float types `f16`, `f32`, `f64`, `f128` are also supplied.
 
 # Arrays
@@ -193,6 +186,13 @@ test "function recursion" {
 }
 ```
 When recursion happens, the compiler is no longer able to work out the maximum stack size. This may result in unsafe behaviour - a stack overflow. Details on how to achieve safe recursion will be covered in future.
+
+Values can be ignored by using `_` in place of a variable or const declaration. This does not work at the global scope (i.e. it only works inside functions and blocks), and is useful for ignoring the values returned from functions if you do not need them.
+
+<!--no_test-->
+```zig
+_ = 10;
+```
 
 # Defer
 
