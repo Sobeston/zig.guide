@@ -1,7 +1,7 @@
 ---
 title: "Chapter 0 - Getting Started"
 weight: 1
-date: 2020-11-08 19:12:45
+date: 2021-01-05 01:16:00
 description: "Ziglearn - A Guide / Tutorial for the zig programming language. Install and get started with ziglang here."
 ---
 

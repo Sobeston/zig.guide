@@ -1,7 +1,7 @@
 ---
 title: "Chapter 5 - Async"
 weight: 5
-date: 2020-12-26 22:00:00
+date: 2021-01-08 01:39:00
 description: "Chapter 5 - Learn about how the ziglang's async works"
 ---
 

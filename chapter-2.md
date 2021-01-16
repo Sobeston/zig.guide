@@ -1,7 +1,7 @@
 ---
 title: "Chapter 2 - Standard Patterns"
 weight: 3
-date: 2020-12-05 16:00:00
+date: 2021-01-09 19:52:00
 description: "Chapter 2 - This section of the tutorial will cover the zig programming language's standard library in detail."
 ---
 

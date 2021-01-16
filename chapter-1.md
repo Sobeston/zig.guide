@@ -1,7 +1,7 @@
 ---
 title: "Chapter 1 - Basics"
 weight: 2
-date: 2021-01-07 22:44:00
+date: 2021-01-16 15:55:00
 description: "Chapter 1 - This will get you up to speed with almost all of the zig programming language. This part of the tutorial should be coverable in under an hour."
 ---
 

@@ -1,7 +1,7 @@
 ---
 title: "Chapter 3 - Build system"
 weight: 4
-date: 2020-07-20 10:56:00
+date: 2021-01-12 20:05:00
 description: "Chapter 3 - Ziglang's build system in detail."
 ---
 
