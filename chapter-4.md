@@ -1,7 +1,7 @@
 ---
 title: "Chapter 4 - Working with C"
 weight: 4
-date: 2021-01-11 23:22:00
+date: 2021-01-18 23:28:00
 description: "Chapter 4 - Learn about how the zig programming language makes use of C code. This tutorial covers C data types, FFI, building with C, translate-c and more!"
 ---
 
@@ -173,11 +173,22 @@ In another file you could use `@import("int_sort.zig")` to make use of this func
 
 Currently the code produced may be unnecessarily verbose, though translate-c successfully translates most C code into Zig. You may wish to use translate-c to produce Zig code before editing it into more idiomatic code; a gradual transfer from C to Zig within a codebase is a supported use case.
 
+# cImport
+
+Zig's `@cImport` builtin is unique in that it takes in an expression, which can only take in `@cInclude`, `@cDefine`, and `@cUndef`. This works similarly to translate-c, translating C code to Zig under the hood. 
+
+`@cInclude` takes in a path string, can adds the path to the includes list.
+
+`@cDefine` and `@cUndef` define and undefine things for the import.
+
+These three functions work exactly as you'd expect them to work within C code.
+
+Similar to `@import` this returns a struct type with declarations. It is typically recommended to only use one instance of `@cImport` in an application to avoid symbol collisions; the types generated within one cImport will not be equivalent to those generated in another.
+
 # End of Chapter 4
 
 This chapter is incomplete. In the future it will contain things such as:
 - Packed structs, bit aligned pointers
-- Cimports
 - Calling C code from Zig and vice versa
 - Zig cc, Zig c++
 - Using `zig build` with a mixture of C and Zig code
