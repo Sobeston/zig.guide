@@ -519,7 +519,7 @@ test "random numbers" {
 
 # Threads
 
-While zig provides more advanced ways or writing concurrent and parallel code, `std.Thread` is available for making use of OS threads. Let's make use of an OS thread.
+While zig provides more advanced ways of writing concurrent and parallel code, `std.Thread` is available for making use of OS threads. Let's make use of an OS thread.
 
 ```zig
 fn ticker(step: u8) void {
