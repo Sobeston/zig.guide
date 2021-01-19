@@ -1,6 +1,6 @@
 ---
 title: "Chapter 4 - Working with C"
-weight: 4
+weight: 5
 date: 2021-01-19 12:10:00
 description: "Chapter 4 - Learn about how the zig programming language makes use of C code. This tutorial covers C data types, FFI, building with C, translate-c and more!"
 ---
