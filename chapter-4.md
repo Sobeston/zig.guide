@@ -204,7 +204,6 @@ Some examples in the wild:
 This chapter is incomplete. In the future it will contain things such as:
 - Packed structs, bit aligned pointers
 - Calling C code from Zig and vice versa
-- Zig cc, Zig c++
 - Using `zig build` with a mixture of C and Zig code
 
 Feedback and PRs are welcome.
