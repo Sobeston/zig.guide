@@ -1,7 +1,7 @@
 ---
 title: "Chapter 2 - Standard Patterns"
 weight: 3
-date: 2021-01-09 19:52:00
+date: 2021-01-20 11:06:00
 description: "Chapter 2 - This section of the tutorial will cover the zig programming language's standard library in detail."
 ---
 
@@ -506,14 +506,30 @@ Here we create a new prng using a 64 bit random seed. a, b, c, and are given ran
 
 ```zig
 test "random numbers" {
-    var seed: u64 = undefined;
-    try std.os.getrandom(std.mem.asBytes(&seed));
-    var rand = std.rand.DefaultPrng.init(seed);
+    var prng = std.rand.DefaultPrng.init(blk: {
+        var seed: u64 = undefined;
+        try std.os.getrandom(std.mem.asBytes(&seed));
+        break :blk seed;
+    });
+    const rand = &prng.random;
 
-    const a = rand.random.float(f32);
-    const b = rand.random.boolean();
-    const c = rand.random.int(u8);
-    const d = rand.random.intRangeAtMost(u8, 0, 255);
+    const a = rand.float(f32);
+    const b = rand.boolean();
+    const c = rand.int(u8);
+    const d = rand.intRangeAtMost(u8, 0, 255);
+}
+```
+
+Cryptographically secure random is also available.
+
+```zig
+test "crypto random numbers" {
+    const rand = std.crypto.random;
+
+    const a = rand.float(f32);
+    const b = rand.boolean();
+    const c = rand.int(u8);
+    const d = rand.intRangeAtMost(u8, 0, 255);
 }
 ```
 
