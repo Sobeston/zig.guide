@@ -137,7 +137,7 @@ pub fn main() !void {
 }
 ```
 
-In the above code if we change the value of `ticker` to be above 0, this is detectable illegal behaviour. If we run that code, we will an error like this in safe build modes. Similar to other illegal behaviours in Zig, having these happen in unsafe modes will result in undefined behaviour.
+In the above code if we change the value of `ticker` to be above 0, this is detectable illegal behaviour. If we run that code, we will have an error like this in safe build modes. Similar to other illegal behaviours in Zig, having these happen in unsafe modes will result in undefined behaviour.
 
 ```
 async function called in nosuspend scope suspended
