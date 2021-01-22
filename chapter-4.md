@@ -185,6 +185,8 @@ These three functions work exactly as you'd expect them to work within C code.
 
 Similar to `@import` this returns a struct type with declarations. It is typically recommended to only use one instance of `@cImport` in an application to avoid symbol collisions; the types generated within one cImport will not be equivalent to those generated in another.
 
+cImport is only available when linking libc.
+
 # Zig cc, Zig c++
 
 The Zig executable comes with Clang embedded inside it alongside libraries and headers required to cross compile for other operating systems and architectures. 
