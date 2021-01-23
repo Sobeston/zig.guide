@@ -863,9 +863,9 @@ test "scientific" {
 }
 ```
 
-`{s}` outputs zero terminated strings.
+`{s}` outputs strings.
 ```zig
-test "terminated fmt" {
+test "string fmt" {
     var b: [6]u8 = undefined;
     const hello: [*:0]const u8 = "hello!";
 
