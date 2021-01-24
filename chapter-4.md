@@ -2,7 +2,7 @@
 title: "Chapter 4 - Working with C"
 weight: 5
 date: 2021-01-19 12:10:00
-description: "Chapter 4 - Learn about how the zig programming language makes use of C code. This tutorial covers C data types, FFI, building with C, translate-c and more!"
+description: "Chapter 4 - Learn about how the Zig programming language makes use of C code. This tutorial covers C data types, FFI, building with C, translate-c and more!"
 ---
 
 Zig has been designed from the ground up with C interop as a first class feature. In this section we will go over how this works.
@@ -167,7 +167,7 @@ void int_sort(int* array, size_t count) {
     }
 }
 ```
-Run the command `zig translate-c main.c` to get the equivalent zig code output to your console (stdout). You may wish to pipe this into a file with `zig translate-c main.c > int_sort.zig` (warning for windows users: piping in powershell will produce a file with the incorrect encoding - use your editor to correct this).
+Run the command `zig translate-c main.c` to get the equivalent Zig code output to your console (stdout). You may wish to pipe this into a file with `zig translate-c main.c > int_sort.zig` (warning for windows users: piping in powershell will produce a file with the incorrect encoding - use your editor to correct this).
 
 In another file you could use `@import("int_sort.zig")` to make use of this function.
 

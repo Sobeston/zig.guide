@@ -2,7 +2,7 @@
 title: "Chapter 0 - Getting Started"
 weight: 1
 date: 2021-01-23 20:52:00
-description: "Ziglearn - A Guide / Tutorial for the zig programming language. Install and get started with ziglang here."
+description: "Ziglearn - A Guide / Tutorial for the Zig programming language. Install and get started with ziglang here."
 ---
 
 # Welcome
@@ -21,15 +21,15 @@ Knowing a language like C, C++, Rust, Go, Pascal or similar will be helpful for 
 
 **This guide assumes you're using a master build** of Zig as opposed to the latest major release, which means downloading a binary from the site or compiling from source; **the version of Zig in your package manager is likely outdated**. This guide does not support the 0.7 or 0.7.1 build of Zig.
 
-1.  Download and extract a prebuilt master binary of zig from:
+1.  Download and extract a prebuilt master binary of Zig from:
 ```
 https://ziglang.org/download/
 ```
 
-2. Add zig to your path
+2. Add Zig to your path
    - linux, macos, bsd
 
-      Add the location of your zig binary to your `PATH` environment variable. For an installation, add `export PATH=$PATH:~/zig` or similar to your `/etc/profile` (system-wide) or `$HOME/.profile`. If these changes do not apply immediately, run the line from your shell.
+      Add the location of your Zig binary to your `PATH` environment variable. For an installation, add `export PATH=$PATH:~/zig` or similar to your `/etc/profile` (system-wide) or `$HOME/.profile`. If these changes do not apply immediately, run the line from your shell.
    - windows
 
       a) System wide (admin powershell)

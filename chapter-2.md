@@ -2,18 +2,18 @@
 title: "Chapter 2 - Standard Patterns"
 weight: 3
 date: 2021-01-20 11:06:00
-description: "Chapter 2 - This section of the tutorial will cover the zig programming language's standard library in detail."
+description: "Chapter 2 - This section of the tutorial will cover the Zig programming language's standard library in detail."
 ---
 
 Automatically generated standard library documentation can be found [here](https://ziglang.org/documentation/master/std/). Installing [ZLS](https://github.com/zigtools/zls/) may also help you explore the standard library, which provides completions for it.
 
 # Allocators
 
-The zig standard library provides a pattern for allocating memory, which allows the programmer to choose exactly how memory allocations are done within the standard library - no allocations happen behind your back in the standard library.
+The Zig standard library provides a pattern for allocating memory, which allows the programmer to choose exactly how memory allocations are done within the standard library - no allocations happen behind your back in the standard library.
 
 The most basic allocator is `std.heap.page_allocator`. Whenever this allocator makes an allocation it will ask your OS for an entire page of memory, which may be multiple kilobytes of memory even if only a single byte is used. As asking the OS for memory requires a system call this is also extremely inefficient for speed.
 
-Here, we allocate 100 bytes as a `[]u8`. Notice how defer is used in conjunction with a free - this is a common pattern for memory management in zig.
+Here, we allocate 100 bytes as a `[]u8`. Notice how defer is used in conjunction with a free - this is a common pattern for memory management in Zig.
 
 ```zig
 const std = @import("std");
@@ -535,7 +535,7 @@ test "crypto random numbers" {
 
 # Threads
 
-While zig provides more advanced ways of writing concurrent and parallel code, `std.Thread` is available for making use of OS threads. Let's make use of an OS thread.
+While Zig provides more advanced ways of writing concurrent and parallel code, `std.Thread` is available for making use of OS threads. Let's make use of an OS thread.
 
 ```zig
 fn ticker(step: u8) void {
@@ -766,8 +766,8 @@ test "hex" {
     _ = try bufPrint(&b, "{x}", .{4294967294});
     expect(eql(u8, &b, "fffffffe"));
 
-    _ = try bufPrint(&b, "{x}", .{"zig!"});
-    expect(eql(u8, &b, "7a696721"));
+    _ = try bufPrint(&b, "{x}", .{"Zig!"});
+    expect(eql(u8, &b, "5a696721"));
 }
 ```
 

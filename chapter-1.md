@@ -2,7 +2,7 @@
 title: "Chapter 1 - Basics"
 weight: 2
 date: 2021-01-16 15:55:00
-description: "Chapter 1 - This will get you up to speed with almost all of the zig programming language. This part of the tutorial should be coverable in under an hour."
+description: "Chapter 1 - This will get you up to speed with almost all of the Zig programming language. This part of the tutorial should be coverable in under an hour."
 ---
 
 # Assignment
@@ -224,7 +224,7 @@ test "multi defer" {
 
 # Errors
 
-An error set is like an enum (details on zig's enums later), where each error in the set is a value. There are no exceptions in zig; errors are values. Let's create an error set.
+An error set is like an enum (details on Zig's enums later), where each error in the set is a value. There are no exceptions in Zig; errors are values. Let's create an error set.
 
 ```zig
 const FileOpenError = error{
@@ -258,7 +258,7 @@ test "error union" {
 }
 ```
 
-Functions often return error unions. Here's one using a catch with __payload capturing__ to take the value of the error. Side note: some languages use similar syntax for lambdas - this is not the case for zig.
+Functions often return error unions. Here's one using a catch with __payload capturing__ to take the value of the error. Side note: some languages use similar syntax for lambdas - this is not the case for Zig.
 
 ```zig
 fn failingFunction() error{Oops}!void {
@@ -510,7 +510,7 @@ Sometimes you may have a pointer to an unknown amount of elements. `[*]T` is the
 
 # Slices
 
-Slices can be thought of as a pair of `[*]T` (the pointer to the data) and a `usize` (the element count). Their syntax is given as `[]T`, with `T` being the child type. Slices are used heavily throughout Zig for when you need to operate on arbitrary amounts of data. Slices have the same attributes as pointers, meaning that there also exists const slices. For loops also operate over slices. String literals in zig coerce to `[]const u8`.
+Slices can be thought of as a pair of `[*]T` (the pointer to the data) and a `usize` (the element count). Their syntax is given as `[]T`, with `T` being the child type. Slices are used heavily throughout Zig for when you need to operate on arbitrary amounts of data. Slices have the same attributes as pointers, meaning that there also exists const slices. For loops also operate over slices. String literals in Zig coerce to `[]const u8`.
 
 Here, the syntax `x[n..m]` is used to create a slice from an array. This is called __slicing__, and creates a slice of the elements starting at `x[n]` and ending at `x[m - 1]`. This example uses a const slice as the values which the slice points to do not need to be modified.
 
@@ -982,7 +982,7 @@ test "while null capture" {
 
 Optional pointer and optional slice types do not take up any extra memory, compared to non-optional ones. This is because internally they use the 0 value of the pointer for `null`. 
 
-This is how null pointers in zig work - they must be unwrapped to a non-optional before dereferencing, which stops null pointer dereferences from happening accidentally.
+This is how null pointers in Zig work - they must be unwrapped to a non-optional before dereferencing, which stops null pointer dereferences from happening accidentally.
 
 # Comptime
 
@@ -1012,7 +1012,7 @@ test "comptime_int" {
 
 `comptime_float` is also available, which internally is an `f128`. These cannot be coerced to integers, even if they hold an integer value.
 
-Types in zig are values of the type `type`. These are available at compile time. We have previously encountered them by checking `@TypeOf` and comparing with other types, but we can do more.
+Types in Zig are values of the type `type`. These are available at compile time. We have previously encountered them by checking `@TypeOf` and comparing with other types, but we can do more.
 
 ```zig
 test "branching on types" {
@@ -1078,7 +1078,7 @@ test "@Type" {
 }
 ```
 
-Returning a struct type is how you make generic data structures in zig. The usage of `@This` is required here, which gets the type of the innermost struct, union, or enum. Here `std.mem.eql` is also used which compares two slices.
+Returning a struct type is how you make generic data structures in Zig. The usage of `@This` is required here, which gets the type of the innermost struct, union, or enum. Here `std.mem.eql` is also used which compares two slices.
 
 ```zig
 fn Vec(
