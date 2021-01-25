@@ -971,7 +971,6 @@ This chapter is incomplete. In the future it will contain things such as:
 - Mutexes
 - Atomics
 - Searching
-- Sorting
 - Logging
 
 Feedback and PRs are welcome.
