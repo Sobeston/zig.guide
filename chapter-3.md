@@ -229,9 +229,9 @@ Version Date
 ```
 
 
-Zig does not yet have an official package manager. Some unofficial experimental package managers however do exist, namely [Zkg](https://github.com/mattnite/zkg) and [zigmod](https://github.com/nektro/zigmod). The `table-helper` package is designed to support both of them.
+Zig does not yet have an official package manager. Some unofficial experimental package managers however do exist, namely [gyro](https://github.com/mattnite/gyro) and [zigmod](https://github.com/nektro/zigmod). The `table-helper` package is designed to support both of them.
 
-Some good places to find packages include: [zpm](https://zpm.random-projects.net/), [awesome-zig](https://github.com/nrdmn/awesome-zig/), and the [zig tag on GitHub](https://github.com/topics/zig).
+Some good places to find packages include: [astrolabe.pm](https://astrolabe.pm), [zpm](https://zpm.random-projects.net/), [awesome-zig](https://github.com/nrdmn/awesome-zig/), and the [zig tag on GitHub](https://github.com/topics/zig).
 
 # Build steps
 
