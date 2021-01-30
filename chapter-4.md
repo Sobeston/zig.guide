@@ -229,6 +229,8 @@ Some examples in the wild:
 
 - [Using zig cc and zig c++ in combination with cgo to cross compile hugo from aarch64-macos to x86_64-linux, with full static linking](https://twitter.com/croloris/status/1349861344330330114)
 
+- [Using zig build, zig cc, and zigmod to build snapraid](https://github.com/nektro/snapraid)
+
 # End of Chapter 4
 
 This chapter is incomplete. In the future it will contain things such as:
