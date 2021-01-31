@@ -1,7 +1,7 @@
 ---
 title: "Chapter 1 - Basics"
 weight: 2
-date: 2021-01-16 15:55:00
+date: 2021-01-31 23:00:00
 description: "Chapter 1 - This will get you up to speed with almost all of the Zig programming language. This part of the tutorial should be coverable in under an hour."
 ---
 
@@ -1165,6 +1165,54 @@ test "inline for" {
 ```
 
 Using these for performance reasons is inadvisable unless you've tested that explicitly unrolling is faster; the compiler tends to make better decisions here than you.
+
+# Opaque
+
+`opaque` types in Zig have an unknown (albeit non-zero) size and alignment. Because of this these data types cannot be stored directly. These are used to maintain type safety with pointers to types that we don't have information about.
+
+<!--fail_test-->
+```zig
+const Window = opaque {};
+const Button = opaque {};
+
+extern fn show_window(*Window) callconv(.C) void;
+
+test "opaque" {
+    var main_window: *Window = undefined;
+    show_window(main_window);
+
+    var ok_button: *Button = undefined;
+    show_window(ok_button);
+}
+```
+```
+./test-c1.zig:653:17: error: expected type '*Window', found '*Button'
+    show_window(ok_button);
+                ^
+./test-c1.zig:653:17: note: pointer type child 'Button' cannot cast into pointer type child 'Window'
+    show_window(ok_button);
+                ^
+```
+
+Opaque types may have declarations in their definitions (the same as structs, enums and unions).
+
+<!--no_test-->
+```zig
+const Window = opaque {
+    fn show(self: *Window) void {
+        show_window(self);
+    }
+};
+
+extern fn show_window(*Window) callconv(.C) void;
+
+test "opaque with declarations" {
+    var main_window: *Window = undefined;
+    main_window.show();
+}
+```
+
+The typical usecase of opaque is to maintain type safety when interoperating with C code that does not expose complete type information.
 
 # Anonymous Structs
 
