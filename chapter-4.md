@@ -1,7 +1,7 @@
 ---
 title: "Chapter 4 - Working with C"
 weight: 5
-date: 2021-01-29 23:44:00
+date: 2021-02-01 23:43:00
 description: "Chapter 4 - Learn about how the Zig programming language makes use of C code. This tutorial covers C data types, FFI, building with C, translate-c and more!"
 ---
 
@@ -214,6 +214,10 @@ These three functions work exactly as you'd expect them to work within C code.
 Similar to `@import` this returns a struct type with declarations. It is typically recommended to only use one instance of `@cImport` in an application to avoid symbol collisions; the types generated within one cImport will not be equivalent to those generated in another.
 
 cImport is only available when linking libc.
+
+# Linking libc
+
+Linking libc can be done via the command line via `-lc`, or via `build.zig` using `exe.linkLibC();`. The libc used is that of the compilation's target; Zig provides libc for many targets.
 
 # Zig cc, Zig c++
 
