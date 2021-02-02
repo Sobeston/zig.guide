@@ -1,7 +1,7 @@
 ---
 title: "Chapter 4 - Working with C"
 weight: 5
-date: 2021-02-01 23:43:00
+date: 2021-02-02 21:24:00
 description: "Chapter 4 - Learn about how the Zig programming language makes use of C code. This tutorial covers C data types, FFI, building with C, translate-c and more!"
 ---
 
@@ -238,7 +238,7 @@ Some examples in the wild:
 # End of Chapter 4
 
 This chapter is incomplete. In the future it will contain things such as:
-- Packed structs, bit aligned pointers
+- Bit aligned pointers
 - Calling C code from Zig and vice versa
 - Using `zig build` with a mixture of C and Zig code
 
