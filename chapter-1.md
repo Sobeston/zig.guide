@@ -1,7 +1,7 @@
 ---
 title: "Chapter 1 - Basics"
 weight: 2
-date: 2021-01-31 23:00:00
+date: 2021-02-03 19:50:00
 description: "Chapter 1 - This will get you up to speed with almost all of the Zig programming language. This part of the tutorial should be coverable in under an hour."
 ---
 
@@ -550,6 +550,8 @@ Types that may be sliced are: arrays, multi pointers and slices.
 
 # Enums
 
+Zig's enums allow you to define types which have a restricted set of named values.
+
 Let's declare an enum.
 ```zig
 const Direction = enum { north, south, east, west };
@@ -622,7 +624,7 @@ test "hmm" {
 
 # Structs
 
-Zig gives no guarantees about the in-memory order of fields in a struct, or its size. Like arrays, structs are also neatly constructed with `T{}` syntax. Here is an example of declaring and filling a struct.
+Structs are Zig's most common kind of composite data type, allowing you to define types that can store a fixed set of named fields. Zig gives no guarantees about the in-memory order of fields in a struct, or its size. Like arrays, structs are also neatly constructed with `T{}` syntax. Here is an example of declaring and filling a struct.
 ```zig
 const Vec3 = struct {
     x: f32, y: f32, z: f32
@@ -692,6 +694,8 @@ test "automatic dereference" {
 ```
 
 # Unions
+
+Zig's union's allow you to define types which store one value of many possible typed fields; only one field may be active at one time.
 
 Bare union types do not have a guaranteed memory layout. Because of this, bare unions cannot be used to reinterpret memory. Accessing a field in a union which is not active is detectable illegal behaviour.
 
