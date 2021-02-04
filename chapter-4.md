@@ -1,7 +1,7 @@
 ---
 title: "Chapter 4 - Working with C"
 weight: 5
-date: 2021-02-02 21:24:00
+date: 2021-02-04 21:41:00
 description: "Chapter 4 - Learn about how the Zig programming language makes use of C code. This tutorial covers C data types, FFI, building with C, translate-c and more!"
 ---
 
@@ -137,7 +137,7 @@ test "passing aligned data" {
 
 # Packed Structs
 
-By default all struct fields in Zig are naturally aligned, according to the target architecture. Sometimes you may want to have struct fields with a defined layout that do not conform to your C abi. `packed` structs allow you to have extremely precise control of your struct fields, allowing you to place your fields on a bit-by-bit basis.
+By default all struct fields in Zig are naturally aligned to that of `@alignOf(FieldType)` (the ABI size), but without a defined layout. Sometimes you may want to have struct fields with a defined layout that do not conform to your C ABI. `packed` structs allow you to have extremely precise control of your struct fields, allowing you to place your fields on a bit-by-bit basis.
 
 Inside packed structs, Zig's integers take their bit-width in space (i.e. a `u12` has an `@bitSizeOf` of 12, meaning it will take up 12 bits in the packed struct). Bools also take up 1 bit, meaning you can implement bit flags easily.
 
