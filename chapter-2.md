@@ -1,7 +1,7 @@
 ---
 title: "Chapter 2 - Standard Patterns"
 weight: 3
-date: 2021-01-20 11:06:00
+date: 2021-02-05 23:22:00
 description: "Chapter 2 - This section of the tutorial will cover the Zig programming language's standard library in detail."
 ---
 
@@ -533,6 +533,18 @@ test "crypto random numbers" {
 }
 ```
 
+# Crypto
+
+`std.crypto` includes many cryptographic utilities, including:
+-  AES (Aes128, Aes256)
+-  Diffie-Hellman key exchange (x25519)
+-  Elliptic-curve arithmetic (curve25519, edwards25519, ristretto255)
+-  Crypto secure hashing (blake2, Blake3, Gimli, Md5, sha1, sha2, sha3)
+-  MAC functions (Ghash, Poly1305)
+-  Stream ciphers (ChaCha20IETF, ChaCha20With64BitNonce, XChaCha20IETF, Salsa20, XSalsa20)
+
+This list is inexhaustive.
+
 # Threads
 
 While Zig provides more advanced ways of writing concurrent and parallel code, `std.Thread` is available for making use of OS threads. Let's make use of an OS thread.
@@ -966,7 +978,6 @@ This chapter is incomplete. In the future it will contain things such as:
 
 - Arbitrary Precision Maths
 - Linked Lists
-- Crypto
 - Queues
 - Mutexes
 - Atomics
