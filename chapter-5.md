@@ -181,7 +181,7 @@ test "@frame 1" {
 }
 ```
 
-Or, more interestingly, we can use it to tell other other functions to resume us. Here we're introducing **suspend blocks**. Upon entering a suspend block, the async function is already considered suspended (i.e. it can be resumed). This means that we can have our function resumed by something other than the last resumer.
+Or, more interestingly, we can use it to tell other functions to resume us. Here we're introducing **suspend blocks**. Upon entering a suspend block, the async function is already considered suspended (i.e. it can be resumed). This means that we can have our function resumed by something other than the last resumer.
 
 ```zig
 const std = @import("std");
