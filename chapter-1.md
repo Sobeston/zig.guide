@@ -1,7 +1,7 @@
 ---
 title: "Chapter 1 - Basics"
 weight: 2
-date: 2021-02-03 19:50:00
+date: 2021-02-08 22:49:00
 description: "Chapter 1 - This will get you up to speed with almost all of the Zig programming language. This part of the tutorial should be coverable in under an hour."
 ---
 
@@ -950,9 +950,9 @@ test "orelse unreachable" {
 }
 ```
 
-Payload capturing works in many places for optionals.
+Payload capturing works in many places for optionals, meaning that in the event that it is non-null we can "capture" its non-null value.
 
-Here we use an `if` optional payload capture; a and b are equivalent here.
+Here we use an `if` optional payload capture; a and b are equivalent here. `if (b) |value|` captures the value of `b` (in the cases where `b` is not null), and copies it inside `value`.
 
 ```zig
 test "if optional payload capture" {
