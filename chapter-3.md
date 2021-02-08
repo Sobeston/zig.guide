@@ -131,6 +131,8 @@ pub fn main() anyerror!void {
 
 Upon using the `zig build` command, the executable will appear in the install path. Here we have not specified an install path, so the executable will be saved in `./zig-cache/bin`.
 
+To customize the build path use the `prefix` option : `--prefix /path/to`. This will emit the executable under `/path/to/bin/init-exe`.
+
 # Builder
 
 Zig's `std.build.Builder` type contains the information used by the build runner. This includes information such as:
@@ -156,7 +158,47 @@ pub fn build(b: *Builder) void {
     exe.install();
 }
 ```
+## Compiling multiple source files.
 
+It is sufficient to specify ONLY the root of the compilation unit in `build.zig`. In the case of our
+executable, as in the example above, `src/main.zig` is the root of our compilation unit. All the files
+included in `main.zig` will be compiled.
+ 
+```
+➜ tree
+.
+├── bin
+│   └── ziglearn
+├── build.zig
+└── src
+    ├── main.zig
+    └── run.zig
+
+2 directories, 4 files
+```
+```
+cat src/main.zig
+```
+<!--no_test-->
+```zig
+const std = @import("std");
+const run = @import("run.zig");
+
+pub fn main() anyerror!void {
+    std.log.info("{}: All your codebase are belong to us.", .{run.doubleOrNothing(2345)});
+}
+```
+
+```
+cat src/run.zig
+```
+<!--no_test-->
+```zig
+pub fn doubleOrNothing(x: u32) u32 {
+  if(x > 123) return x * 2;
+  return 0;
+}
+```
 # Packages
 
 The Zig build system has the concept of packages, which are other source files written in Zig. Let's make use of a package.
