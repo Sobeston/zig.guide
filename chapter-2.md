@@ -543,7 +543,7 @@ test "crypto random numbers" {
 -  MAC functions (Ghash, Poly1305)
 -  Stream ciphers (ChaCha20IETF, ChaCha20With64BitNonce, XChaCha20IETF, Salsa20, XSalsa20)
 
-This list is inexhaustive.
+This list is inexhaustive. For more in-depth information, try [A tour of std.crypto in Zig 0.7.0 - Frank Denis](https://www.youtube.com/watch?v=9t6Y7KoCvyk).
 
 # Threads
 
