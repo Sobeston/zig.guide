@@ -1340,7 +1340,7 @@ test "sentinel terminated slicing" {
 
 # Vectors
 
-Zig provides vector types for SIMD. These are not to be conflated with vectors in a mathematical sense, or vectors like C++'s std::vector (for this, see "ArrayList" in chapter 2). Vectors may be created using the `@Type` built-in we used earlier, and `std.meta.Vector` provides a shorthand for this.
+Zig provides vector types for SIMD. These are not to be conflated with vectors in a mathematical sense, or vectors like C++'s std::vector (for this, see "Arraylist" in chapter 2). Vectors may be created using the `@Type` built-in we used earlier, and `std.meta.Vector` provides a shorthand for this.
 
 Vectors can only have child types of booleans, integers, floats and pointers.
 
