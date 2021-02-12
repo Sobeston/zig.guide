@@ -1,7 +1,7 @@
 ---
 title: "Chapter 3 - Build system"
 weight: 4
-date: 2021-01-12 20:05:00
+date: 2021-02-12 12:49:00
 description: "Chapter 3 - Ziglang's build system in detail."
 ---
 
@@ -253,6 +253,55 @@ fn myTask(self: *std.build.Step) !void {
 ```
 
 We called `exe.install()` earlier - this adds a build step which tells the builder to build the executable.
+
+# Generating Documentation
+
+The Zig compiler comes with automatic documentation generation. This can be envoked by adding `-femit-docs` to your `Zig build-{exe, lib, obj}` or `Zig run` command. This documentation is saved into `./docs`, as a small static website.
+
+Zig's documentation generation makes use of *doc comments* which are similar to comments, using `///` instead of `//`, and preceding globals.
+
+Here we will save this as `x.zig` and build documentation for it with `zig build-lib -femit-docs x.zig -target native-windows`. There are some things to take away here:
+-  Only things that are public with a doc comment will appear
+-  Blank doc comments may be used
+-  Doc comments can make use of subset of markdown
+-  Things will only appear inside generated documentation if the compiler analyses them; you may need to force analysis to happen to get things to appear.
+
+<!--no_test-->
+```zig
+const std = @import("std");
+const w = std.os.windows;
+
+///**Opens a process**, giving you a handle to it. 
+///[MSDN](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-openprocess)
+pub extern "kernel32" fn OpenProcess(
+    ///[The desired process access rights](https://docs.microsoft.com/en-us/windows/win32/procthread/process-security-and-access-rights)
+    dwDesiredAccess: w.DWORD,
+    ///
+    bInheritHandle: w.BOOL,
+    dwProcessId: w.DWORD,
+) callconv(w.WINAPI) ?w.HANDLE;
+
+///spreadsheet position
+pub const Pos = struct{
+    ///row
+    x: u32,
+    ///column
+    y: u32,
+};
+
+pub const message = "hello!";
+
+//used to force analysis, as these things aren't otherwise referenced.
+comptime {
+    _ = OpenProcess;
+    _ = Pos;
+    _ = message;
+}
+```
+
+When using a `build.zig` this may be invoked by setting the `emit_docs` field to true on a `LibExeObjStep`.
+
+This generation is experimental, and often fails with complex examples. This is used by the [standard library documentation](https://ziglang.org/documentation/master/std/).
 
 # End of Chapter 3
 
