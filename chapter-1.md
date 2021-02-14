@@ -1,7 +1,7 @@
 ---
 title: "Chapter 1 - Basics"
 weight: 2
-date: 2021-02-08 22:49:00
+date: 2021-02-14 23:49:00
 description: "Chapter 1 - This will get you up to speed with almost all of the Zig programming language. This part of the tutorial should be coverable in under an hour."
 ---
 
@@ -1153,6 +1153,120 @@ test "**" {
         &memory,
         &[_]u8{ 0xCC, 0xAA, 0xCC, 0xAA, 0xCC, 0xAA }
     ));
+}
+```
+
+# Payload Captures
+
+Payload captures use the syntax `|value|` and appear in many places. These are used to "capture" the value from something.
+
+With if statements and optionals.
+```zig
+test "optional-if" {
+    var maybe_num: ?usize = 10;
+    if (maybe_num) |n| {
+        expect(@TypeOf(n) == usize);
+        expect(n == 10);
+    } else {
+        unreachable;
+    }
+}
+```
+
+With if statements and error unions. The else with the error capture is required here.
+```zig
+test "error union if" {
+    var ent_num: error{UnknownEntity}!u32 = 5;
+    if (ent_num) |entity| {
+        expect(@TypeOf(entity) == u32);
+        expect(entity == 5);
+    } else |err| {
+        unreachable;
+    }
+}
+```
+
+With while loops and optionals. This may have an else block.
+```zig
+test "while optional" {
+    var i: ?u32 = 10;
+    while (i) |num| : (i.? -= 1) {
+        expect(@TypeOf(num) == u32);
+        if (num == 1) {
+            i = null;
+            break;
+        }
+    }
+    expect(i == null);
+}
+```
+
+With while loops and error unions. The else with the error capture is required here.
+
+```zig
+var numbers_left2: u32 = undefined;
+
+fn eventuallyErrorSequence() !u32 {
+    return if (numbers_left2 == 0) error.ReachedZero else blk: {
+        numbers_left2 -= 1;
+        break :blk numbers_left2;
+    };
+}
+
+test "while error union capture" {
+    var sum: u32 = 0;
+    numbers_left2 = 3;
+    while (eventuallyErrorSequence()) |value| {
+        sum += value;
+    } else |err| {
+        expect(err == error.ReachedZero);
+    }
+}
+```
+
+For loops.
+```zig
+test "for capture" {
+    const x = [_]i8{1, 5, 120, -5};
+    for (x) |v| expect(@TypeOf(v) == i8);
+}
+```
+
+Switch cases on tagged unions.
+```zig
+const Info = union(enum) {
+    a: u32,
+    b: []const u8,
+    c,
+    d: u32,
+};
+
+test "switch capture" {
+    var b = Info{ .a = 10 };
+    const x = switch (b) {
+        .b => |str| blk: {
+            expect(@TypeOf(str) == []const u8);
+            break :blk 1;
+        },
+        .c => 2,
+        //if these are of the same type, they 
+        //may be inside the same capture group
+        .a, .d => |num| blk: {
+            expect(@TypeOf(num) == u32);
+            break :blk num * 2;
+        },
+    };
+    expect(x == 20);
+}
+```
+
+So far, we have only shown payload captures with copy semantics (i.e. the captured value is a copy of the original value). We can also modify captured values by taking them as pointers, using the `|*value|` syntax. This is called a *pointer capture*.
+
+```zig
+test "for with pointer capture" {
+    var data = [_]u8{1, 2, 3};
+    for (data) |*byte| byte.* += 1;
+    expect(eql(u8, &data, &[_]u8{2, 3, 4}));
 }
 ```
 
