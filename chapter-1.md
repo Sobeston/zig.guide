@@ -7,33 +7,30 @@ description: "Chapter 1 - This will get you up to speed with almost all of the Z
 
 # Assignment
 
-Zig provides bit-sized integers in the format `iN` (signed), and `uN` (unsigned). Here, `N` can be anywhere in the range 0-65535 (inclusive). Examples: `u8`, `u1`, `i32`, `u64`, `i40`.
+Value assignment has the following syntax: `(const|var) identifier[: type] = value`.
 
-Variables and constants can be assigned using the syntax `var/const identifier: type = value`. Values which are `const` cannot be changed, and are preferable over `var` where possible. Variables and constants are written as snake_case.
+* `const` indicates that `identifier` is a **constant** that stores an immutable value.
+* `var` indicates that `identifier` is a **variable** that stores a mutable value.
+* `: type` is a type annotation for `identifier`, and may be omitted if the data type of `value` can be inferred.
 
-<!--no_test-->
-```zig
-var some_variable: i32 = 5;
-const some_constant: u64 = 5000;
-```
-
-The type may be left out in cases where you want the type to be inferred by the value. Here we will use the `@as` built-in function which allows us to perform an explicit coercion to a type.
+Where possible, `const` values are preferred over `var` values.
 
 <!--no_test-->
 ```zig
-var some_variable = @as(i32, 5);
-const some_constant = @as(u64, 5000);
+const constant: i32 = 5;
+var variable: u32 = 5000;
+
+const inferred_constant = @as(i32, 5); // @as performs an explicit type coercion
+var inferred_variable = 5000;
 ```
 
-Variables and constants cannot be declared without a value. The value `undefined` may be used where no known value may be given, which is special in that it coerces to any type.
+Constants and variables *must* have a value. If no known value can be given, the `undefined` value, which coerces to any type, may be used as long as a type annotation is provided.
 
 <!--no_test-->
 ```zig
-var x: u8 = undefined;
-const y: i16 = undefined;
+const a: i32 = undefined;
+var b: u32 = undefined;
 ```
-
-The float types `f16`, `f32`, `f64`, `f128` are also supplied.
 
 # Arrays
 
