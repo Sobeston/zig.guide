@@ -1,7 +1,7 @@
 ---
 title: "Chapter 2 - Standard Patterns"
 weight: 3
-date: 2021-02-13 18:04:00
+date: 2021-02-15 00:05:00
 description: "Chapter 2 - This section of the tutorial will cover the Zig programming language's standard library in detail."
 ---
 
@@ -303,13 +303,13 @@ test "custom writer" {
 
 `std.fmt` provides ways to format data to and from strings. 
 
-A basic example of creating a formatted string. The format string must be compile time known.
+A basic example of creating a formatted string. The format string must be compile time known. The `d` here denotes that we want a decimal number.
 
 ```zig
 test "fmt" {
     const string = try std.fmt.allocPrint(
         test_allocator,
-        "{} + {} = {}",
+        "{d} + {d} = {d}",
         .{ 9, 10, 19 },
     );
     defer test_allocator.free(string);
@@ -344,13 +344,13 @@ test "hello world" {
 }
 ```
 
-We have used the `{s}` format specifier up until this point to print strings. This is as the default formatting for slices is printing the element values.
+We have used the `{s}` format specifier up until this point to print strings. Here we will use `{any}`, which gives us the default formatting.
 
 ```zig
 test "array printing" {
     const string = try std.fmt.allocPrint(
         test_allocator,
-        "{} + {} = {}",
+        "{any} + {any} = {any}",
         .{
             @as([]const u8, &[_]u8{ 1, 4 }),
             @as([]const u8, &[_]u8{ 2, 5 }),
@@ -906,6 +906,8 @@ test "string fmt" {
     ));
 }
 ```
+
+This list is non-exhaustive.
 
 # Advanced Formatting
 
