@@ -34,18 +34,33 @@ var b: u32 = undefined;
 
 # Arrays
 
-Arrays use the syntax `[N]T`, where `N` (a natural number) is the number of elements, and `T` is the type of the elements, the so-called "child type" of the array. Examples: `[100]u8`, `[3]f32`, `[4]u32`, `[2]u40`.
+Arrays are denoted by `[N]T`, where `N` is the number of elements in the array and `T` is the type of those elements (i.e., the array's child type).
 
-A notable feature about Zig is that all values are constructed as literals, or are constructed using `T{}` syntax. Here's an example of creating an array.
+For array literals, `N` may be replaced by `_` to infer the size of the array.
+
 <!--no_test-->
 ```zig
-const a = [3]u8{ 1, 2, 3 };
+const a = [5]u8{ 'h', 'e', 'l', 'l', 'o' };
+const b = [_]u8{ 'w', 'o', 'r', 'l', 'd' };
 ```
 
-The `N` in the case of array literals may be swapped out by `_` for when inferred length is desirable. 
+To get the size of an array, simply access the array's `len` field.
+
 <!--no_test-->
 ```zig
-const a = [_]u8{ 1, 2, 3 };
+const array = [_]u8{ 'h', 'e', 'l', 'l', 'o' };
+const length = array.len; // 5
+```
+
+Zig also provides some useful array-specific operators:
+
+* `a ++ b` concatenates arrays `a` and `b` (if `a` and `b` are compile-time known).
+* `a ** f` multiplies array `a` by the factor `f` (if `a` is compile-time known).
+
+<!--no_test-->
+```zig
+const a = [_]u8{ 1, 2 } ++ [_]u8{ 3, 4 }; // { 1, 2, 3, 4 }
+const b = [_]u8{0} ** 4;                  // { 0, 0, 0, 0 }
 ```
 
 # If
