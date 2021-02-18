@@ -17,8 +17,8 @@ Where possible, `const` values are preferred over `var` values.
 
 <!--no_test-->
 ```zig
-const constant: i32 = 5; //a signed 32-bit constant
-var variable: u32 = 5000; //an unsigned 32-bit variable
+const constant: i32 = 5;  // signed 32-bit constant
+var variable: u32 = 5000; // unsigned 32-bit variable
 
 const inferred_constant = @as(i32, 5); // @as performs an explicit type coercion
 var inferred_variable = 5000;
