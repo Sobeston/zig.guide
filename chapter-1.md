@@ -13,8 +13,6 @@ Value assignment has the following syntax: `(const|var) identifier[: type] = val
 * `var` indicates that `identifier` is a **variable** that stores a mutable value.
 * `: type` is a type annotation for `identifier`, and may be omitted if the data type of `value` can be inferred.
 
-Where possible, `const` values are preferred over `var` values.
-
 <!--no_test-->
 ```zig
 const constant: i32 = 5;  // signed 32-bit constant
@@ -31,6 +29,8 @@ Constants and variables *must* have a value. If no known value can be given, the
 const a: i32 = undefined;
 var b: u32 = undefined;
 ```
+
+Where possible, `const` values are preferred over `var` values.
 
 # Arrays
 
