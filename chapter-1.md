@@ -1,7 +1,7 @@
 ---
 title: "Chapter 1 - Basics"
 weight: 2
-date: 2021-02-14 23:49:00
+date: 2021-02-22 18:27:00
 description: "Chapter 1 - This will get you up to speed with almost all of the Zig programming language. This part of the tutorial should be coverable in under an hour."
 ---
 
@@ -1369,6 +1369,8 @@ fn dump(args: anytype) void {
 <!-- TODO: mention tuple slicing when it's implemented -->
 
 Anonymous structs without field names may be created, and are referred to as __tuples__. These have many of the properties that arrays do; tuples can be iterated over, indexed, can be used with the `++` and `**` operators, and have a len field. Internally, these have numbered field names starting at `"0"`, which may be accessed with the special syntax `@"0"` which acts as an escape for the syntax - things inside `@""` are always recognised as identifiers.
+
+An `inline` loop must be used to iterate over the tuple here, as the type of each tuple field may differ.
 
 ```zig
 test "tuple" {
