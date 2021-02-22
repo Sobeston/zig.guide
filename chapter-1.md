@@ -52,17 +52,6 @@ const array = [_]u8{ 'h', 'e', 'l', 'l', 'o' };
 const length = array.len; // 5
 ```
 
-Zig also provides some useful array-specific operators:
-
-* `a ++ b` concatenates arrays `a` and `b` (if `a` and `b` are compile-time known).
-* `a ** f` multiplies array `a` by the factor `f` (if `a` is compile-time known).
-
-<!--no_test-->
-```zig
-const a = [_]u8{ 1, 2 } ++ [_]u8{ 3, 4 }; // { 1, 2, 3, 4 }
-const b = [_]u8{0} ** 4;                  // { 0, 0, 0, 0 }
-```
-
 # If
 
 Zig's basic if statement is simple in that it only accepts a `bool` value (of values `true` or `false`). There is no concept of truthy or falsy values.
