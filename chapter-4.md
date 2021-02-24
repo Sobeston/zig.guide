@@ -1,26 +1,25 @@
 ---
 title: "Chapter 4 - Working with C"
 weight: 5
-date: 2021-02-04 21:41:00
+date: 2021-02-24 17:17:00
 description: "Chapter 4 - Learn about how the Zig programming language makes use of C code. This tutorial covers C data types, FFI, building with C, translate-c and more!"
 ---
 
 Zig has been designed from the ground up with C interop as a first class feature. In this section we will go over how this works.
 
-# The C ABI
+# ABI
 
-The C ABI *(application binary interface)* is a set of standards, pertaining to:
+An ABI *(application binary interface)* is a standard, pertaining to:
 
-- The sizes of types
-- The memory layout of structs
-- How types are aligned (details on alignment later)
-- How function calls work, i.e. calling conventions
+- The in-memory layout of types (i.e. a type's size, alignment, offsets, and the layouts of its fields)
+- The in-linker naming of symbols (e.g. name mangling)
+- The calling conventions of functions (i.e. how a function call works at a binary level)
 
-The C ABI that you're using is dependant on what CPU architecture you're using, and the standard you're using (e.g. GNU, MSVC, etc).
+By defining these rules and not breaking them an ABI is said to be stable and this can be used to, for example, reliably link together multiple libraries, executables, or objects which were compiled separately (potentially on different machines, or using different compilers). This allows for FFI *(foreign function interface)* to take place, where we can share code between programming languages.
 
-The point in an ABI is so that machine code can interoperate with other machine code, independent of what compilers or programming languages are used to build each part of code.
+Zig natively supports C ABIs for `extern` things; which C ABI is used is dependant on the target which you are compiling for (e.g. CPU architecture, operating system). This allows for near-seamless interoperation with code that was not written in Zig; the usage of C ABIs is standard amongst programming languages.
 
-Zig internally does not make use of an ABI, meaning code should explicitly conform to the C ABI where that behaviour is desired.
+Zig internally does not make use of an ABI, meaning code should explicitly conform to a C ABI where reproducible and defined binary-level behaviour is needed.
 
 # C Primitive Types
 
