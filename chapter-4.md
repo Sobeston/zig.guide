@@ -162,6 +162,37 @@ test "packed struct size" {
 
 Currently Zig's packed structs have some long withstanding compiler bugs, and do not currently work for many use cases.
 
+# Bit Aligned Pointers
+
+Similar to aligned pointers, bit aligned pointers have extra information in their type which informs how to access the data. These are necessary when the data is not byte-aligned. Bit alignment information is often needed to address fields inside of packed structs.
+
+```zig
+test "bit aligned pointers" {
+    var x = MovementState{
+        .running = false,
+        .crouching = false,
+        .jumping = false,
+        .in_air = false,
+    };
+
+    const running = &x.running;
+    running.* = true;
+
+    const crouching = &x.crouching; 
+    crouching.* = true;
+
+    expect(@TypeOf(running) == *align(1:0:1) bool);
+    expect(@TypeOf(crouching) == *align(1:1:1) bool);
+
+    expect(@import("std").meta.eql(x, .{
+        .running = true,
+        .crouching = true,
+        .jumping = false,
+        .in_air = false,
+    }));
+}
+```
+
 # C Pointers
 
 Up until now we have used the following kinds of pointers:
