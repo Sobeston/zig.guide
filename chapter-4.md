@@ -268,7 +268,6 @@ Some examples in the wild:
 # End of Chapter 4
 
 This chapter is incomplete. In the future it will contain things such as:
-- Bit aligned pointers
 - Calling C code from Zig and vice versa
 - Using `zig build` with a mixture of C and Zig code
 
