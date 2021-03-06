@@ -325,8 +325,6 @@ test "inferred error set" {
 
 Error sets can be merged. 
 
-<!-- TODO: note on how left-hand doc comments on errors override right-hand ones -->
-
 ```zig
 const A = error{ NotDir, PathNotFound };
 const B = error{ OutOfMemory, PathNotFound };
