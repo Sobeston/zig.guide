@@ -503,9 +503,11 @@ test "usize" {
 }
 ```
 
-# Multi Pointers
+# Many-Item Pointers
 
 Sometimes you may have a pointer to an unknown amount of elements. `[*]T` is the solution for this, which works like `*T` but also supports indexing syntax, pointer arithmetic, and slicing. Unlike `*T`, it cannot point to a type which does not have a known size. `*T` coerces to `[*]T`.
+
+These many pointers may point to any amount of elements, including 0 and 1.
 
 # Slices
 
@@ -545,7 +547,7 @@ test "slices 3" {
 }
 ```
 
-Types that may be sliced are: arrays, multi pointers and slices.
+Types that may be sliced are: arrays, many pointers and slices.
 
 # Enums
 
@@ -1395,7 +1397,7 @@ test "tuple" {
 
 # Sentinel Termination
 
-Arrays, slices and multi pointers may be terminated by a value of their child type. This is known as sentinel termination. These follow the syntax `[N:t]T`, `[:t]T`, and `[*:t]T`, where `t` is a value of the child type `T`.
+Arrays, slices and many pointers may be terminated by a value of their child type. This is known as sentinel termination. These follow the syntax `[N:t]T`, `[:t]T`, and `[*:t]T`, where `t` is a value of the child type `T`.
 
 An example of a sentinel terminated array. The built-in `@bitCast` is used to perform an unsafe bitwise type conversion. This shows us that the last element of the array is followed by a 0 byte.
 
@@ -1407,7 +1409,7 @@ test "sentinel termination" {
 }
 ```
 
-The types of string literals is `*const [N:0]u8`, where N is the length of the string. This allows string literals to coerce to sentinel terminated slices, and sentinel terminated multi pointers. Note: string literals are UTF-8 encoded.
+The types of string literals is `*const [N:0]u8`, where N is the length of the string. This allows string literals to coerce to sentinel terminated slices, and sentinel terminated many pointers. Note: string literals are UTF-8 encoded.
 
 ```zig
 test "string literal" {
