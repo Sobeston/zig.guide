@@ -1068,7 +1068,7 @@ We can use the `@Type` function to create a type from a `@typeInfo`. `@Type` is 
 Here anonymous struct syntax is used with `.{}`, because the `T` in `T{}` can be inferred. Anonymous structs will be covered in detail later. In this example we will get a compile error if the `Int` tag isn't set.
 
 ```zig
-fn getBiggerInt(comptime T: type) type {
+fn GetBiggerInt(comptime T: type) type {
     return @Type(.{
         .Int = .{
             .bits = @typeInfo(T).Int.bits + 1,
@@ -1078,8 +1078,8 @@ fn getBiggerInt(comptime T: type) type {
 }
 
 test "@Type" {
-    expect(getBiggerInt(u8) == u9);
-    expect(getBiggerInt(i31) == i32);
+    expect(GetBiggerInt(u8) == u9);
+    expect(GetBiggerInt(i31) == i32);
 }
 ```
 
