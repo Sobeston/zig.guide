@@ -560,7 +560,7 @@ fn ticker(step: u8) void {
 var tick: isize = 0;
 
 test "threading" {
-    var thread = try std.Thread.spawn(@as(u8, 1), ticker);
+    var thread = try std.Thread.spawn(ticker, @as(u8, 1));
     expect(tick == 0);
     std.time.sleep(3 * std.time.ns_per_s / 2);
     expect(tick == 1);
