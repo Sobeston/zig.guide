@@ -60,6 +60,7 @@ https://ziglang.org/download/
 ```
 https://github.com/zigtools/zls/
 ```
+5. (optional) Join a [Zig community](https://github.com/ziglang/zig/wiki/Community).
 
 # Hello World
 
