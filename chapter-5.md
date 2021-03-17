@@ -22,7 +22,7 @@ The style of Zig's async may be described as suspendible stackless coroutines. Z
 
 # Suspend / Resume
 
-In the previous section we talked of how async functions can give control back to the caller, and how the async function can later take control back. This functionality is provided by the keywords `suspend`, and `resume`. When a function suspends, control flow returns to wherever it was last resumed; when a function is called via an `async` invocation, this is an implicit resume.
+In the previous section we talked of how async functions can give control back to the caller, and how the async function can later take control back. This functionality is provided by the keywords [`suspend`, and `resume`](https://ziglang.org/documentation/master/#Suspend-and-Resume). When a function suspends, control flow returns to wherever it was last resumed; when a function is called via an `async` invocation, this is an implicit resume.
 
 In these examples, I have commented the order of execution. There are a few things to take in here:
 *  The `async` keyword is used to invoke functions in an async context.
@@ -164,7 +164,7 @@ test "@Frame" {
 }
 ```
 
-`@frame()` returns a pointer to the frame of the current function. Similar to `suspend` points, if this call is found in a function then it is inferred as being async. All pointers to frames coerce to the special type `anyframe`, which you can use `resume` upon.
+[`@frame()`](https://ziglang.org/documentation/master/#Frame) returns a pointer to the frame of the current function. Similar to `suspend` points, if this call is found in a function then it is inferred as being async. All pointers to frames coerce to the special type `anyframe`, which you can use `resume` upon.
 
 This allows us to, for example, write a function that resumes itself.
 ```zig
@@ -336,6 +336,6 @@ pub fn main() !void {
 
 # End of Chapter 5
 
-This chapter is incomplete and in future should contain usage of `std.event.Loop`, and evented IO.
+This chapter is incomplete and in future should contain usage of [`std.event.Loop`](https://ziglang.org/documentation/master/std/#std;event.Loop), and evented IO.
 
 Feedback and PRs are welcome.

@@ -133,7 +133,7 @@ Upon using the `zig build` command, the executable will appear in the install pa
 
 # Builder
 
-Zig's `std.build.Builder` type contains the information used by the build runner. This includes information such as:
+Zig's [`std.build.Builder`](https://ziglang.org/documentation/master/std/#std;build.Builder) type contains the information used by the build runner. This includes information such as:
 
 - the build target
 - the release mode
@@ -194,7 +194,7 @@ To your newly made `build.zig`, add the following lines.
     });
 ```
 
-Now when run via `zig build`, `@import` inside your `main.zig` will work with the string "table-helper". This means that main has the table-helper package. Packages (type `std.build.Pkg`) also have a field for dependencies of type `?[]const Pkg`, which is defaulted to null. This allows you to have packages which rely on other packages. 
+Now when run via `zig build`, [`@import`](https://ziglang.org/documentation/master/#import) inside your `main.zig` will work with the string "table-helper". This means that main has the table-helper package. Packages (type [`std.build.Pkg`](https://ziglang.org/documentation/master/std/#std;build.Pkg)) also have a field for dependencies of type `?[]const Pkg`, which is defaulted to null. This allows you to have packages which rely on other packages. 
 
 Place the following inside your `main.zig` and run `zig build run`. 
 

@@ -23,7 +23,7 @@ const inferred_constant = @as(i32, 5);
 var inferred_variable = @as(u32, 5000);
 ```
 
-Constants and variables *must* have a value. If no known value can be given, the `undefined` value, which coerces to any type, may be used as long as a type annotation is provided.
+Constants and variables *must* have a value. If no known value can be given, the [`undefined`](https://ziglang.org/documentation/master/#undefined) value, which coerces to any type, may be used as long as a type annotation is provided.
 
 <!--no_test-->
 ```zig
@@ -57,7 +57,7 @@ const length = array.len; // 5
 
 Zig's basic if statement is simple in that it only accepts a `bool` value (of values `true` or `false`). There is no concept of truthy or falsy values.
 
-Here I will introduce testing. Save the below code and compile + run it with `zig test file-name.zig`. We will be using the `expect` function from the standard library, which will cause the test to fail if its given the value `false`. When a test fails, the error and stack trace will be shown.
+Here I will introduce testing. Save the below code and compile + run it with `zig test file-name.zig`. We will be using the [`expect`](https://ziglang.org/documentation/master/std/#std;testing.expect) function from the standard library, which will cause the test to fail if its given the value `false`. When a test fails, the error and stack trace will be shown.
 
 ```zig
 const expect = @import("std").testing.expect;
@@ -248,7 +248,7 @@ test "coerce error from a subset to a superset" {
 
 An error set type and a normal type can be combined with the `!` operator to form an error union type. Values of these types may be an error value, or a value of the normal type.
 
-Let's create a value of an error union type. Here `catch` is used, which is followed by an expression which is evaluated when the value before it is an error. The catch here is used to provide a fallback value, but could instead be a `noreturn` - the type of `return`, `while (true)` and others.
+Let's create a value of an error union type. Here [`catch`](https://ziglang.org/documentation/master/#catch) is used, which is followed by an expression which is evaluated when the value before it is an error. The catch here is used to provide a fallback value, but could instead be a [`noreturn`](https://ziglang.org/documentation/master/#noreturn) - the type of `return`, `while (true)` and others.
 
 ```zig
 test "error union" {
@@ -275,7 +275,7 @@ test "returning an error" {
 }
 ```
 
-`try x` is a shortcut for `x catch |err| return err`, and is commonly used in places where handling an error isn't appropriate. Zig's `try` and `catch` are unrelated to try-catch in other languages.
+`try x` is a shortcut for `x catch |err| return err`, and is commonly used in places where handling an error isn't appropriate. Zig's [`try`](https://ziglang.org/documentation/master/#try) and [`catch`](https://ziglang.org/documentation/master/#catch) are unrelated to try-catch in other languages.
 
 ```zig
 fn failFn() error{Oops}!i32 {
@@ -292,7 +292,7 @@ test "try" {
 }
 ```
 
-`errdefer` works like `defer`, but only executing when the function is returned from with an error inside of the `errdefer`'s block.
+[`errdefer`](https://ziglang.org/documentation/master/#errdefer) works like [`defer`](https://ziglang.org/documentation/master/#defer), but only executing when the function is returned from with an error inside of the [`errdefer`](https://ziglang.org/documentation/master/#errdefer)'s block.
 
 ```zig
 var problems: u32 = 98;
@@ -392,7 +392,7 @@ test "out of bounds"...index out of bounds
              ^
 ```
 
-The user may choose to disable runtime safety for the current block by using the built-in function `@setRuntimeSafety`. 
+The user may choose to disable runtime safety for the current block by using the built-in function [`@setRuntimeSafety`](https://ziglang.org/documentation/master/#setRuntimeSafety). 
 
 ```zig
 test "out of bounds, no safety" {
@@ -407,9 +407,9 @@ Safety is off for some build modes (to be discussed later).
 
 # Unreachable
 
-`unreachable` is an assertion to the compiler that this statement will not be reached. It can be used to tell the compiler that a branch is impossible, which the optimiser can then take advantage of. Reaching an `unreachable` is detectable illegal behaviour.
+[`unreachable`](https://ziglang.org/documentation/master/#unreachable) is an assertion to the compiler that this statement will not be reached. It can be used to tell the compiler that a branch is impossible, which the optimiser can then take advantage of. Reaching an [`unreachable`](https://ziglang.org/documentation/master/#unreachable) is detectable illegal behaviour.
 
-As it is of the type `noreturn`, it is compatible with all other types. Here it coerces to u32.
+As it is of the type [`noreturn`](https://ziglang.org/documentation/master/#noreturn), it is compatible with all other types. Here it coerces to u32.
 <!--fail_test-->
 ```zig
 test "unreachable" {
@@ -564,7 +564,7 @@ Enums types may have specified (integer) tag types.
 const Value = enum(u2) { zero, one, two };
 ```
 
-Enum's ordinal values start at 0. They can be accessed with the built-in function `@enumToInt`.
+Enum's ordinal values start at 0. They can be accessed with the built-in function [`@enumToInt`](https://ziglang.org/documentation/master/#enumToInt).
 ```zig
 test "enum ordinal value" {
     expect(@enumToInt(Value.zero) == 0);
@@ -781,7 +781,7 @@ test "integer widening" {
 }
 ```
 
-If you have a value stored in an integer that cannot coerce to the type that you want, `@intCast` may be used to explicitly convert from one type to the other. If the value given is out of the range of the destination type, this is detectable illegal behaviour.
+If you have a value stored in an integer that cannot coerce to the type that you want, [`@intCast`](https://ziglang.org/documentation/master/#intCast) may be used to explicitly convert from one type to the other. If the value given is out of the range of the destination type, this is detectable illegal behaviour.
 
 ```zig
 test "@intCast" {
@@ -812,7 +812,7 @@ test "well defined overflow" {
 
 # Floats
 
-Zig's floats are strictly IEEE compliant unless `@setFloatMode(.Optimized)` is used, which is equivalent to GCC's `-ffast-math`. Floats coerce to larger float types.
+Zig's floats are strictly IEEE compliant unless [`@setFloatMode(.Optimized)`](https://ziglang.org/documentation/master/#setFloatMode) is used, which is equivalent to GCC's `-ffast-math`. Floats coerce to larger float types.
 
 ```zig
 test "float widening" {
@@ -840,7 +840,7 @@ const nanosecond: f64 = 0.000_000_001;
 const more_hex: f64 = 0x1234_5678.9ABC_CDEFp-10;
 ```
 
-Integers and floats may be converted using the built-in functions `@intToFloat` and `@floatToInt`. `@intToFloat` is always safe, whereas `@floatToInt` is detectable illegal behaviour if the float value cannot fit in the integer destination type.
+Integers and floats may be converted using the built-in functions [`@intToFloat`](https://ziglang.org/documentation/master/#intToFloat) and [`@floatToInt`](https://ziglang.org/documentation/master/#floatToInt). [`@intToFloat`](https://ziglang.org/documentation/master/#intToFloat) is always safe, whereas [`@floatToInt`](https://ziglang.org/documentation/master/#floatToInt) is detectable illegal behaviour if the float value cannot fit in the integer destination type.
 
 ```zig
 test "int-float conversion" {
@@ -916,7 +916,7 @@ test "while loop expression" {
 
 # Optionals
 
-Optionals use the syntax `?T` and are used to store the data `null`, or a value of type `T`.
+Optionals use the syntax `?T` and are used to store the data [`null`](https://ziglang.org/documentation/master/#null), or a value of type `T`.
 
 ```zig
 test "optional" {
@@ -929,7 +929,7 @@ test "optional" {
 }
 ```
 
-Optionals support the `orelse` expression, which acts when the optional is `null`. This unwraps the optional to its child type.
+Optionals support the `orelse` expression, which acts when the optional is [`null`](https://ziglang.org/documentation/master/#null). This unwraps the optional to its child type.
 
 ```zig
 test "orelse" {
@@ -940,7 +940,7 @@ test "orelse" {
 }
 ```
 
-`.?` is a shorthand for `orelse unreachable`. This is used for when you know it is impossible for an optional value to be null, and using this to unwrap a `null` value is detectable illegal behaviour.
+`.?` is a shorthand for `orelse unreachable`. This is used for when you know it is impossible for an optional value to be null, and using this to unwrap a [`null`](https://ziglang.org/documentation/master/#null) value is detectable illegal behaviour.
 
 ```zig
 test "orelse unreachable" {
@@ -992,7 +992,7 @@ This is how null pointers in Zig work - they must be unwrapped to a non-optional
 
 # Comptime
 
-Blocks of code may be forcibly executed at compile time using the `comptime` keyword. In this example, the variables x and y are equivalent.
+Blocks of code may be forcibly executed at compile time using the [`comptime`](https://ziglang.org/documentation/master/#comptime) keyword. In this example, the variables x and y are equivalent.
 
 ```zig
 test "comptime blocks" {
@@ -1018,7 +1018,7 @@ test "comptime_int" {
 
 `comptime_float` is also available, which internally is an `f128`. These cannot be coerced to integers, even if they hold an integer value.
 
-Types in Zig are values of the type `type`. These are available at compile time. We have previously encountered them by checking `@TypeOf` and comparing with other types, but we can do more.
+Types in Zig are values of the type `type`. These are available at compile time. We have previously encountered them by checking [`@TypeOf`](https://ziglang.org/documentation/master/#TypeOf) and comparing with other types, but we can do more.
 
 ```zig
 test "branching on types" {
@@ -1027,7 +1027,7 @@ test "branching on types" {
 }
 ```
 
-Function parameters in Zig can be tagged as being `comptime`. This means that the value passed to that function parameter must be known at compile time. Let's make a function that returns a type. Notice how this function is PascalCase, as it returns a type.
+Function parameters in Zig can be tagged as being [`comptime`](https://ziglang.org/documentation/master/#comptime). This means that the value passed to that function parameter must be known at compile time. Let's make a function that returns a type. Notice how this function is PascalCase, as it returns a type.
 
 ```zig
 fn Matrix(
@@ -1043,7 +1043,7 @@ test "returning a type" {
 }
 ```
 
-We can reflect upon types using the built-in `@typeInfo`, which takes in a `type` and returns a tagged union. This tagged union type can be found in `std.builtin.TypeInfo` (info on how to make use of imports and std later).
+We can reflect upon types using the built-in [`@typeInfo`](https://ziglang.org/documentation/master/#typeInfo), which takes in a `type` and returns a tagged union. This tagged union type can be found in [`std.builtin.TypeInfo`](https://ziglang.org/documentation/master/std/#std;builtin.TypeInfo) (info on how to make use of imports and std later).
 
 ```zig
 fn addSmallInts(comptime T: type, a: T, b: T) T {
@@ -1064,7 +1064,7 @@ test "typeinfo switch" {
 }
 ```
 
-We can use the `@Type` function to create a type from a `@typeInfo`. `@Type` is implemented for most types but is notably unimplemented for enums, unions, functions, and structs.
+We can use the [`@Type`](https://ziglang.org/documentation/master/#Type) function to create a type from a [`@typeInfo`](https://ziglang.org/documentation/master/#typeInfo). [`@Type`](https://ziglang.org/documentation/master/#Type) is implemented for most types but is notably unimplemented for enums, unions, functions, and structs.
 
 Here anonymous struct syntax is used with `.{}`, because the `T` in `T{}` can be inferred. Anonymous structs will be covered in detail later. In this example we will get a compile error if the `Int` tag isn't set.
 
@@ -1084,7 +1084,7 @@ test "@Type" {
 }
 ```
 
-Returning a struct type is how you make generic data structures in Zig. The usage of `@This` is required here, which gets the type of the innermost struct, union, or enum. Here `std.mem.eql` is also used which compares two slices.
+Returning a struct type is how you make generic data structures in Zig. The usage of [`@This`](https://ziglang.org/documentation/master/#This) is required here, which gets the type of the innermost struct, union, or enum. Here [`std.mem.eql`](https://ziglang.org/documentation/master/std/#std;mem.eql) is also used which compares two slices.
 
 ```zig
 fn Vec(
@@ -1121,7 +1121,7 @@ test "generic vector" {
 }
 ```
 
-The types of function parameters can also be inferred by using `anytype` in place of a type. `@TypeOf` can then be used on the parameter.
+The types of function parameters can also be inferred by using `anytype` in place of a type. [`@TypeOf`](https://ziglang.org/documentation/master/#TypeOf) can then be used on the parameter.
 
 ```zig
 fn plusOne(x: anytype) @TypeOf(x) {
@@ -1274,7 +1274,7 @@ test "for with pointer capture" {
 
 # Inline Loops
 
-`inline` loops are unrolled, and allow some things to happen which only work at compile time. Here we use a `for`, but a `while` works similarly.
+`inline` loops are unrolled, and allow some things to happen which only work at compile time. Here we use a [`for`](https://ziglang.org/documentation/master/#inline-for), but a [`while`](https://ziglang.org/documentation/master/#inline-while) works similarly.
 ```zig
 test "inline for" {
     const types = [_]type{ i32, f32, u8, bool };
@@ -1288,7 +1288,7 @@ Using these for performance reasons is inadvisable unless you've tested that exp
 
 # Opaque
 
-`opaque` types in Zig have an unknown (albeit non-zero) size and alignment. Because of this these data types cannot be stored directly. These are used to maintain type safety with pointers to types that we don't have information about.
+[`opaque`](https://ziglang.org/documentation/master/#opaque) types in Zig have an unknown (albeit non-zero) size and alignment. Because of this these data types cannot be stored directly. These are used to maintain type safety with pointers to types that we don't have information about.
 
 <!--fail_test-->
 ```zig
@@ -1400,7 +1400,7 @@ test "tuple" {
 
 Arrays, slices and many pointers may be terminated by a value of their child type. This is known as sentinel termination. These follow the syntax `[N:t]T`, `[:t]T`, and `[*:t]T`, where `t` is a value of the child type `T`.
 
-An example of a sentinel terminated array. The built-in `@bitCast` is used to perform an unsafe bitwise type conversion. This shows us that the last element of the array is followed by a 0 byte.
+An example of a sentinel terminated array. The built-in [`@bitCast`](https://ziglang.org/documentation/master/#bitCast) is used to perform an unsafe bitwise type conversion. This shows us that the last element of the array is followed by a 0 byte.
 
 ```zig
 test "sentinel termination" {
@@ -1458,11 +1458,11 @@ test "sentinel terminated slicing" {
 
 # Vectors
 
-Zig provides vector types for SIMD. These are not to be conflated with vectors in a mathematical sense, or vectors like C++'s std::vector (for this, see "Arraylist" in chapter 2). Vectors may be created using the `@Type` built-in we used earlier, and `std.meta.Vector` provides a shorthand for this.
+Zig provides vector types for SIMD. These are not to be conflated with vectors in a mathematical sense, or vectors like C++'s std::vector (for this, see "Arraylist" in chapter 2). Vectors may be created using the [`@Type`](https://ziglang.org/documentation/master/#Type) built-in we used earlier, and [`std.meta.Vector`](https://ziglang.org/documentation/master/std/#std;meta.Vector) provides a shorthand for this.
 
 Vectors can only have child types of booleans, integers, floats and pointers.
 
-Operations between vectors with the same child type and length can take place. These operations are performed on each of the values in the vector.`std.meta.eql` is used here to check for equality between two vectors (also useful for other types like structs).
+Operations between vectors with the same child type and length can take place. These operations are performed on each of the values in the vector.[`std.meta.eql`](https://ziglang.org/documentation/master/std/#std;meta.eql) is used here to check for equality between two vectors (also useful for other types like structs).
 
 ```zig
 const meta = @import("std").meta;
@@ -1484,7 +1484,7 @@ test "vector indexing" {
 }
 ```
 
-The built-in function `@splat` may be used to construct a vector where all of the values are the same. Here I am using it to multiply a vector by a scalar.
+The built-in function [`@splat`](https://ziglang.org/documentation/master/#splat) may be used to construct a vector where all of the values are the same. Here I am using it to multiply a vector by a scalar.
 
 ```zig
 test "vector * scalar" {
@@ -1494,7 +1494,7 @@ test "vector * scalar" {
 }
 ```
 
-Vectors do not have a `len` field like arrays, but may still be looped over. Here, `std.mem.len` is used as a shortcut for `@typeInfo(@TypeOf(x)).Vector.len`.
+Vectors do not have a `len` field like arrays, but may still be looped over. Here, [`std.mem.len`](https://ziglang.org/documentation/master/std/#std;mem.len) is used as a shortcut for `@typeInfo(@TypeOf(x)).Vector.len`.
 
 ```zig
 const len = @import("std").mem.len;
@@ -1521,9 +1521,9 @@ It is worth noting that using explicit vectors may result in slower software if 
 
 # Imports
 
-The built-in function `@import` takes in a file, and gives you a struct type based on that file. All declarations labelled as `pub` (for public) will end up in this struct type, ready for use.
+The built-in function [`@import`](https://ziglang.org/documentation/master/#import) takes in a file, and gives you a struct type based on that file. All declarations labelled as `pub` (for public) will end up in this struct type, ready for use.
 
-`@import("std")` is a special case in the compiler, and gives you access to the standard library. Other `@import`s will take in a file path, or a package name (more on packages in a later chapter).
+`@import("std")` is a special case in the compiler, and gives you access to the standard library. Other [`@import`](https://ziglang.org/documentation/master/#import)s will take in a file path, or a package name (more on packages in a later chapter).
 
 We will explore more of the standard library in later chapters.
 

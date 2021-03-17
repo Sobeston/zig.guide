@@ -136,9 +136,9 @@ test "passing aligned data" {
 
 # Packed Structs
 
-By default all struct fields in Zig are naturally aligned to that of `@alignOf(FieldType)` (the ABI size), but without a defined layout. Sometimes you may want to have struct fields with a defined layout that do not conform to your C ABI. `packed` structs allow you to have extremely precise control of your struct fields, allowing you to place your fields on a bit-by-bit basis.
+By default all struct fields in Zig are naturally aligned to that of [`@alignOf(FieldType)`](https://ziglang.org/documentation/master/#alignOf) (the ABI size), but without a defined layout. Sometimes you may want to have struct fields with a defined layout that do not conform to your C ABI. `packed` structs allow you to have extremely precise control of your struct fields, allowing you to place your fields on a bit-by-bit basis.
 
-Inside packed structs, Zig's integers take their bit-width in space (i.e. a `u12` has an `@bitSizeOf` of 12, meaning it will take up 12 bits in the packed struct). Bools also take up 1 bit, meaning you can implement bit flags easily.
+Inside packed structs, Zig's integers take their bit-width in space (i.e. a `u12` has an [`@bitSizeOf`](https://ziglang.org/documentation/master/#bitSizeOf) of 12, meaning it will take up 12 bits in the packed struct). Bools also take up 1 bit, meaning you can implement bit flags easily.
 
 ```zig
 const MovementState = packed struct {
@@ -233,15 +233,15 @@ Currently the code produced may be unnecessarily verbose, though translate-c suc
 
 # cImport
 
-Zig's `@cImport` builtin is unique in that it takes in an expression, which can only take in `@cInclude`, `@cDefine`, and `@cUndef`. This works similarly to translate-c, translating C code to Zig under the hood. 
+Zig's [`@cImport`](https://ziglang.org/documentation/master/#cImport) builtin is unique in that it takes in an expression, which can only take in [`@cInclude`](https://ziglang.org/documentation/master/#cInclude), [`@cDefine`](https://ziglang.org/documentation/master/#cDefine), and [`@cUndef`](https://ziglang.org/documentation/master/#cUndef). This works similarly to translate-c, translating C code to Zig under the hood. 
 
-`@cInclude` takes in a path string, can adds the path to the includes list.
+[`@cInclude`](https://ziglang.org/documentation/master/#cInclude) takes in a path string, can adds the path to the includes list.
 
-`@cDefine` and `@cUndef` define and undefine things for the import.
+[`@cDefine`](https://ziglang.org/documentation/master/#cDefine) and [`@cUndef`](https://ziglang.org/documentation/master/#cUndef) define and undefine things for the import.
 
 These three functions work exactly as you'd expect them to work within C code.
 
-Similar to `@import` this returns a struct type with declarations. It is typically recommended to only use one instance of `@cImport` in an application to avoid symbol collisions; the types generated within one cImport will not be equivalent to those generated in another.
+Similar to [`@import`](https://ziglang.org/documentation/master/#import) this returns a struct type with declarations. It is typically recommended to only use one instance of [`@cImport`](https://ziglang.org/documentation/master/#cImport) in an application to avoid symbol collisions; the types generated within one cImport will not be equivalent to those generated in another.
 
 cImport is only available when linking libc.
 
