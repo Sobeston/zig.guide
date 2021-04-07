@@ -67,7 +67,7 @@ Some operating systems you can cross-compile for:
 - `dragonfly`
 - `UEFI`
 
-Many other targets are available for compilation, but aren't as well tested as of now. See [Zig's support table](https://ziglang.org/#Wide-range-of-targets-supported) for more information; the list of well tested targets is slowly expanding.
+Many other targets are available for compilation, but aren't as well tested as of now. See [Zig's support table](https://ziglang.org/learn/overview/#wide-range-of-targets-supported) for more information; the list of well tested targets is slowly expanding.
 
 As Zig compiles for your specific CPU by default, these binaries may not run on other computers with slightly different CPU architectures. It may be useful to instead specify a specific baseline CPU model for greater compatibility. Note: choosing an older CPU architecture will bring greater compatibility, but means you also miss out on newer CPU instructions; there is an efficiency/speed versus compatibility trade-off here.
 
