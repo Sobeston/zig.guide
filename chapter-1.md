@@ -518,9 +518,9 @@ Here, the syntax `x[n..m]` is used to create a slice from an array. This is call
 
 ```zig
 fn total(values: []const u8) usize {
-    var count: usize = 0;
-    for (values) |v| count += v;
-    return count;
+    var accumulator: usize = 0;
+    for (values) |v| accumulator += v;
+    return accumulator;
 }
 test "slices" {
     const array = [_]u8{ 1, 2, 3, 4, 5 };
