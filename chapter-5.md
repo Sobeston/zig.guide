@@ -38,12 +38,12 @@ var foo: i32 = 1;
 
 test "suspend with no resume" {
     var frame = async func();   //1
-    expect(foo == 2);           //4
+    try expect(foo == 2);           //4
 }
 
 fn func() void {
     foo += 1;                   //2
-    suspend;                    //3
+    suspend {}                    //3
     foo += 1;                   //never reached!
 }
 ```
@@ -56,12 +56,12 @@ var bar: i32 = 1;
 test "suspend with resume" {
     var frame = async func2();  //1
     resume frame;               //4
-    expect(bar == 3);           //6
+    try expect(bar == 3);           //6
 }
 
 fn func2() void {
     bar += 1;                   //2
-    suspend;                    //3
+    suspend {}                    //3
     bar += 1;                   //5
 }
 ```
@@ -79,7 +79,7 @@ fn func3() u32 {
 
 test "async / await" {
     var frame = async func3();
-    expect (await frame == 5);
+    try expect(await frame == 5);
 }
 ```
 
@@ -92,7 +92,7 @@ When calling a function which is determined to be async (i.e. it may suspend) wi
 <!--no_test-->
 ```zig
 pub fn main() !void {
-    suspend;
+    suspend {}
 }
 ```
 (compiled from windows)
@@ -110,7 +110,7 @@ C:\zig\lib\zig\std\start.zig:334:37: note: async function call here
             const result = root.main() catch |err| {
                                     ^
 .\main.zig:12:5: note: suspends here
-    suspend;
+    suspend {}
     ^
 ```
 
@@ -124,7 +124,7 @@ fn doTicksDuration(ticker: *u32) i64 {
     const start = std.time.milliTimestamp();
 
     while (ticker.* > 0) {
-        suspend;
+        suspend {}
         ticker.* -= 1;
     }
 
@@ -160,7 +160,7 @@ fn add(a: i32, b: i32) i64 {
 
 test "@Frame" {
     var frame: @Frame(add) = async add(1, 2);
-    expect(await frame == 3);
+    try expect(await frame == 3);
 }
 ```
 
@@ -177,7 +177,7 @@ fn double(value: u8) u9 {
 
 test "@frame 1" {
     var f = async double(1);
-    expect(nosuspend await f == 2);
+    try expect(nosuspend await f == 2);
 }
 ```
 
@@ -222,7 +222,7 @@ fn awaiter(x: anyframe->f32) f32 {
 
 test "anyframe->T" {
     var frame = async zero(f32);
-    expect(awaiter(&frame) == 0);
+    try expect(awaiter(&frame) == 0);
 }
 ```
 

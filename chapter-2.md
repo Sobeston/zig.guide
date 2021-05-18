@@ -25,8 +25,8 @@ test "allocation" {
     const memory = try allocator.alloc(u8, 100);
     defer allocator.free(memory);
 
-    expect(memory.len == 100);
-    expect(@TypeOf(memory) == []u8);
+    try expect(memory.len == 100);
+    try expect(@TypeOf(memory) == []u8);
 }
 ```
 
@@ -41,8 +41,8 @@ test "fixed buffer allocator" {
     const memory = try allocator.alloc(u8, 100);
     defer allocator.free(memory);
 
-    expect(memory.len == 100);
-    expect(@TypeOf(memory) == []u8);
+    try expect(memory.len == 100);
+    try expect(@TypeOf(memory) == []u8);
 }
 ```
 
@@ -77,8 +77,8 @@ test "GPA" {
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
     defer {
         const leaked = gpa.deinit();
-        if (leaked) expect(false); //fail test
-    } 
+        if (leaked) expect(false) catch @panic("TEST FAIL"); //fail test; can't try in defer as defer is executed after we return
+    }
     const bytes = try gpa.allocator.alloc(u8, 100);
     defer gpa.allocator.free(bytes);
 }
@@ -109,7 +109,7 @@ test "arraylist" {
     try list.append('o');
     try list.appendSlice(" World!");
 
-    expect(eql(u8, list.items, "Hello World!"));
+    try expect(eql(u8, list.items, "Hello World!"));
 }
 ```
 
@@ -130,8 +130,8 @@ test "createFile, write, seekTo, read" {
     var buffer: [100]u8 = undefined;
     try file.seekTo(0);
     const bytes_read = try file.readAll(&buffer);
-    
-    expect(eql(u8, buffer[0..bytes_read], "Hello File!"));
+
+    try expect(eql(u8, buffer[0..bytes_read], "Hello File!"));
 }
 ```
 
@@ -147,11 +147,11 @@ test "file stat" {
     );
     defer file.close();
     const stat = try file.stat();
-    expect(stat.size == 0);
-    expect(stat.kind == .File);
-    expect(stat.ctime <= std.time.nanoTimestamp());
-    expect(stat.mtime <= std.time.nanoTimestamp());
-    expect(stat.atime <= std.time.nanoTimestamp());
+    try expect(stat.size == 0);
+    try expect(stat.kind == .File);
+    try expect(stat.ctime <= std.time.nanoTimestamp());
+    try expect(stat.mtime <= std.time.nanoTimestamp());
+    try expect(stat.atime <= std.time.nanoTimestamp());
 }
 ```
 
@@ -178,7 +178,7 @@ test "make dir" {
         if (entry.kind == .File) file_count += 1;
     }
 
-    expect(file_count == 3);
+    try expect(file_count == 3);
 }
 ```
 
@@ -193,8 +193,8 @@ test "io writer usage" {
     const bytes_written = try list.writer().write(
         "Hello World!",
     );
-    expect(bytes_written == 12);
-    expect(eql(u8, list.items, "Hello World!"));
+    try expect(bytes_written == 12);
+    try expect(eql(u8, list.items, "Hello World!"));
 }
 ```
 
@@ -219,7 +219,7 @@ test "io reader usage" {
     );
     defer test_allocator.free(contents);
 
-    expect(eql(u8, contents, message));
+    try expect(eql(u8, contents, message));
 }
 ```
 
@@ -243,7 +243,7 @@ test "read until next line" {
     const stdin = std.io.getStdIn();
 
     try stdout.writeAll(
-        \\ Enter your name: 
+        \\ Enter your name:
     );
 
     var buffer: [100]u8 = undefined;
@@ -295,13 +295,13 @@ test "custom writer" {
     var bytes = MyByteList{};
     _ = try bytes.writer().write("Hello");
     _ = try bytes.writer().write(" Writer!");
-    expect(eql(u8, bytes.items, "Hello Writer!"));
+    try expect(eql(u8, bytes.items, "Hello Writer!"));
 }
 ```
 
 # Formatting
 
-[`std.fmt`](https://ziglang.org/documentation/master/std/#std;fmt) provides ways to format data to and from strings. 
+[`std.fmt`](https://ziglang.org/documentation/master/std/#std;fmt) provides ways to format data to and from strings.
 
 A basic example of creating a formatted string. The format string must be compile time known. The `d` here denotes that we want a decimal number.
 
@@ -314,7 +314,7 @@ test "fmt" {
     );
     defer test_allocator.free(string);
 
-    expect(eql(u8, string, "9 + 10 = 19"));
+    try expect(eql(u8, string, "9 + 10 = 19"));
 }
 ```
 
@@ -328,7 +328,7 @@ test "print" {
         "{} + {} = {}",
         .{ 9, 10, 19 },
     );
-    expect(eql(u8, list.items, "9 + 10 = 19"));
+    try expect(eql(u8, list.items, "9 + 10 = 19"));
 }
 ```
 
@@ -359,7 +359,7 @@ test "array printing" {
     );
     defer test_allocator.free(string);
 
-    expect(eql(
+    try expect(eql(
         u8,
         string,
         "{ 1, 4 } + { 2, 5 } = { 3, 9 }",
@@ -406,7 +406,7 @@ test "custom fmt" {
     );
     defer test_allocator.free(john_string);
 
-    expect(eql(
+    try expect(eql(
         u8,
         john_string,
         "John Carmack (1970-)",
@@ -425,7 +425,7 @@ test "custom fmt" {
     );
     defer test_allocator.free(claude_string);
 
-    expect(eql(
+    try expect(eql(
         u8,
         claude_string,
         "Claude Shannon (1916-2001)",
@@ -446,8 +446,8 @@ test "json parse" {
     );
     const x = try std.json.parse(Place, &stream, .{});
 
-    expect(x.lat == 40.684540);
-    expect(x.long == -74.401422);
+    try expect(x.lat == 40.684540);
+    try expect(x.long == -74.401422);
 }
 ```
 
@@ -465,7 +465,7 @@ test "json stringify" {
     var string = std.ArrayList(u8).init(&fba.allocator);
     try std.json.stringify(x, .{}, string.writer());
 
-    expect(eql(
+    try expect(eql(
         u8,
         string.items,
         \\{"lat":5.19976654e+01,"long":-7.40687012e-01}
@@ -495,8 +495,8 @@ test "json parse with strings" {
         .{ .allocator = test_allocator },
     );
 
-    expect(eql(u8, x.name, "Joe"));
-    expect(x.age == 25);
+    try expect(eql(u8, x.name, "Joe"));
+    try expect(x.age == 25);
 }
 ```
 
@@ -561,9 +561,9 @@ var tick: isize = 0;
 
 test "threading" {
     var thread = try std.Thread.spawn(ticker, @as(u8, 1));
-    expect(tick == 0);
+    try expect(tick == 0);
     std.time.sleep(3 * std.time.ns_per_s / 2);
-    expect(tick == 1);
+    try expect(tick == 1);
 }
 ```
 
@@ -589,7 +589,7 @@ test "hashing" {
     try map.put(1575, .{ .x = 3, .y = -2 });
     try map.put(1600, .{ .x = 4, .y = -1 });
 
-    expect(map.count() == 4);
+    try expect(map.count() == 4);
 
     var sum = Point{ .x = 0, .y = 0 };
     var iterator = map.iterator();
@@ -599,8 +599,8 @@ test "hashing" {
         sum.y += entry.value.y;
     }
 
-    expect(sum.x == 10);
-    expect(sum.y == -10);
+    try expect(sum.x == 10);
+    try expect(sum.y == -10);
 }
 ```
 
@@ -616,8 +616,8 @@ test "fetchPut" {
     try map.put(255, 10);
     const old = try map.fetchPut(255, 100);
 
-    expect(old.?.value == 10);
-    expect(map.get(255).? == 100);
+    try expect(old.?.value == 10);
+    try expect(map.get(255).? == 100);
 }
 ```
 
@@ -633,8 +633,8 @@ test "string hashmap" {
     try map.put("loris", .uncool);
     try map.put("me", .cool);
 
-    expect(map.get("me").? == .cool);
-    expect(map.get("loris").? == .uncool);
+    try expect(map.get("me").? == .cool);
+    try expect(map.get("loris").? == .uncool);
 }
 ```
 
@@ -670,7 +670,7 @@ test "stack" {
     }
 
     for (pairs.items) |pair, i| {
-        expect(std.meta.eql(pair, switch (i) {
+        try expect(std.meta.eql(pair, switch (i) {
             0 => Pair{ .open = 1, .close = 2 },
             1 => Pair{ .open = 3, .close = 4 },
             2 => Pair{ .open = 0, .close = 5 },
@@ -688,9 +688,9 @@ The standard library provides utilities for in-place sorting slices. Its basic u
 test "sorting" {
     var data = [_]u8{ 10, 240, 0, 0, 10, 5 };
     std.sort.sort(u8, &data, {}, comptime std.sort.asc(u8));
-    expect(eql(u8, &data, &[_]u8{ 0, 0, 5, 10, 10, 240 }));
+    try expect(eql(u8, &data, &[_]u8{ 0, 0, 5, 10, 10, 240 }));
     std.sort.sort(u8, &data, {}, comptime std.sort.desc(u8));
-    expect(eql(u8, &data, &[_]u8{ 240, 10, 10, 5, 0, 0 }));
+    try expect(eql(u8, &data, &[_]u8{ 240, 10, 10, 5, 0, 0 }));
 }
 ```
 
@@ -707,12 +707,12 @@ It is a common idiom to have a struct type with a `next` function with an option
 test "split iterator" {
     const text = "robust, optimal, reusable, maintainable, ";
     var iter = std.mem.split(text, ", ");
-    expect(eql(u8, iter.next().?, "robust"));
-    expect(eql(u8, iter.next().?, "optimal"));
-    expect(eql(u8, iter.next().?, "reusable"));
-    expect(eql(u8, iter.next().?, "maintainable"));
-    expect(eql(u8, iter.next().?, ""));
-    expect(iter.next() == null);
+    try expect(eql(u8, iter.next().?, "robust"));
+    try expect(eql(u8, iter.next().?, "optimal"));
+    try expect(eql(u8, iter.next().?, "reusable"));
+    try expect(eql(u8, iter.next().?, "maintainable"));
+    try expect(eql(u8, iter.next().?, ""));
+    try expect(iter.next() == null);
 }
 ```
 
@@ -730,7 +730,7 @@ test "iterator looping" {
         if (entry.kind == .File) file_count += 1;
     }
 
-    expect(file_count > 0);
+    try expect(file_count > 0);
 }
 ```
 
@@ -745,7 +745,7 @@ test "arg iteration" {
         arg_characters += argument.len;
         test_allocator.free(argument);
     }
-    expect(arg_characters > 0);
+    try expect(arg_characters > 0);
 }
 ```
 
@@ -774,16 +774,16 @@ test "custom iterator" {
         .needle = "e",
     };
 
-    expect(eql(u8, iter.next().?, "one"));
-    expect(eql(u8, iter.next().?, "three"));
-    expect(iter.next() == null);   
+    try expect(eql(u8, iter.next().?, "one"));
+    try expect(eql(u8, iter.next().?, "three"));
+    try expect(iter.next() == null);
 }
 ```
 
 # Formatting specifiers
 [`std.fmt`](https://ziglang.org/documentation/master/std/#std;fmt) provides options for formatting various data types.
 
-`{X}` and `{x}` provide hex formatting.
+`std.fmt.fmtSliceHexLower` and `std.fmt.fmtSliceHexUpper` provide hex formatting for strings as well as `{x}` and `{X}` for ints.
 ```zig
 const bufPrint = std.fmt.bufPrint;
 
@@ -791,13 +791,13 @@ test "hex" {
     var b: [8]u8 = undefined;
 
     _ = try bufPrint(&b, "{X}", .{4294967294});
-    expect(eql(u8, &b, "FFFFFFFE"));
+    try expect(eql(u8, &b, "FFFFFFFE"));
 
     _ = try bufPrint(&b, "{x}", .{4294967294});
-    expect(eql(u8, &b, "fffffffe"));
+    try expect(eql(u8, &b, "fffffffe"));
 
-    _ = try bufPrint(&b, "{x}", .{"Zig!"});
-    expect(eql(u8, &b, "5a696721"));
+    _ = try bufPrint(&b, "{}", .{std.fmt.fmtSliceHexLower("Zig!")});
+    try expect(eql(u8, &b, "5a696721"));
 }
 ```
 
@@ -806,7 +806,7 @@ test "hex" {
 ```zig
 test "decimal float" {
     var b: [4]u8 = undefined;
-    expect(eql(
+    try expect(eql(
         u8,
         try bufPrint(&b, "{d}", .{16.5}),
         "16.5",
@@ -819,30 +819,30 @@ test "decimal float" {
 test "ascii fmt" {
     var b: [1]u8 = undefined;
     _ = try bufPrint(&b, "{c}", .{66});
-    expect(eql(u8, &b, "B"));
+    try expect(eql(u8, &b, "B"));
 }
 ```
 
-`{B}` and `{Bi}` output memory sizes in metric (1000) and power-of-two (1024) based notation.
+`std.fmt.fmtIntSizeDec` and `std.fmt.fmtIntSizeBin` output memory sizes in metric (1000) and power-of-two (1024) based notation.
 
 ```zig
 test "B Bi" {
     var b: [32]u8 = undefined;
 
-    expect(eql(u8, try bufPrint(&b, "{B}", .{1}), "1B"));
-    expect(eql(u8, try bufPrint(&b, "{Bi}", .{1}), "1B"));
+    try expect(eql(u8, try bufPrint(&b, "{}", .{std.fmt.fmtIntSizeDec(1)}), "1B"));
+    try expect(eql(u8, try bufPrint(&b, "{}", .{std.fmt.fmtIntSizeBin(1)}), "1B"));
 
-    expect(eql(u8, try bufPrint(&b, "{B}", .{1024}), "1.024kB"));
-    expect(eql(u8, try bufPrint(&b, "{Bi}", .{1024}), "1KiB"));
+    try expect(eql(u8, try bufPrint(&b, "{}", .{std.fmt.fmtIntSizeDec(1024)}), "1.024kB"));
+    try expect(eql(u8, try bufPrint(&b, "{}", .{std.fmt.fmtIntSizeBin(1024)}), "1KiB"));
 
-    expect(eql(
+    try expect(eql(
         u8,
-        try bufPrint(&b, "{B}", .{1024 * 1024 * 1024}),
+        try bufPrint(&b, "{}", .{std.fmt.fmtIntSizeDec(1024 * 1024 * 1024)}),
         "1.073741824GB",
     ));
-    expect(eql(
+    try expect(eql(
         u8,
-        try bufPrint(&b, "{Bi}", .{1024 * 1024 * 1024}),
+        try bufPrint(&b, "{}", .{std.fmt.fmtIntSizeBin(1024 * 1024 * 1024)}),
         "1GiB",
     ));
 }
@@ -854,13 +854,13 @@ test "B Bi" {
 test "binary, octal fmt" {
     var b: [8]u8 = undefined;
 
-    expect(eql(
+    try expect(eql(
         u8,
         try bufPrint(&b, "{b}", .{254}),
         "11111110",
     ));
 
-    expect(eql(
+    try expect(eql(
         u8,
         try bufPrint(&b, "{o}", .{254}),
         "376",
@@ -872,7 +872,7 @@ test "binary, octal fmt" {
 ```zig
 test "pointer fmt" {
     var b: [16]u8 = undefined;
-    expect(eql(
+    try expect(eql(
         u8,
         try bufPrint(&b, "{*}", .{@intToPtr(*u8, 0xDEADBEEF)}),
         "u8@deadbeef",
@@ -885,7 +885,7 @@ test "pointer fmt" {
 test "scientific" {
     var b: [16]u8 = undefined;
 
-    expect(eql(
+    try expect(eql(
         u8,
         try bufPrint(&b, "{e}", .{3.14159}),
         "3.14159e+00",
@@ -899,7 +899,7 @@ test "string fmt" {
     var b: [6]u8 = undefined;
     const hello: [*:0]const u8 = "hello!";
 
-    expect(eql(
+    try expect(eql(
         u8,
         try bufPrint(&b, "{s}", .{hello}),
         "hello!",
@@ -929,7 +929,7 @@ Position usage.
 ```zig
 test "position" {
     var b: [3]u8 = undefined;
-    expect(eql(
+    try expect(eql(
         u8,
         try bufPrint(&b, "{0s}{0s}{1s}", .{"a", "b"}),
         "aab",
@@ -942,19 +942,19 @@ Fill, alignment and width being used.
 test "fill, alignment, width" {
     var b: [5]u8 = undefined;
 
-    expect(eql(
+    try expect(eql(
         u8,
         try bufPrint(&b, "{s: <5}", .{"hi!"}),
         "hi!  ",
     ));
 
-    expect(eql(
+    try expect(eql(
         u8,
         try bufPrint(&b, "{s:_^5}", .{"hi!"}),
         "_hi!_",
     ));
 
-    expect(eql(
+    try expect(eql(
         u8,
         try bufPrint(&b, "{s:!>4}", .{"hi!"}),
         "!hi!",
@@ -966,7 +966,7 @@ Using a specifier with precision.
 ```zig
 test "precision" {
     var b: [4]u8 = undefined;
-    expect(eql(
+    try expect(eql(
         u8,
         try bufPrint(&b, "{d:.2}", .{3.14159}),
         "3.14",
