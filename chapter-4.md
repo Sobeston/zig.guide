@@ -23,7 +23,7 @@ Zig internally does not make use of an ABI, meaning code should explicitly confo
 
 # C Primitive Types
 
-Zig provides special `c_` prefixed types for conforming to the C ABI. These do not have fixed sizes, but rather change in size depending on the ABI being used. 
+Zig provides special `c_` prefixed types for conforming to the C ABI. These do not have fixed sizes, but rather change in size depending on the ABI being used.
 
 | Type         | C Equivalent      | Minimum Size (bits) |
 |--------------|-------------------|---------------------|
@@ -76,11 +76,11 @@ test "hmm" {
     };
     const z = @ptrCast([*]const u8, &x);
 
-    expect(@ptrCast(*const i32, z).* == 10005);
-    expect(@ptrCast(*const u8, z + 4).* == 42);
-    expect(@ptrCast(*const f32, z + 8).* == -10.5);
-    expect(@ptrCast(*const bool, z + 12).* == false);
-    expect(@ptrCast(*const bool, z + 13).* == true);
+    try expect(@ptrCast(*const i32, z).* == 10005);
+    try expect(@ptrCast(*const u8, z + 4).* == 42);
+    try expect(@ptrCast(*const f32, z + 8).* == -10.5);
+    try expect(@ptrCast(*const bool, z + 12).* == false);
+    try expect(@ptrCast(*const bool, z + 13).* == true);
 }
 ```
 
@@ -90,7 +90,7 @@ This is what the memory inside our `x` value looks like.
 |-------|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|
 | Bytes | 15 | 27 | 00 | 00 | 2A | 00 | 00 | 00 | 00 | 00 | 28 | C1 | 00 | 01 | 00 | 00 |
 
-Note how there are gaps in the middle and at the end - this is called "padding". The data in this padding is undefined memory, and won't always be zero. 
+Note how there are gaps in the middle and at the end - this is called "padding". The data in this padding is undefined memory, and won't always be zero.
 
 As our `x` value is that of an extern struct, we could safely pass it into a C function expecting a `Data`, providing the C function was also compiled with the same `gnu` ABI and CPU arch.
 
@@ -115,7 +115,7 @@ Like `const`, `align` is also a property of pointers.
 ```zig
 test "aligned pointers" {
     const a: u32 align(8) = 5;
-    expect(@TypeOf(&a) == *align(8) const u32);
+    try expect(@TypeOf(&a) == *align(8) const u32);
 }
 ```
 
@@ -130,7 +130,7 @@ fn total(a: *align(64) const [64]u8) u32 {
 
 test "passing aligned data" {
     const x align(64) = [_]u8{10} ** 64;
-    expect(total(&x) == 640);
+    try expect(total(&x) == 640);
 }
 ```
 
@@ -149,8 +149,8 @@ const MovementState = packed struct {
 };
 
 test "packed struct size" {
-    expect(@sizeOf(MovementState) == 1);
-    expect(@bitSizeOf(MovementState) == 4);
+    try expect(@sizeOf(MovementState) == 1);
+    try expect(@bitSizeOf(MovementState) == 4);
     const state = MovementState{
         .running = true,
         .crouching = true,
@@ -178,13 +178,13 @@ test "bit aligned pointers" {
     const running = &x.running;
     running.* = true;
 
-    const crouching = &x.crouching; 
+    const crouching = &x.crouching;
     crouching.* = true;
 
-    expect(@TypeOf(running) == *align(1:0:1) bool);
-    expect(@TypeOf(crouching) == *align(1:1:1) bool);
+    try expect(@TypeOf(running) == *align(1:0:1) bool);
+    try expect(@TypeOf(crouching) == *align(1:1:1) bool);
 
-    expect(@import("std").meta.eql(x, .{
+    try expect(@import("std").meta.eql(x, .{
         .running = true,
         .crouching = true,
         .jumping = false,
@@ -233,7 +233,7 @@ Currently the code produced may be unnecessarily verbose, though translate-c suc
 
 # cImport
 
-Zig's [`@cImport`](https://ziglang.org/documentation/master/#cImport) builtin is unique in that it takes in an expression, which can only take in [`@cInclude`](https://ziglang.org/documentation/master/#cInclude), [`@cDefine`](https://ziglang.org/documentation/master/#cDefine), and [`@cUndef`](https://ziglang.org/documentation/master/#cUndef). This works similarly to translate-c, translating C code to Zig under the hood. 
+Zig's [`@cImport`](https://ziglang.org/documentation/master/#cImport) builtin is unique in that it takes in an expression, which can only take in [`@cInclude`](https://ziglang.org/documentation/master/#cInclude), [`@cDefine`](https://ziglang.org/documentation/master/#cDefine), and [`@cUndef`](https://ziglang.org/documentation/master/#cUndef). This works similarly to translate-c, translating C code to Zig under the hood.
 
 [`@cInclude`](https://ziglang.org/documentation/master/#cInclude) takes in a path string, can adds the path to the includes list.
 
@@ -251,7 +251,7 @@ Linking libc can be done via the command line via `-lc`, or via `build.zig` usin
 
 # Zig cc, Zig c++
 
-The Zig executable comes with Clang embedded inside it alongside libraries and headers required to cross compile for other operating systems and architectures. 
+The Zig executable comes with Clang embedded inside it alongside libraries and headers required to cross compile for other operating systems and architectures.
 
 This means that not only can `zig cc` and `zig c++` compile C and C++ code (with Clang-compatible arguments), but it can also do so while respecting Zig's target triple argument; the single Zig binary that you have installed has the power to compile for several different targets without the need to install multiple versions of the compiler or any addons. Using `zig cc` and `zig c++` also makes use of Zig's caching system to speed up your workflow.
 

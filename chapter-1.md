@@ -19,7 +19,7 @@ const constant: i32 = 5;  // signed 32-bit constant
 var variable: u32 = 5000; // unsigned 32-bit variable
 
 // @as performs an explicit type coercion
-const inferred_constant = @as(i32, 5); 
+const inferred_constant = @as(i32, 5);
 var inferred_variable = @as(u32, 5000);
 ```
 
@@ -70,7 +70,7 @@ test "if statement" {
     } else {
         x += 2;
     }
-    expect(x == 1);
+    try expect(x == 1);
 }
 ```
 
@@ -81,7 +81,7 @@ test "if statement expression" {
     const a = true;
     var x: u16 = 0;
     x += if (a) 1 else 2;
-    expect(x == 1);
+    try expect(x == 1);
 }
 ```
 
@@ -96,7 +96,7 @@ test "while" {
     while (i < 100) {
         i *= 2;
     }
-    expect(i == 128);
+    try expect(i == 128);
 }
 ```
 
@@ -108,7 +108,7 @@ test "while with continue expression" {
     while (i <= 10) : (i += 1) {
         sum += i;
     }
-    expect(sum == 55);
+    try expect(sum == 55);
 }
 ```
 
@@ -122,7 +122,7 @@ test "while with continue" {
         if (i == 2) continue;
         sum += i;
     }
-    expect(sum == 4);
+    try expect(sum == 4);
 }
 ```
 
@@ -136,7 +136,7 @@ test "while with break" {
         if (i == 2) break;
         sum += i;
     }
-    expect(sum == 1);
+    try expect(sum == 1);
 }
 ```
 
@@ -169,8 +169,8 @@ fn addFive(x: u32) u32 {
 
 test "function" {
     const y = addFive(0);
-    expect(@TypeOf(y) == u32);
-    expect(y == 5);
+    try expect(@TypeOf(y) == u32);
+    try expect(y == 5);
 }
 ```
 
@@ -184,7 +184,7 @@ fn fibonacci(n: u16) u16 {
 
 test "function recursion" {
     const x = fibonacci(10);
-    expect(x == 55);
+    try expect(x == 55);
 }
 ```
 When recursion happens, the compiler is no longer able to work out the maximum stack size. This may result in unsafe behaviour - a stack overflow. Details on how to achieve safe recursion will be covered in future.
@@ -205,9 +205,9 @@ test "defer" {
     var x: i16 = 5;
     {
         defer x += 2;
-        expect(x == 5);
+        try expect(x == 5);
     }
-    expect(x == 7);
+    try expect(x == 7);
 }
 ```
 
@@ -220,7 +220,7 @@ test "multi defer" {
         defer x += 2;
         defer x /= 2;
     }
-    expect(x == 4.5);
+    try expect(x == 4.5);
 }
 ```
 
@@ -242,7 +242,7 @@ const AllocationError = error{OutOfMemory};
 
 test "coerce error from a subset to a superset" {
     const err: FileOpenError = AllocationError.OutOfMemory;
-    expect(err == FileOpenError.OutOfMemory);
+    try expect(err == FileOpenError.OutOfMemory);
 }
 ```
 
@@ -255,8 +255,8 @@ test "error union" {
     const maybe_error: AllocationError!u16 = 10;
     const no_error = maybe_error catch 0;
 
-    expect(@TypeOf(no_error) == u16);
-    expect(no_error == 10);
+    try expect(@TypeOf(no_error) == u16);
+    try expect(no_error == 10);
 }
 ```
 
@@ -269,7 +269,7 @@ fn failingFunction() error{Oops}!void {
 
 test "returning an error" {
     failingFunction() catch |err| {
-        expect(err == error.Oops);
+        try expect(err == error.Oops);
         return;
     };
 }
@@ -285,10 +285,10 @@ fn failFn() error{Oops}!i32 {
 
 test "try" {
     var v = failFn() catch |err| {
-        expect(err == error.Oops);
+        try expect(err == error.Oops);
         return;
     };
-    expect(v == 12); // is never reached
+    try expect(v == 12); // is never reached
 }
 ```
 
@@ -304,8 +304,8 @@ fn failFnCounter() error{Oops}!void {
 
 test "errdefer" {
     failFnCounter() catch |err| {
-        expect(err == error.Oops);
-        expect(problems == 99);
+        try expect(err == error.Oops);
+        try expect(problems == 99);
         return;
     };
 }
@@ -324,7 +324,7 @@ test "inferred error set" {
 }
 ```
 
-Error sets can be merged. 
+Error sets can be merged.
 
 ```zig
 const A = error{ NotDir, PathNotFound };
@@ -354,7 +354,7 @@ test "switch statement" {
         },
         else => {},
     }
-    expect(x == 1);
+    try expect(x == 1);
 }
 ```
 
@@ -367,7 +367,7 @@ test "switch expression" {
         10, 100 => @divExact(x, 10),
         else => x,
     };
-    expect(x == 1);
+    try expect(x == 1);
 }
 ```
 
@@ -392,7 +392,7 @@ test "out of bounds"...index out of bounds
              ^
 ```
 
-The user may choose to disable runtime safety for the current block by using the built-in function [`@setRuntimeSafety`](https://ziglang.org/documentation/master/#setRuntimeSafety). 
+The user may choose to disable runtime safety for the current block by using the built-in function [`@setRuntimeSafety`](https://ziglang.org/documentation/master/#setRuntimeSafety).
 
 ```zig
 test "out of bounds, no safety" {
@@ -435,8 +435,8 @@ fn asciiToUpper(x: u8) u8 {
 }
 
 test "unreachable switch" {
-    expect(asciiToUpper('a') == 'A');
-    expect(asciiToUpper('A') == 'A');
+    try expect(asciiToUpper('a') == 'A');
+    try expect(asciiToUpper('A') == 'A');
 }
 ```
 
@@ -454,7 +454,7 @@ fn increment(num: *u8) void {
 test "pointers" {
     var x: u8 = 1;
     increment(&x);
-    expect(x == 2);
+    try expect(x == 2);
 }
 ```
 
@@ -495,12 +495,12 @@ A `*T` coerces to a `*const T`.
 
 # Pointer sized integers
 
-`usize` and `isize` are given as unsigned and signed integers which are the same size as pointers. 
+`usize` and `isize` are given as unsigned and signed integers which are the same size as pointers.
 
 ```zig
 test "usize" {
-    expect(@sizeOf(usize) == @sizeOf(*u8));
-    expect(@sizeOf(isize) == @sizeOf(*u8));
+    try expect(@sizeOf(usize) == @sizeOf(*u8));
+    try expect(@sizeOf(isize) == @sizeOf(*u8));
 }
 ```
 
@@ -525,7 +525,7 @@ fn total(values: []const u8) usize {
 test "slices" {
     const array = [_]u8{ 1, 2, 3, 4, 5 };
     const slice = array[0..3];
-    expect(total(slice) == 6);
+    try expect(total(slice) == 6);
 }
 ```
 
@@ -535,7 +535,7 @@ When these `n` and `m` values are both known at compile time, slicing will actua
 test "slices 2" {
     const array = [_]u8{ 1, 2, 3, 4, 5 };
     const slice = array[0..3];
-    expect(@TypeOf(slice) == *const [3]u8);
+    try expect(@TypeOf(slice) == *const [3]u8);
 }
 ```
 
@@ -567,9 +567,9 @@ const Value = enum(u2) { zero, one, two };
 Enum's ordinal values start at 0. They can be accessed with the built-in function [`@enumToInt`](https://ziglang.org/documentation/master/#enumToInt).
 ```zig
 test "enum ordinal value" {
-    expect(@enumToInt(Value.zero) == 0);
-    expect(@enumToInt(Value.one) == 1);
-    expect(@enumToInt(Value.two) == 2);
+    try expect(@enumToInt(Value.zero) == 0);
+    try expect(@enumToInt(Value.one) == 1);
+    try expect(@enumToInt(Value.two) == 2);
 }
 ```
 
@@ -583,10 +583,10 @@ const Value2 = enum(u32) {
 };
 
 test "set enum ordinal value" {
-    expect(@enumToInt(Value2.hundred) == 100);
-    expect(@enumToInt(Value2.thousand) == 1000);
-    expect(@enumToInt(Value2.million) == 1000000);
-    expect(@enumToInt(Value2.next) == 1000001);
+    try expect(@enumToInt(Value2.hundred) == 100);
+    try expect(@enumToInt(Value2.thousand) == 1000);
+    try expect(@enumToInt(Value2.million) == 1000000);
+    try expect(@enumToInt(Value2.next) == 1000001);
 }
 ```
 
@@ -604,11 +604,11 @@ const Suit = enum {
 };
 
 test "enum method" {
-    expect(Suit.spades.isClubs() == Suit.isClubs(.spades));
+    try expect(Suit.spades.isClubs() == Suit.isClubs(.spades));
 }
 ```
 
-Enums can also be given `var` and `const` declarations. These act as namespaced globals, and their values are unrelated and unattached to instances of the enum type. 
+Enums can also be given `var` and `const` declarations. These act as namespaced globals, and their values are unrelated and unattached to instances of the enum type.
 
 ```zig
 const Mode = enum {
@@ -619,7 +619,7 @@ const Mode = enum {
 
 test "hmm" {
     Mode.count += 1;
-    expect(Mode.count == 1);
+    try expect(Mode.count == 1);
 }
 ```
 
@@ -690,8 +690,8 @@ const Stuff = struct {
 test "automatic dereference" {
     var thing = Stuff{ .x = 10, .y = 20 };
     thing.swap();
-    expect(thing.x == 20);
-    expect(thing.y == 10);
+    try expect(thing.x == 20);
+    try expect(thing.y == 10);
 }
 ```
 
@@ -735,7 +735,7 @@ test "switch on tagged union" {
         .b => |*float| float.* *= 2,
         .c => |*b| b.* = !b.*,
     }
-    expect(value.b == 3);
+    try expect(value.b == 3);
 }
 ```
 
@@ -777,7 +777,7 @@ test "integer widening" {
     const a: u8 = 250;
     const b: u16 = a;
     const c: u32 = b;
-    expect(c == a);
+    try expect(c == a);
 }
 ```
 
@@ -787,7 +787,7 @@ If you have a value stored in an integer that cannot coerce to the type that you
 test "@intCast" {
     const x: u64 = 200;
     const y = @intCast(u8, x);
-    expect(@TypeOf(y) == u8);
+    try expect(@TypeOf(y) == u8);
 }
 ```
 
@@ -806,7 +806,7 @@ Integers by default are not allowed to overflow. Overflows are detectable illega
 test "well defined overflow" {
     var a: u8 = 255;
     a +%= 1;
-    expect(a == 0);
+    try expect(a == 0);
 }
 ```
 
@@ -819,7 +819,7 @@ test "float widening" {
     const a: f16 = 0;
     const b: f32 = a;
     const c: f128 = b;
-    expect(c == @as(f128, a));
+    try expect(c == @as(f128, a));
 }
 ```
 
@@ -847,7 +847,7 @@ test "int-float conversion" {
     const a: i32 = 0;
     const b = @intToFloat(f32, a);
     const c = @floatToInt(i32, b);
-    expect(c == a);
+    try expect(c == a);
 }
 ```
 
@@ -863,8 +863,8 @@ test "labelled blocks" {
         while (i < 10) : (i += 1) sum += i;
         break :blk sum;
     };
-    expect(count == 45);
-    expect(@TypeOf(count) == u32);
+    try expect(count == 45);
+    try expect(@TypeOf(count) == u32);
 }
 ```
 
@@ -891,7 +891,7 @@ test "nested continue" {
             continue :outer;
         }
     }
-    expect(count == 8);
+    try expect(count == 8);
 }
 ```
 
@@ -910,7 +910,7 @@ fn rangeHasNumber(begin: usize, end: usize, number: usize) bool {
 }
 
 test "while loop expression" {
-    expect(rangeHasNumber(0, 10, 3));
+    try expect(rangeHasNumber(0, 10, 3));
 }
 ```
 
@@ -925,7 +925,7 @@ test "optional" {
     for (data) |v, i| {
         if (v == 10) found_index = i;
     }
-    expect(found_index == null);
+    try expect(found_index == null);
 }
 ```
 
@@ -935,8 +935,8 @@ Optionals support the `orelse` expression, which acts when the optional is [`nul
 test "orelse" {
     var a: ?f32 = null;
     var b = a orelse 0;
-    expect(b == 0);
-    expect(@TypeOf(b) == f32);
+    try expect(b == 0);
+    try expect(@TypeOf(b) == f32);
 }
 ```
 
@@ -947,8 +947,8 @@ test "orelse unreachable" {
     const a: ?f32 = 5;
     const b = a orelse unreachable;
     const c = a.?;
-    expect(b == c);
-    expect(@TypeOf(c) == f32);
+    try expect(b == c);
+    try expect(@TypeOf(c) == f32);
 }
 ```
 
@@ -982,11 +982,11 @@ test "while null capture" {
     while (eventuallyNullSequence()) |value| {
         sum += value;
     }
-    expect(sum == 6); // 3 + 2 + 1
+    try expect(sum == 6); // 3 + 2 + 1
 }
 ```
 
-Optional pointer and optional slice types do not take up any extra memory, compared to non-optional ones. This is because internally they use the 0 value of the pointer for `null`. 
+Optional pointer and optional slice types do not take up any extra memory, compared to non-optional ones. This is because internally they use the 0 value of the pointer for `null`.
 
 This is how null pointers in Zig work - they must be unwrapped to a non-optional before dereferencing, which stops null pointer dereferences from happening accidentally.
 
@@ -1039,7 +1039,7 @@ fn Matrix(
 }
 
 test "returning a type" {
-    expect(Matrix(f32, 4, 4) == [4][4]f32);
+    try expect(Matrix(f32, 4, 4) == [4][4]f32);
 }
 ```
 
@@ -1059,8 +1059,8 @@ fn addSmallInts(comptime T: type, a: T, b: T) T {
 
 test "typeinfo switch" {
     const x = addSmallInts(u16, 20, 30);
-    expect(@TypeOf(x) == u16);
-    expect(x == 50);
+    try expect(@TypeOf(x) == u16);
+    try expect(x == 50);
 }
 ```
 
@@ -1079,8 +1079,8 @@ fn GetBiggerInt(comptime T: type) type {
 }
 
 test "@Type" {
-    expect(GetBiggerInt(u8) == u9);
-    expect(GetBiggerInt(i31) == i32);
+    try expect(GetBiggerInt(u8) == u9);
+    try expect(GetBiggerInt(i31) == i32);
 }
 ```
 
@@ -1117,7 +1117,7 @@ const eql = @import("std").mem.eql;
 test "generic vector" {
     const x = Vec(3, f32).init([_]f32{ 10, -10, 5 });
     const y = x.abs();
-    expect(eql(f32, &y.data, &[_]f32{ 10, 10, 5 }));
+    try expect(eql(f32, &y.data, &[_]f32{ 10, 10, 5 }));
 }
 ```
 
@@ -1129,7 +1129,7 @@ fn plusOne(x: anytype) @TypeOf(x) {
 }
 
 test "inferred function parameter" {
-    expect(plusOne(@as(u32, 1)) == 2);
+    try expect(plusOne(@as(u32, 1)) == 2);
 }
 ```
 
@@ -1144,13 +1144,13 @@ test "++" {
     const b = a[0..];
 
     const new = y ++ b;
-    expect(new.len == 10);
+    try expect(new.len == 10);
 }
 
 test "**" {
     const pattern = [_]u8{ 0xCC, 0xAA };
     const memory = pattern ** 3;
-    expect(eql(
+    try expect(eql(
         u8,
         &memory,
         &[_]u8{ 0xCC, 0xAA, 0xCC, 0xAA, 0xCC, 0xAA }
@@ -1167,8 +1167,8 @@ With if statements and optionals.
 test "optional-if" {
     var maybe_num: ?usize = 10;
     if (maybe_num) |n| {
-        expect(@TypeOf(n) == usize);
-        expect(n == 10);
+        try expect(@TypeOf(n) == usize);
+        try expect(n == 10);
     } else {
         unreachable;
     }
@@ -1180,8 +1180,8 @@ With if statements and error unions. The else with the error capture is required
 test "error union if" {
     var ent_num: error{UnknownEntity}!u32 = 5;
     if (ent_num) |entity| {
-        expect(@TypeOf(entity) == u32);
-        expect(entity == 5);
+        try expect(@TypeOf(entity) == u32);
+        try expect(entity == 5);
     } else |err| {
         unreachable;
     }
@@ -1193,13 +1193,13 @@ With while loops and optionals. This may have an else block.
 test "while optional" {
     var i: ?u32 = 10;
     while (i) |num| : (i.? -= 1) {
-        expect(@TypeOf(num) == u32);
+        try expect(@TypeOf(num) == u32);
         if (num == 1) {
             i = null;
             break;
         }
     }
-    expect(i == null);
+    try expect(i == null);
 }
 ```
 
@@ -1221,7 +1221,7 @@ test "while error union capture" {
     while (eventuallyErrorSequence()) |value| {
         sum += value;
     } else |err| {
-        expect(err == error.ReachedZero);
+        try expect(err == error.ReachedZero);
     }
 }
 ```
@@ -1230,7 +1230,7 @@ For loops.
 ```zig
 test "for capture" {
     const x = [_]i8{1, 5, 120, -5};
-    for (x) |v| expect(@TypeOf(v) == i8);
+    for (x) |v| try expect(@TypeOf(v) == i8);
 }
 ```
 
@@ -1247,18 +1247,18 @@ test "switch capture" {
     var b = Info{ .a = 10 };
     const x = switch (b) {
         .b => |str| blk: {
-            expect(@TypeOf(str) == []const u8);
+            try expect(@TypeOf(str) == []const u8);
             break :blk 1;
         },
         .c => 2,
-        //if these are of the same type, they 
+        //if these are of the same type, they
         //may be inside the same capture group
         .a, .d => |num| blk: {
-            expect(@TypeOf(num) == u32);
+            try expect(@TypeOf(num) == u32);
             break :blk num * 2;
         },
     };
-    expect(x == 20);
+    try expect(x == 20);
 }
 ```
 
@@ -1268,7 +1268,7 @@ So far, we have only shown payload captures with copy semantics (i.e. the captur
 test "for with pointer capture" {
     var data = [_]u8{1, 2, 3};
     for (data) |*byte| byte.* += 1;
-    expect(eql(u8, &data, &[_]u8{2, 3, 4}));
+    try expect(eql(u8, &data, &[_]u8{2, 3, 4}));
 }
 ```
 
@@ -1280,7 +1280,7 @@ test "inline for" {
     const types = [_]type{ i32, f32, u8, bool };
     var sum: usize = 0;
     inline for (types) |T| sum += @sizeOf(T);
-    expect(sum == 10);
+    try expect(sum == 10);
 }
 ```
 
@@ -1341,13 +1341,13 @@ The struct type may be omitted from a struct literal. These literals may coerce 
 ```zig
 test "anonymous struct literal" {
     const Point = struct { x: i32, y: i32 };
-    
+
     var pt: Point = .{
         .x = 13,
         .y = 67,
     };
-    expect(pt.x == 13);
-    expect(pt.y == 67);
+    try expect(pt.x == 13);
+    try expect(pt.y == 67);
 }
 ```
 
@@ -1355,7 +1355,7 @@ Anonymous structs may be completely anonymous i.e. without being coerced to anot
 
 ```zig
 test "fully anonymous struct" {
-    dump(.{
+    try dump(.{
         .int = @as(u32, 1234),
         .float = @as(f64, 12.34),
         .b = true,
@@ -1363,12 +1363,12 @@ test "fully anonymous struct" {
     });
 }
 
-fn dump(args: anytype) void {
-    expect(args.int == 1234);
-    expect(args.float == 12.34);
-    expect(args.b);
-    expect(args.s[0] == 'h');
-    expect(args.s[1] == 'i');
+fn dump(args: anytype) !void {
+    try expect(args.int == 1234);
+    try expect(args.float == 12.34);
+    try expect(args.b);
+    try expect(args.s[0] == 'h');
+    try expect(args.s[1] == 'i');
 }
 ```
 <!-- TODO: mention tuple slicing when it's implemented -->
@@ -1385,14 +1385,14 @@ test "tuple" {
         true,
         "hi",
     } ++ .{false} ** 2;
-    expect(values[0] == 1234);
-    expect(values[4] == false);
+    try expect(values[0] == 1234);
+    try expect(values[4] == false);
     inline for (values) |v, i| {
         if (i != 2) continue;
-        expect(v);
+        try expect(v);
     }
-    expect(values.len == 6);
-    expect(values.@"3"[0] == 'h');
+    try expect(values.len == 6);
+    try expect(values.@"3"[0] == 'h');
 }
 ```
 
@@ -1405,8 +1405,8 @@ An example of a sentinel terminated array. The built-in [`@bitCast`](https://zig
 ```zig
 test "sentinel termination" {
     const terminated = [3:0]u8{ 3, 2, 1 };
-    expect(terminated.len == 3);
-    expect(@bitCast([4]u8, terminated)[3] == 0);
+    try expect(terminated.len == 3);
+    try expect(@bitCast([4]u8, terminated)[3] == 0);
 }
 ```
 
@@ -1414,7 +1414,7 @@ The types of string literals is `*const [N:0]u8`, where N is the length of the s
 
 ```zig
 test "string literal" {
-    expect(@TypeOf("hello") == *const [5:0]u8);
+    try expect(@TypeOf("hello") == *const [5:0]u8);
 }
 ```
 
@@ -1472,7 +1472,7 @@ test "vector add" {
     const x: Vector(4, f32) = .{ 1, -10, 20, -1 };
     const y: Vector(4, f32) = .{ 2, 10, 0, 1 };
     const z = x + y;
-    expect(meta.eql(z, Vector(4, f32){ 3, 0, 20, 0 }));
+    try expect(meta.eql(z, Vector(4, f32){ 3, 0, 20, 0 }));
 }
 ```
 
@@ -1480,7 +1480,7 @@ Vectors are indexable.
 ```zig
 test "vector indexing" {
     const x: Vector(4, u8) = .{ 255, 0, 255, 0 };
-    expect(x[0] == 255);
+    try expect(x[0] == 255);
 }
 ```
 
@@ -1490,7 +1490,7 @@ The built-in function [`@splat`](https://ziglang.org/documentation/master/#splat
 test "vector * scalar" {
     const x: Vector(3, f32) = .{ 12.5, 37.5, 2.5 };
     const y = x * @splat(3, @as(f32, 2));
-    expect(meta.eql(y, Vector(3, f32){ 25, 75, 5 }));
+    try expect(meta.eql(y, Vector(3, f32){ 25, 75, 5 }));
 }
 ```
 
@@ -1507,7 +1507,7 @@ test "vector looping" {
         while (i < len(x)) : (i += 1) tmp += x[i];
         break :blk tmp;
     };
-    expect(sum == 510);
+    try expect(sum == 510);
 }
 ```
 
