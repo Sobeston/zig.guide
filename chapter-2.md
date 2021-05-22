@@ -232,7 +232,7 @@ fn nextLine(reader: anytype, buffer: []u8) !?[]const u8 {
         '\n',
     )) orelse return null;
     // trim annoying windows-only carriage return character
-    if (std.builtin.Target.current.os.tag == .windows) {
+    if (std.builtin.os.tag == .windows) {
         line = std.mem.trimRight(u8, line, "\r");
     }
     return line;
