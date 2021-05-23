@@ -303,7 +303,7 @@ When using a `build.zig` this may be invoked by setting the `emit_docs` field to
 
 This generation is experimental, and often fails with complex examples. This is used by the [standard library documentation](https://ziglang.org/documentation/master/std/).
 
-When merging error sets, the left-most error set's documentation strings take priority over the right. In this case, the doc comment for `C.PathNotFound` is the doc comment provided in A.
+When merging error sets, the left-most error set's documentation strings take priority over the right. In this case, the doc comment for `C.PathNotFound` is the doc comment provided in `A`.
 
 <!--no_test-->
 ```zig
