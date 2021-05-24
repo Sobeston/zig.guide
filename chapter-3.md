@@ -256,7 +256,7 @@ We called `exe.install()` earlier - this adds a build step which tells the build
 
 # Generating Documentation
 
-The Zig compiler comes with automatic documentation generation. This can be envoked by adding `-femit-docs` to your `zig build-{exe, lib, obj}` or `zig run` command. This documentation is saved into `./docs`, as a small static website.
+The Zig compiler comes with automatic documentation generation. This can be invoked by adding `-femit-docs` to your `zig build-{exe, lib, obj}` or `zig run` command. This documentation is saved into `./docs`, as a small static website.
 
 Zig's documentation generation makes use of *doc comments* which are similar to comments, using `///` instead of `//`, and preceding globals.
 
@@ -303,7 +303,7 @@ When using a `build.zig` this may be invoked by setting the `emit_docs` field to
 
 This generation is experimental, and often fails with complex examples. This is used by the [standard library documentation](https://ziglang.org/documentation/master/std/).
 
-When merging error sets, the left-most error set's documentation strings take priority over the right. In this case, the doc comment for C.PathNotFound is the doc comment provided in A.
+When merging error sets, the left-most error set's documentation strings take priority over the right. In this case, the doc comment for `C.PathNotFound` is the doc comment provided in `A`.
 
 <!--no_test-->
 ```zig
