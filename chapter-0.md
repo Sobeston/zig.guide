@@ -9,7 +9,7 @@ description: "Ziglearn - A Guide / Tutorial for the Zig programming language. In
 
 [Zig](https://ziglang.org) is a general-purpose programming language and toolchain for maintaining __robust__, __optimal__, and __reusable__ software.
 
-Warning: the latest major release is 0.7 - Zig is still pre-1.0; usage in production is still not recommended and you may run into compiler bugs.
+Warning: the latest major release is 0.8 - Zig is still pre-1.0; usage in production is still not recommended and you may run into compiler bugs.
 
 To follow this guide, we assume you have:
    * Prior experience programming
@@ -19,7 +19,7 @@ Knowing a language like C, C++, Rust, Go, Pascal or similar will be helpful for 
 
 # Installation
 
-**This guide assumes you're using a master build** of Zig as opposed to the latest major release, which means downloading a binary from the site or compiling from source; **the version of Zig in your package manager is likely outdated**. This guide does not support the 0.7 or 0.7.1 build of Zig.
+**This guide assumes you're using a master build** of Zig as opposed to the latest major release, which means downloading a binary from the site or compiling from source; **the version of Zig in your package manager is likely outdated**. This guide does not support Zig 0.8.0.
 
 1.  Download and extract a prebuilt master binary of Zig from:
 ```
