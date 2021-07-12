@@ -53,6 +53,19 @@ const array = [_]u8{ 'h', 'e', 'l', 'l', 'o' };
 const length = array.len; // 5
 ```
 
+A two dimensional array is denoted by `[M][N]T`, this is an array of array where `M` is the number of sub-array and `N` is, as in the first example, the number of elements in the array and `T` is the type of those elements.
+
+<!--no_test-->
+```zig
+const array = [2][5]u8{ [5]u8{'h', 'e', 'l', 'l', 'o'}, [5]u8{ 'w', 'o', 'r', 'l', 'd' } };
+```
+
+The sub-array literals can be declared with `.{}`, because the type `[N]T` can be inferred from the parent type `[M][N]T`.
+<!--no_test-->
+```zig
+const array = [2][5]u8{ .{'h', 'e', 'l', 'l', 'o'}, .{ 'w', 'o', 'r', 'l', 'd' } };
+```
+
 # If
 
 Zig's basic if statement is simple in that it only accepts a `bool` value (of values `true` or `false`). There is no concept of truthy or falsy values.
