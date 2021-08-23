@@ -913,11 +913,11 @@ This list is non-exhaustive.
 
 So far we have only covered formatting specifiers. Format strings actually follow this format, where between each pair of square brackets is a parameter you have to replace with something.
 
-`{[position][specifier]:[fill][alignment][width].[precision]}`
+`{[argument][specifier]:[fill][alignment][width].[precision]}`
 
 | Name      | Meaning                                                                                 |
 |-----------|-----------------------------------------------------------------------------------------|
-| Position  | The index of the argument that should be inserted                                       |
+| argument  | The name or index of the argument that should be inserted                               |
 | Specifier | A type-dependent formatting option                                                      |
 | Fill      | A single character used for padding                                                     |
 | Alignment | One of three characters '<', '^' or '>'; these are for left, middle and right alignment |
@@ -925,14 +925,19 @@ So far we have only covered formatting specifiers. Format strings actually follo
 | Precision | How many decimals a formatted number should have                                        |
 
 
-Position usage.
+argument usage.
 ```zig
-test "position" {
+test "arument" {
     var b: [3]u8 = undefined;
     try expect(eql(
         u8,
-        try bufPrint(&b, "{0s}{0s}{1s}", .{"a", "b"}),
+        try bufPrint(&b, "{0s}{0s}{1s}", .{ "a", "b" }),
         "aab",
+    ));
+    try expect(eql(
+        u8,
+        try bufPrint(&b, "{[a_name]s}{[name_2]s}{[a_name]s}", .{ .a_name = "a" .name_2 = "b" }),
+        "aba",
     ));
 }
 ```
