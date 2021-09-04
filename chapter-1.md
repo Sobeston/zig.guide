@@ -260,7 +260,7 @@ test "error union" {
 }
 ```
 
-Functions often return error unions. Here's one using a catch with __payload capturing__ to take the value of the error. Side note: some languages use similar syntax for lambdas - this is not the case for Zig.
+Functions often return error unions. Here's one using a catch, where the `|err|` syntax receives the value of the error. This is called __payload capturing__, and is used similarly in many places. We'll talk about it in more detail later in the chapter. Side note: some languages use similar syntax for lambdas - this is not the case for Zig.
 
 ```zig
 fn failingFunction() error{Oops}!void {
@@ -703,25 +703,25 @@ Bare union types do not have a guaranteed memory layout. Because of this, bare u
 
 <!--fail_test-->
 ```zig
-const Payload = union {
+const Result = union {
     int: i64,
     float: f64,
     bool: bool,
 };
 
 test "simple union" {
-    var payload = Payload{ .int = 1234 };
-    payload.float = 12.34;
+    var result = Result{ .int = 1234 };
+    result.float = 12.34;
 }
 ```
 ```
 test "simple union"...access of inactive union field
 .\tests.zig:342:12: 0x7ff62c89244a in test "simple union" (test.obj)
-    payload.float = 12.34;
+    result.float = 12.34;
            ^
 ```
 
-Tagged unions are unions which use an enum used to detect which field is active. Here we make use of a switch with payload capturing; captured values are immutable so pointers must be taken to mutate the values.
+Tagged unions are unions which use an enum used to detect which field is active. Here we make use payload capturing again, this time to switch on the tag type of a union while also capturing the value it contains. Captured values are immutable, so pointers must be taken to mutate the values.
 
 ```zig
 const Tag = enum { a, b, c };
@@ -1160,7 +1160,7 @@ test "**" {
 
 # Payload Captures
 
-Payload captures use the syntax `|value|` and appear in many places. These are used to "capture" the value from something.
+Payload captures use the syntax `|value|` and appear in many places, some of which we've seen already. Wherever they appear, they are used to "capture" the value from something.
 
 With if statements and optionals.
 ```zig
@@ -1262,7 +1262,7 @@ test "switch capture" {
 }
 ```
 
-So far, we have only shown payload captures with copy semantics (i.e. the captured value is a copy of the original value). We can also modify captured values by taking them as pointers, using the `|*value|` syntax. This is called a *pointer capture*.
+As we saw in the Unions section, by default captured values are immutable (similar to function arguments) and must be copied in order to modify them. With payload captures, we also have the option to capture the values as pointers using the `|*value|` syntax. This is called a *pointer capture*, and allows us to modify captured values directly:
 
 ```zig
 test "for with pointer capture" {
