@@ -721,7 +721,7 @@ test "simple union"...access of inactive union field
            ^
 ```
 
-Tagged unions are unions which use an enum used to detect which field is active. Here we make use payload capturing again, to switch on the tag type of a union while also capturing the value it contains. Here we use a _pointer capture_; captured values are immutable, but with the `|*value|` syntax we can capture a pointer to the values instead of the values themselves. This allows us to use dereferencing to mutate the original value.
+Tagged unions are unions which use an enum used to detect which field is active. Here we make use payload capturing again, to switch on the tag type of a union while also capturing the value it contains. Here we use a *pointer capture*; captured values are immutable, but with the `|*value|` syntax we can capture a pointer to the values instead of the values themselves. This allows us to use dereferencing to mutate the original value.
 
 ```zig
 const Tag = enum { a, b, c };
@@ -1265,7 +1265,7 @@ test "switch capture" {
 }
 ```
 
-As we saw in the Unions section, values captured with the `|val|` syntax are immutable (similar to function arguments) and only copies of them are modifiable. With payload captures, we can instead capture the values as pointers using the `|*value|` syntax. This is called a *pointer capture*, and allows us to modify the original value by dereferencing the pointer:
+As we saw in the Union and Optional sections above, values captured with the `|val|` syntax are immutable (similar to function arguments), but we can use pointer capture to modify the original values. This captures the values as pointers that are themselves still immutable, but because the value is now a pointer, we can modify the original value by dereferencing it:
 
 ```zig
 test "for with pointer capture" {
