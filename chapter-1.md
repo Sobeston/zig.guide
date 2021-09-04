@@ -1262,7 +1262,7 @@ test "switch capture" {
 }
 ```
 
-As we saw in the Unions section, by default captured values are immutable (similar to function arguments) and must be copied in order to modify them. With payload captures, we also have the option to capture the values as pointers using the `|*value|` syntax. This is called a *pointer capture*, and allows us to modify captured values directly:
+As we saw in the Unions section, values captured with the `|val|` syntax are immutable (similar to function arguments) and only copies of them are modifiable. With payload captures, we can instead capture the values as pointers using the `|*value|` syntax. This is called a *pointer capture*, and allows us to modify the original value by dereferencing the pointer:
 
 ```zig
 test "for with pointer capture" {
