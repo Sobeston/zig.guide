@@ -721,7 +721,7 @@ test "simple union"...access of inactive union field
            ^
 ```
 
-Tagged unions are unions which use an enum used to detect which field is active. Here we make use payload capturing again, this time to switch on the tag type of a union while also capturing the value it contains. Captured values are immutable, so pointers must be taken to mutate the values.
+Tagged unions are unions which use an enum used to detect which field is active. Here we make use payload capturing again, to switch on the tag type of a union while also capturing the value it contains. Here we use a _pointer capture_; captured values are immutable, but with the `|*value|` syntax we can capture a pointer to the values instead of the values themselves. This allows us to use dereferencing to mutate the original value.
 
 ```zig
 const Tag = enum { a, b, c };
@@ -954,7 +954,7 @@ test "orelse unreachable" {
 
 Payload capturing works in many places for optionals, meaning that in the event that it is non-null we can "capture" its non-null value.
 
-Here we use an `if` optional payload capture; a and b are equivalent here. `if (b) |value|` captures the value of `b` (in the cases where `b` is not null), and copies it inside `value`.
+Here we use an `if` optional payload capture; a and b are equivalent here. `if (b) |value|` captures the value of `b` (in the cases where `b` is not null), and and makes it available as `value`. As in the union example, the captured value is immutable, but we can still use a pointer capture to modify the value stored in `b`.
 
 ```zig
 test "if optional payload capture" {
@@ -963,8 +963,11 @@ test "if optional payload capture" {
         const value = a.?;
     }
 
-    const b: ?i32 = 5;
-    if (b) |value| {}
+    var b: ?i32 = 5;
+    if (b) |*value| {
+        value.* += 1;
+    }
+    try expect(b.? == 6);
 }
 ```
 
