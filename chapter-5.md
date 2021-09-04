@@ -24,7 +24,7 @@ The style of Zig's async may be described as suspendible stackless coroutines. Z
 
 In the previous section we talked of how async functions can give control back to the caller, and how the async function can later take control back. This functionality is provided by the keywords [`suspend`, and `resume`](https://ziglang.org/documentation/master/#Suspend-and-Resume). When a function suspends, control flow returns to wherever it was last resumed; when a function is called via an `async` invocation, this is an implicit resume.
 
-In these examples, I have commented the order of execution. There are a few things to take in here:
+The comments in these examples indicate the order of execution. There are a few things to take in here:
 *  The `async` keyword is used to invoke functions in an async context.
 *  `async func()` returns the function's frame.
 *  We must store this frame.
