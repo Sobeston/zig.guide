@@ -604,7 +604,7 @@ test "set enum ordinal value" {
 }
 ```
 
-Methods can be given to enums. These act as namespaced functions that can be called with dot syntax.
+Functions can be given to enums. These are sometimes called "methods", and act as namespaced functions that can be called with dot syntax. When called from an instance of the enum, these methods are automatically passed that instance as their first argument. Notice below that `Suit.spades.isClubs()` is equivalent to `Suit.isClubs(Suit.spades)`.
 
 ```zig
 const Suit = enum {
@@ -691,7 +691,7 @@ test "struct defaults" {
 
 Like enums, structs may also contain functions and declarations.
 
-Structs have a couple of unique properties to make them easier to work with. First, when accessing fields from a pointer to a struct, one level of dereferencing is done automatically. Second, when calling a method from an instance of a struct, a pointer to that instance is passed as the first argument to the function. Notice how in the example below, the swap() function accesses self.x and self.y using a pointer to `Stuff` without needing to dereference that pointer, and the `thing.swap()` call doesn't explicitly pass a pointer in. This call is functionally identitcal to (and could be replaced by) `Stuff.swap(&thing)`, being able to call the method from the instance is just for convenience.
+Similar to enums, methods called from a struct instance will be passed a _pointer to_ that instance. In addition, structs an additional unique property: when accessing fields from a pointer to a struct, one level of dereferencing is done automatically. Notice how these work together in the example below: the swap() function is automatically passed a pointer to `thing`, and then accesses self.x and self.y using that pointer without needing to dereference it.
 
 ```zig
 const Stuff = struct {
@@ -711,6 +711,8 @@ test "automatic dereference" {
     try expect(thing.y == 10);
 }
 ```
+
+The code above is equivalent to calling `Stuff.swap(&thing)` and accessing the fields with `self.*.x` - these are just convenience features to make code easier to work with.
 
 # Unions
 
