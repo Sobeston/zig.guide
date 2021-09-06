@@ -691,7 +691,7 @@ test "struct defaults" {
 
 Like enums, structs may also contain functions and declarations.
 
-Structs have the unique property that when given a pointer to a struct, one level of dereferencing is done automatically when accessing fields. Notice how in this example, self.x and self.y are accessed in the swap function without needing to dereference the self pointer.
+Structs have a couple of unique properties to make them easier to work with. First, when accessing fields from a pointer to a struct, one level of dereferencing is done automatically. Second, when calling a method from an instance of a struct, a pointer to that instance is passed as the first argument to the function. Notice how in the example below, the swap() function accesses self.x and self.y using a pointer to `Stuff` without needing to dereference that pointer, and the `thing.swap()` call doesn't explicitly pass a pointer in. This call is functionally identitcal to (and could be replaced by) `Stuff.swap(&thing)`, being able to call the method from the instance is just for convenience.
 
 ```zig
 const Stuff = struct {
