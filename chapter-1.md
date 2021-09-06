@@ -604,7 +604,22 @@ test "set enum ordinal value" {
 }
 ```
 
-Methods can be given to enums. These act as namespaced functions that can be called with dot syntax.
+When switching on an enum, the branches must be referencing that enum. So as a shorthand, we can omit its name and supply just the value prefixed with a `.`:
+
+```zig
+const Volume = enum { quiet, loud };
+
+test {
+    const volume = Volume.loud;
+    const level = switch (volume) {
+        .quiet => 2,
+        .loud => 11,
+    };
+    try expect(level == 11);
+}
+```
+
+Methods can be given to enums. These act as namespaced functions that can be called with dot syntax. Their arguments can also use the same shorthand as the switch above.
 
 ```zig
 const Suit = enum {
@@ -634,21 +649,6 @@ const Mode = enum {
 test "hmm" {
     Mode.count += 1;
     try expect(Mode.count == 1);
-}
-```
-
-For convenience, when switching on an enum the branches can omit the enum's name and supply just the enum value prefixed with a `.`:
-
-```zig
-const Volume = enum { quiet, loud };
-
-test {
-    const volume = Volume.loud;
-    const level = switch (volume) {
-        .quiet => 2,
-        .loud => 11,
-    };
-    try expect(level == 11);
 }
 ```
 
