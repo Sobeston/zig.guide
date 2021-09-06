@@ -604,7 +604,7 @@ test "set enum ordinal value" {
 }
 ```
 
-Functions can be given to enums. These are sometimes called "methods", and act as namespaced functions that can be called with dot syntax. When called from an instance of the enum, these methods are automatically passed that instance as their first argument. Notice below that `Suit.spades.isClubs()` is equivalent to `Suit.isClubs(Suit.spades)`.
+Functions can be given to enums. These are sometimes called "methods", and act as namespaced functions that can be called with dot syntax. As a convenience, when called from an instance of the enum these methods are automatically passed that instance as their first argument. Thus, `Suit.spades.isClubs()` is equivalent to `Suit.isClubs(Suit.spades)`. Additionally, when calling a method from the enum, we can shorten the argument to omit the enum name and pass it with just a leading dot, as in the example below.
 
 ```zig
 const Suit = enum {
