@@ -260,7 +260,7 @@ test "error union" {
 }
 ```
 
-Functions often return error unions. Here's one using a catch with __payload capturing__ to take the value of the error. Side note: some languages use similar syntax for lambdas - this is not the case for Zig.
+Functions often return error unions. Here's one using a catch, where the `|err|` syntax receives the value of the error. This is called __payload capturing__, and is used similarly in many places. We'll talk about it in more detail later in the chapter. Side note: some languages use similar syntax for lambdas - this is not the case for Zig.
 
 ```zig
 fn failingFunction() error{Oops}!void {
@@ -697,31 +697,31 @@ test "automatic dereference" {
 
 # Unions
 
-Zig's union's allow you to define types which store one value of many possible typed fields; only one field may be active at one time.
+Zig's unions allow you to define types which store one value of many possible typed fields; only one field may be active at one time.
 
 Bare union types do not have a guaranteed memory layout. Because of this, bare unions cannot be used to reinterpret memory. Accessing a field in a union which is not active is detectable illegal behaviour.
 
 <!--fail_test-->
 ```zig
-const Payload = union {
+const Result = union {
     int: i64,
     float: f64,
     bool: bool,
 };
 
 test "simple union" {
-    var payload = Payload{ .int = 1234 };
-    payload.float = 12.34;
+    var result = Result{ .int = 1234 };
+    result.float = 12.34;
 }
 ```
 ```
 test "simple union"...access of inactive union field
 .\tests.zig:342:12: 0x7ff62c89244a in test "simple union" (test.obj)
-    payload.float = 12.34;
+    result.float = 12.34;
            ^
 ```
 
-Tagged unions are unions which use an enum used to detect which field is active. Here we make use of a switch with payload capturing; captured values are immutable so pointers must be taken to mutate the values.
+Tagged unions are unions which use an enum used to detect which field is active. Here we make use payload capturing again, to switch on the tag type of a union while also capturing the value it contains. Here we use a *pointer capture*; captured values are immutable, but with the `|*value|` syntax we can capture a pointer to the values instead of the values themselves. This allows us to use dereferencing to mutate the original value.
 
 ```zig
 const Tag = enum { a, b, c };
@@ -954,7 +954,7 @@ test "orelse unreachable" {
 
 Payload capturing works in many places for optionals, meaning that in the event that it is non-null we can "capture" its non-null value.
 
-Here we use an `if` optional payload capture; a and b are equivalent here. `if (b) |value|` captures the value of `b` (in the cases where `b` is not null), and copies it inside `value`.
+Here we use an `if` optional payload capture; a and b are equivalent here. `if (b) |value|` captures the value of `b` (in the cases where `b` is not null), and and makes it available as `value`. As in the union example, the captured value is immutable, but we can still use a pointer capture to modify the value stored in `b`.
 
 ```zig
 test "if optional payload capture" {
@@ -963,8 +963,11 @@ test "if optional payload capture" {
         const value = a.?;
     }
 
-    const b: ?i32 = 5;
-    if (b) |value| {}
+    var b: ?i32 = 5;
+    if (b) |*value| {
+        value.* += 1;
+    }
+    try expect(b.? == 6);
 }
 ```
 
@@ -1160,7 +1163,7 @@ test "**" {
 
 # Payload Captures
 
-Payload captures use the syntax `|value|` and appear in many places. These are used to "capture" the value from something.
+Payload captures use the syntax `|value|` and appear in many places, some of which we've seen already. Wherever they appear, they are used to "capture" the value from something.
 
 With if statements and optionals.
 ```zig
@@ -1262,7 +1265,7 @@ test "switch capture" {
 }
 ```
 
-So far, we have only shown payload captures with copy semantics (i.e. the captured value is a copy of the original value). We can also modify captured values by taking them as pointers, using the `|*value|` syntax. This is called a *pointer capture*.
+As we saw in the Union and Optional sections above, values captured with the `|val|` syntax are immutable (similar to function arguments), but we can use pointer capture to modify the original values. This captures the values as pointers that are themselves still immutable, but because the value is now a pointer, we can modify the original value by dereferencing it:
 
 ```zig
 test "for with pointer capture" {
