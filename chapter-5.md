@@ -164,7 +164,7 @@ test "@Frame" {
 }
 ```
 
-[`@frame()`](https://ziglang.org/documentation/master/#Frame) returns a pointer to the frame of the current function. Similar to `suspend` points, if this call is found in a function then it is inferred as being async. All pointers to frames coerce to the special type `anyframe`, which you can use `resume` upon.
+[`@frame()`](https://ziglang.org/documentation/master/#frame) returns a pointer to the frame of the current function. Similar to `suspend` points, if this call is found in a function then it is inferred as being async. All pointers to frames coerce to the special type `anyframe`, which you can use `resume` upon.
 
 This allows us to, for example, write a function that resumes itself.
 ```zig
