@@ -57,7 +57,7 @@ const length = array.len; // 5
 
 Zig's basic if statement is simple in that it only accepts a `bool` value (of values `true` or `false`). There is no concept of truthy or falsy values.
 
-Here I will introduce testing. Save the below code and compile + run it with `zig test file-name.zig`. We will be using the [`expect`](https://ziglang.org/documentation/master/std/#std;testing.expect) function from the standard library, which will cause the test to fail if its given the value `false`. When a test fails, the error and stack trace will be shown.
+Here we will introduce testing. Save the below code and compile + run it with `zig test file-name.zig`. We will be using the [`expect`](https://ziglang.org/documentation/master/std/#std;testing.expect) function from the standard library, which will cause the test to fail if its given the value `false`. When a test fails, the error and stack trace will be shown.
 
 ```zig
 const expect = @import("std").testing.expect;
@@ -1484,7 +1484,7 @@ test "vector indexing" {
 }
 ```
 
-The built-in function [`@splat`](https://ziglang.org/documentation/master/#splat) may be used to construct a vector where all of the values are the same. Here I am using it to multiply a vector by a scalar.
+The built-in function [`@splat`](https://ziglang.org/documentation/master/#splat) may be used to construct a vector where all of the values are the same. Here we use it to multiply a vector by a scalar.
 
 ```zig
 test "vector * scalar" {
