@@ -595,8 +595,8 @@ test "hashing" {
     var iterator = map.iterator();
 
     while (iterator.next()) |entry| {
-        sum.x += entry.value.x;
-        sum.y += entry.value.y;
+        sum.x += entry.value_ptr.x;
+        sum.y += entry.value_ptr.y;
     }
 
     try expect(sum.x == 10);
