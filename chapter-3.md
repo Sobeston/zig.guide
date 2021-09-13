@@ -188,10 +188,7 @@ To your newly made `build.zig`, add the following lines.
 
 <!--no_test-->
 ```zig
-    exe.addPackage(.{
-        .name = "table-helper",
-        .path = "libs/table-helper/table-helper.zig",
-    });
+    exe.addPackagePath("table-helper", "libs/table-helper/table-helper.zig");
 ```
 
 Now when run via `zig build`, [`@import`](https://ziglang.org/documentation/master/#import) inside your `main.zig` will work with the string "table-helper". This means that main has the table-helper package. Packages (type [`std.build.Pkg`](https://ziglang.org/documentation/master/std/#std;build.Pkg)) also have a field for dependencies of type `?[]const Pkg`, which is defaulted to null. This allows you to have packages which rely on other packages. 
