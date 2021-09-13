@@ -157,6 +157,7 @@ test "packed struct size" {
         .jumping = true,
         .in_air = true,
     };
+    _ = state;
 }
 ```
 

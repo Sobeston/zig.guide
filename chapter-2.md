@@ -54,9 +54,9 @@ test "arena allocator" {
     defer arena.deinit();
     var allocator = &arena.allocator;
 
-    const m1 = try allocator.alloc(u8, 1);
-    const m2 = try allocator.alloc(u8, 10);
-    const m3 = try allocator.alloc(u8, 100);
+    _ = try allocator.alloc(u8, 1);
+    _ = try allocator.alloc(u8, 10);
+    _ = try allocator.alloc(u8, 100);
 }
 ```
 
@@ -126,6 +126,7 @@ test "createFile, write, seekTo, read" {
     defer file.close();
 
     const bytes_written = try file.writeAll("Hello File!");
+    _ = bytes_written;
 
     var buffer: [100]u8 = undefined;
     try file.seekTo(0);
@@ -380,6 +381,9 @@ const Person = struct {
         options: std.fmt.FormatOptions,
         writer: anytype,
     ) !void {
+        _ = fmt;
+        _ = options;
+
         try writer.print("{s} ({}-", .{
             self.name, self.birth_year,
         });
@@ -517,6 +521,9 @@ test "random numbers" {
     const b = rand.boolean();
     const c = rand.int(u8);
     const d = rand.intRangeAtMost(u8, 0, 255);
+
+    //suppress unused local constant compile error
+    if (false) _ = .{ a, b, c, d }; 
 }
 ```
 
@@ -530,6 +537,9 @@ test "crypto random numbers" {
     const b = rand.boolean();
     const c = rand.int(u8);
     const d = rand.intRangeAtMost(u8, 0, 255);
+
+    //suppress unused local constant compile error
+    if (false) _ = .{ a, b, c, d }; 
 }
 ```
 
@@ -561,6 +571,7 @@ var tick: isize = 0;
 
 test "threading" {
     var thread = try std.Thread.spawn(ticker, @as(u8, 1));
+    _ = thread;
     try expect(tick == 0);
     std.time.sleep(3 * std.time.ns_per_s / 2);
     try expect(tick == 1);

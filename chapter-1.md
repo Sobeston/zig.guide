@@ -141,18 +141,25 @@ test "while with break" {
 ```
 
 # For
-For loops are used to iterate over arrays (and other types, to be discussed later). For loops follow this syntax. Like while, for loops can use `break` and `continue`.
+For loops are used to iterate over arrays (and other types, to be discussed later). For loops follow this syntax. Like while, for loops can use `break` and `continue`. Here we've had to assign values to `_`, as Zig does not allow us to have unused values.
 
 ```zig
 test "for" {
     //character literals are equivalent to integer literals
     const string = [_]u8{ 'a', 'b', 'c' };
 
-    for (string) |character, index| {}
+    for (string) |character, index| {
+        _ = character;
+        _ = index;
+    }
 
-    for (string) |character| {}
+    for (string) |character| {
+        _ = character;
+    }
 
-    for (string) |_, index| {}
+    for (string) |_, index| {
+        _ = index;
+    }
 
     for (string) |_| {}
 }
@@ -321,6 +328,10 @@ fn createFile() !void {
 test "inferred error set" {
     //type coercion successfully takes place
     const x: error{AccessDenied}!void = createFile();
+
+    //Zig does not let us ignore error unions via _ = x;
+    //we must unwrap it with "try", "catch", or "if" by any means
+    _ = x catch {};
 }
 ```
 
@@ -383,6 +394,7 @@ test "out of bounds" {
     const a = [3]u8{ 1, 2, 3 };
     var index: u8 = 5;
     const b = a[index];
+    _ = b;
 }
 ```
 ```
@@ -400,6 +412,7 @@ test "out of bounds, no safety" {
     const a = [3]u8{ 1, 2, 3 };
     var index: u8 = 5;
     const b = a[index];
+    _ = b;
 }
 ```
 
@@ -545,6 +558,7 @@ The syntax `x[n..]` can also be used for when you want to slice to the end.
 test "slices 3" {
     var array = [_]u8{ 1, 2, 3, 4, 5 };
     var slice = array[0..];
+    _ = slice;
 }
 ```
 
@@ -638,6 +652,7 @@ test "struct usage" {
         .y = 100,
         .z = 50,
     };
+    _ = my_vector;
 }
 ```
 
@@ -650,6 +665,7 @@ test "missing struct field" {
         .x = 0,
         .z = 50,
     };
+    _ = my_vector;
 }
 ```
 ```
@@ -669,6 +685,7 @@ test "struct defaults" {
         .x = 25,
         .y = -50,
     };
+    _ = my_vector;
 }
 ```
 
@@ -961,6 +978,7 @@ test "if optional payload capture" {
     const a: ?i32 = 5;
     if (a != null) {
         const value = a.?;
+        _ = value;
     }
 
     var b: ?i32 = 5;
@@ -1000,10 +1018,12 @@ Blocks of code may be forcibly executed at compile time using the [`comptime`](h
 ```zig
 test "comptime blocks" {
     var x = comptime fibonacci(10);
+    _ = x;
 
     var y = comptime blk: {
         break :blk fibonacci(10);
     };
+    _ = y;
 }
 ```
 
@@ -1015,7 +1035,9 @@ test "comptime_int" {
     const b = a + 10;
 
     const c: u4 = a;
+    _ = c;
     const d: f32 = b;
+    _ = d;
 }
 ```
 
@@ -1027,6 +1049,7 @@ Types in Zig are values of the type `type`. These are available at compile time.
 test "branching on types" {
     const a = 5;
     const b: if (a < 10) f32 else i32 = 5;
+    _ = b;
 }
 ```
 
@@ -1186,6 +1209,7 @@ test "error union if" {
         try expect(@TypeOf(entity) == u32);
         try expect(entity == 5);
     } else |err| {
+        _ = err catch {};
         unreachable;
     }
 }
@@ -1441,12 +1465,15 @@ Sentinel terminated types coerce to their non-sentinel-terminated counterparts.
 test "coercion" {
     var a: [*:0]u8 = undefined;
     const b: [*]u8 = a;
+    _ = b;
 
     var c: [5:0]u8 = undefined;
     const d: [5]u8 = c;
+    _ = d;
 
     var e: [:10]f32 = undefined;
     const f = e;
+    _ = f;
 }
 ```
 
@@ -1455,7 +1482,8 @@ Sentinel terminated slicing is provided which can be used to create a sentinel t
 ```zig
 test "sentinel terminated slicing" {
     var x = [_:0]u8{255} ** 3;
-    const y = x[0..3 :0];
+    const y = x[0..3:0];
+    _ = y;
 }
 ```
 
