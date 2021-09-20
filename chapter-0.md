@@ -54,7 +54,11 @@ https://ziglang.org/download/
 
       Close your terminal and create a new one.
 
-3. Verify your install with `zig version`. The output should start with `0.8.0-dev.`.
+3. Verify your install with `zig version`. The output should look something like
+```
+$ zig version
+0.9.0-dev.1083+9fa723ee5
+```
 
 4. (optional, third party) For completions and go-to-definition in your editor, install the Zig Language Server from:
 ```
