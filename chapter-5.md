@@ -306,8 +306,8 @@ fn asyncMain() void {
 // priority queue of tasks
 // lower .expires => higher priority => to be executed before
 var timer_queue: std.PriorityQueue(Delay) = undefined;
-fn cmp(a: Delay, b: Delay) bool {
-    return a.expires < b.expires;
+fn cmp(a: Delay, b: Delay) std.math.Order {
+    return std.math.order(a.expires, b.expires);
 }
 
 pub fn main() !void {
