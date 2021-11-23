@@ -246,6 +246,7 @@ pub fn build(b: *std.build.Builder) void {
 
 fn myTask(self: *std.build.Step) !void {
     std.debug.print("Hello!\n", .{});
+    _ = self;
 }
 ```
 
