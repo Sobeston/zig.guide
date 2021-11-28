@@ -971,7 +971,7 @@ test "orelse unreachable" {
 
 Payload capturing works in many places for optionals, meaning that in the event that it is non-null we can "capture" its non-null value.
 
-Here we use an `if` optional payload capture; a and b are equivalent here. `if (b) |value|` captures the value of `b` (in the cases where `b` is not null), and and makes it available as `value`. As in the union example, the captured value is immutable, but we can still use a pointer capture to modify the value stored in `b`.
+Here we use an `if` optional payload capture; a and b are equivalent here. `if (b) |value|` captures the value of `b` (in the cases where `b` is not null), and makes it available as `value`. As in the union example, the captured value is immutable, but we can still use a pointer capture to modify the value stored in `b`.
 
 ```zig
 test "if optional payload capture" {
