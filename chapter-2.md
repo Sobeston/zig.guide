@@ -570,7 +570,7 @@ fn ticker(step: u8) void {
 var tick: isize = 0;
 
 test "threading" {
-    var thread = try std.Thread.spawn(.{}, ticker, .{@as(u8, 1)});
+    var thread = try std.Thread.spawn(ticker, @as(u8, 1));
     _ = thread;
     try expect(tick == 0);
     std.time.sleep(3 * std.time.ns_per_s / 2);
@@ -717,7 +717,7 @@ It is a common idiom to have a struct type with a `next` function with an option
 ```zig
 test "split iterator" {
     const text = "robust, optimal, reusable, maintainable, ";
-    var iter = std.mem.split(u8, text, ", ");
+    var iter = std.mem.split(text, ", ");
     try expect(eql(u8, iter.next().?, "robust"));
     try expect(eql(u8, iter.next().?, "optimal"));
     try expect(eql(u8, iter.next().?, "reusable"));

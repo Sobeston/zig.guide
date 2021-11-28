@@ -32,7 +32,7 @@ pub fn main() !void {
         defer allocator.free(text);
         _ = try in.readAll(text);
 
-        var iter = std.mem.split(u8, text, "```");
+        var iter = std.mem.split(text, "```");
         outer: while (iter.next()) |token| {
             if (!std.mem.startsWith(u8, token, "zig")) continue;
 
