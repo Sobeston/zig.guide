@@ -36,7 +36,7 @@ The [`std.heap.FixedBufferAllocator`](https://ziglang.org/documentation/master/s
 test "fixed buffer allocator" {
     var buffer: [1000]u8 = undefined;
     var fba = std.heap.FixedBufferAllocator.init(&buffer);
-    var allocator = &fba.allocator;
+    const allocator = fba.allocator();
 
     const memory = try allocator.alloc(u8, 100);
     defer allocator.free(memory);
@@ -52,7 +52,7 @@ test "fixed buffer allocator" {
 test "arena allocator" {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     defer arena.deinit();
-    var allocator = &arena.allocator;
+    const allocator = arena.allocator();
 
     _ = try allocator.alloc(u8, 1);
     _ = try allocator.alloc(u8, 10);
@@ -79,8 +79,9 @@ test "GPA" {
         const leaked = gpa.deinit();
         if (leaked) expect(false) catch @panic("TEST FAIL"); //fail test; can't try in defer as defer is executed after we return
     }
-    const bytes = try gpa.allocator.alloc(u8, 100);
-    defer gpa.allocator.free(bytes);
+    const allocator = gpa.allocator();
+    const bytes = try allocator.alloc(u8, 100);
+    defer allocator.free(bytes);
 }
 ```
 
@@ -144,7 +145,7 @@ We can get various information about files by using `.stat()` on them. `Stat` al
 test "file stat" {
     const file = try std.fs.cwd().createFile(
         "junk_file2.txt",
-        .{},
+        .{ .read = true },
     );
     defer file.close();
     const stat = try file.stat();
