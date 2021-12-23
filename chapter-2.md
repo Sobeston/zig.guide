@@ -517,7 +517,7 @@ test "random numbers" {
         try std.os.getrandom(std.mem.asBytes(&seed));
         break :blk seed;
     });
-    const rand = &prng.random;
+    const rand = prng.random();
 
     const a = rand.float(f32);
     const b = rand.boolean();
