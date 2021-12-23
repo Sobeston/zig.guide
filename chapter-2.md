@@ -468,7 +468,7 @@ test "json stringify" {
 
     var buf: [100]u8 = undefined;
     var fba = std.heap.FixedBufferAllocator.init(&buf);
-    var string = std.ArrayList(u8).init(&fba.allocator);
+    var string = std.ArrayList(u8).init(fba.allocator());
     try std.json.stringify(x, .{}, string.writer());
 
     try expect(eql(
