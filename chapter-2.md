@@ -234,10 +234,11 @@ fn nextLine(reader: anytype, buffer: []u8) !?[]const u8 {
         '\n',
     )) orelse return null;
     // trim annoying windows-only carriage return character
-    if (std.builtin.os.tag == .windows) {
-        line = std.mem.trimRight(u8, line, "\r");
+    if (@import("builtin").os.tag == .windows) {
+        return std.mem.trimRight(u8, line, "\r");
+    } else {
+        return line;
     }
-    return line;
 }
 
 test "read until next line" {
