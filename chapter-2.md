@@ -36,7 +36,7 @@ The [`std.heap.FixedBufferAllocator`](https://ziglang.org/documentation/master/s
 test "fixed buffer allocator" {
     var buffer: [1000]u8 = undefined;
     var fba = std.heap.FixedBufferAllocator.init(&buffer);
-    var allocator = fba.allocator();
+    const allocator = fba.allocator();
 
     const memory = try allocator.alloc(u8, 100);
     defer allocator.free(memory);
@@ -52,7 +52,7 @@ test "fixed buffer allocator" {
 test "arena allocator" {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     defer arena.deinit();
-    var allocator = arena.allocator();
+    const allocator = arena.allocator();
 
     _ = try allocator.alloc(u8, 1);
     _ = try allocator.alloc(u8, 10);
@@ -75,12 +75,14 @@ The Zig standard library also has a general purpose allocator. This is a safe al
 ```zig
 test "GPA" {
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    const allocator = gpa.allocator();
     defer {
         const leaked = gpa.deinit();
         if (leaked) expect(false) catch @panic("TEST FAIL"); //fail test; can't try in defer as defer is executed after we return
     }
-    const bytes = try gpa.allocator().alloc(u8, 100);
-    defer gpa.allocator().free(bytes);
+    
+    const bytes = try allocator.alloc(u8, 100);
+    defer allocator.free(bytes);
 }
 ```
 
@@ -144,7 +146,7 @@ We can get various information about files by using `.stat()` on them. `Stat` al
 test "file stat" {
     const file = try std.fs.cwd().createFile(
         "junk_file2.txt",
-        .{},
+        .{ .read = true },
     );
     defer file.close();
     const stat = try file.stat();
@@ -233,10 +235,11 @@ fn nextLine(reader: anytype, buffer: []u8) !?[]const u8 {
         '\n',
     )) orelse return null;
     // trim annoying windows-only carriage return character
-    if (std.builtin.os.tag == .windows) {
-        line = std.mem.trimRight(u8, line, "\r");
+    if (@import("builtin").os.tag == .windows) {
+        return std.mem.trimRight(u8, line, "\r");
+    } else {
+        return line;
     }
-    return line;
 }
 
 test "read until next line" {
@@ -466,7 +469,7 @@ test "json stringify" {
 
     var buf: [100]u8 = undefined;
     var fba = std.heap.FixedBufferAllocator.init(&buf);
-    var string = std.ArrayList(u8).init(&fba.allocator);
+    var string = std.ArrayList(u8).init(fba.allocator());
     try std.json.stringify(x, .{}, string.writer());
 
     try expect(eql(
@@ -515,7 +518,7 @@ test "random numbers" {
         try std.os.getrandom(std.mem.asBytes(&seed));
         break :blk seed;
     });
-    const rand = &prng.random;
+    const rand = prng.random();
 
     const a = rand.float(f32);
     const b = rand.boolean();
