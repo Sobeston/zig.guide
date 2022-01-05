@@ -12,9 +12,9 @@ Zig provides four build modes, with debug being the default as it produces the s
 |               | Runtime Safety | Optimizations |
 |---------------|----------------|---------------|
 | Debug         | Yes            | No            |
-| Release-Safe  | Yes            | Yes, Speed    |
-| Release-Small | No             | Yes, Size     |
-| Release-Fast  | No             | Yes, Speed    |
+| ReleaseSafe  | Yes            | Yes, Speed    |
+| ReleaseSmall | No             | Yes, Size     |
+| ReleaseFast  | No             | Yes, Speed    |
 
 These may be enabled in `zig run` and `zig test` with the arguments `-O ReleaseSafe`, `-O ReleaseSmall` and `-O ReleaseFast`.
 

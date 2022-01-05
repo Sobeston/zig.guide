@@ -75,11 +75,12 @@ The Zig standard library also has a general purpose allocator. This is a safe al
 ```zig
 test "GPA" {
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    const allocator = gpa.allocator();
     defer {
         const leaked = gpa.deinit();
         if (leaked) expect(false) catch @panic("TEST FAIL"); //fail test; can't try in defer as defer is executed after we return
     }
-    const allocator = gpa.allocator();
+    
     const bytes = try allocator.alloc(u8, 100);
     defer allocator.free(bytes);
 }
