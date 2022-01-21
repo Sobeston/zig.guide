@@ -953,7 +953,7 @@ test "position" {
 Fill, alignment and width being used.
 ```zig
 test "fill, alignment, width" {
-    var b: [5]u8 = undefined;
+    var b: [6]u8 = undefined;
 
     try expect(eql(
         u8,
@@ -963,8 +963,8 @@ test "fill, alignment, width" {
 
     try expect(eql(
         u8,
-        try bufPrint(&b, "{s:_^5}", .{"hi!"}),
-        "_hi!_",
+        try bufPrint(&b, "{s:_^6}", .{"hi!"}),
+        "_hi!__",
     ));
 
     try expect(eql(
