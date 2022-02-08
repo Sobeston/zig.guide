@@ -753,10 +753,10 @@ test "iterator looping" {
 ```zig
 test "arg iteration" {
     var arg_characters: usize = 0;
-    var iter = std.process.args();
-    while (try iter.next(test_allocator)) |arg| {
+    var iter = try std.process.argsWithAllocator(test_allocator);
+    defer iter.deinit();
+    while (iter.next()) |arg| {
         arg_characters += arg.len;
-        test_allocator.free(arg);
     }
     try expect(arg_characters > 0);
 }
