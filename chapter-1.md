@@ -227,7 +227,7 @@ test "multi defer" {
         defer x += 2;
         defer x /= 2;
     }
-    try expect(x == 4.5);
+    try expect(x == 3.5);
 }
 ```
 
