@@ -754,7 +754,8 @@ test "iterator looping" {
 test "arg iteration" {
     var arg_characters: usize = 0;
     var iter = std.process.args();
-    while (try iter.next(test_allocator)) |arg| {
+    while (iter.next(test_allocator)) |_arg| {
+        var arg = try _arg;
         arg_characters += arg.len;
         test_allocator.free(arg);
     }
