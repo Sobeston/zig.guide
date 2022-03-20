@@ -295,9 +295,43 @@ comptime {
     _ = Pos;
     _ = message;
 }
+
+//Alternate method to force analysis of everything automatically, but only in a test build:
+test "Force analysis" {
+    comptime {
+        std.testing.refAllDecls(@This());
+    }
+}
 ```
 
-When using a `build.zig` this may be invoked by setting the `emit_docs` field to true on a `LibExeObjStep`.
+When using a `build.zig` this may be invoked by setting the `emit_docs` field to `.emit` on a `LibExeObjStep`. We can create a build step to generate docs as follows and invoke it with `$ zig build docs`.
+
+<!--no_test-->
+```zig
+const std = @import("std");
+
+pub fn build(b: *std.build.Builder) void {
+    const mode = b.standardReleaseOptions();
+
+    const lib = b.addStaticLibrary("x", "src/x.zig");
+    lib.setBuildMode(mode);
+    lib.install();
+
+    const tests = b.addTest("src/x.zig");
+    tests.setBuildMode(mode);
+
+    const test_step = b.step("test", "Run library tests");
+    test_step.dependOn(&tests.step);
+
+    //Build step to generate docs:
+    const docs = b.addTest("src/x.zig");
+    docs.setBuildMode(mode);
+    docs.emit_docs = .emit;
+    
+    const docs_step = b.step("docs", "Generate docs");
+    docs_step.dependOn(&docs.step);
+}
+```
 
 This generation is experimental, and often fails with complex examples. This is used by the [standard library documentation](https://ziglang.org/documentation/master/std/).
 
