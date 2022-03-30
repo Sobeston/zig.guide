@@ -479,11 +479,12 @@ Trying to set a `*T` to the value 0 is detectable illegal behaviour.
 test "naughty pointer" {
     var x: u16 = 0;
     var y: *u8 = @intToPtr(*u8, x);
+    _ = y;
 }
 ```
 ```
-test "bad pointer"...cast causes pointer to be null
-.\tests.zig:241:18: 0x7ff69ebb22bd in test "bad pointer" (test.obj)
+test "naughty pointer"...cast causes pointer to be null
+.\tests.zig:241:18: 0x7ff69ebb22bd in test "naughty pointer" (test.obj)
     var y: *u8 = @intToPtr(*u8, x);
                  ^
 ```
