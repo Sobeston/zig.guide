@@ -407,10 +407,19 @@ test "out of bounds"...index out of bounds
 The user may choose to disable runtime safety for the current block by using the built-in function [`@setRuntimeSafety`](https://ziglang.org/documentation/master/#setRuntimeSafety).
 
 ```zig
+const std = @import("std");
+const RndGen = std.rand.DefaultPrng;
+
 test "out of bounds, no safety" {
     @setRuntimeSafety(false);
     const a = [3]u8{ 1, 2, 3 };
-    var index: u8 = 5;
+    
+    // generate an index beyond the bounds of [a] to ensure runtime evaluation
+    var rnd = RndGen.init(0);
+    const index = a.len + rnd.random().int(u8);
+    
+    try expect(index >= a.len);
+
     const b = a[index];
     _ = b;
 }
