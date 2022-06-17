@@ -748,20 +748,6 @@ test "iterator looping" {
 }
 ```
 
-`?!T` return types are also found, meaning the optional is unpacked before the error union. This conveys that getting to the next iteration is not the part that can fail, but rather getting the *value* of the next iteration may fail. [`std.process.ArgIterator`](https://ziglang.org/documentation/master/std/#std;process.ArgIterator) uses this pattern.
-
-```zig
-test "arg iteration" {
-    var arg_characters: usize = 0;
-    var iter = std.process.args();
-    while (try iter.next(test_allocator)) |arg| {
-        arg_characters += arg.len;
-        test_allocator.free(arg);
-    }
-    try expect(arg_characters > 0);
-}
-```
-
 Here we will implement a custom iterator. This will iterate over a slice of strings, yielding the strings which contain a given string.
 
 ```zig
