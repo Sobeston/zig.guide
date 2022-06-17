@@ -305,15 +305,15 @@ fn asyncMain() void {
 
 // priority queue of tasks
 // lower .expires => higher priority => to be executed before
-var timer_queue: std.PriorityQueue(Delay) = undefined;
-fn cmp(a: Delay, b: Delay) std.math.Order {
+var timer_queue: std.PriorityQueue(Delay, void, cmp) = undefined;
+fn cmp(context: void, a: Delay, b: Delay) std.math.Order {
+    _ = context;
     return std.math.order(a.expires, b.expires);
 }
 
 pub fn main() !void {
-    timer_queue = std.PriorityQueue(Delay).init(
-        std.heap.page_allocator,
-        cmp,
+    timer_queue = std.PriorityQueue(Delay, void, cmp).init(
+        std.heap.page_allocator, undefined
     );
     defer timer_queue.deinit();
 
