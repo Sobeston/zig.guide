@@ -738,9 +738,9 @@ Some iterators have a `!?T` return type, as opposed to ?T. `!?T` requires that w
 
 ```zig
 test "iterator looping" {
-    var iter = (try std.fs.cwd().openDir(
+    var iter = (try std.fs.cwd().openIterableDir(
         ".",
-        .{ .iterate = true },
+        .{},
     )).iterate();
 
     var file_count: usize = 0;
