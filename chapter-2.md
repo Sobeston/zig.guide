@@ -163,20 +163,17 @@ We can make directories and iterate over their contents. Here we will use an ite
 ```zig
 test "make dir" {
     try std.fs.cwd().makeDir("test-tmp");
-    const dir = try std.fs.cwd().openDir(
-        "test-tmp",
-        .{ .iterate = true },
-    );
+    const iterableDir = try std.fs.cwd().openIterableDir("test-tmp", .{});
     defer {
         std.fs.cwd().deleteTree("test-tmp") catch unreachable;
     }
 
-    _ = try dir.createFile("x", .{});
-    _ = try dir.createFile("y", .{});
-    _ = try dir.createFile("z", .{});
+    _ = try iterableDir.dir.createFile("x", .{});
+    _ = try iterableDir.dir.createFile("y", .{});
+    _ = try iterableDir.dir.createFile("z", .{});
 
     var file_count: usize = 0;
-    var iter = dir.iterate();
+    var iter = iterableDir.iterate();
     while (try iter.next()) |entry| {
         if (entry.kind == .File) file_count += 1;
     }
@@ -734,9 +731,9 @@ Some iterators have a `!?T` return type, as opposed to ?T. `!?T` requires that w
 
 ```zig
 test "iterator looping" {
-    var iter = (try std.fs.cwd().openDir(
+    var iter = (try std.fs.cwd().openIterableDir(
         ".",
-        .{ .iterate = true },
+        .{},
     )).iterate();
 
     var file_count: usize = 0;
