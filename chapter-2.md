@@ -30,7 +30,7 @@ test "allocation" {
 }
 ```
 
-The [`std.heap.FixedBufferAllocator`](https://ziglang.org/documentation/master/std/#std;heap.FixedBufferAllocator) is an allocator that allocates memory into a fixed buffer, and does not make any heap allocations. This is useful when heap usage is not wanted, for example when writing a kernel. It may also be considered for performance reasons. It will give you the error `OutOfMemory` if it has run out of bytes.
+The [`std.heap.FixedBufferAllocator`](https://ziglang.org/documentation/master/std/#std;heap.FixedBufferAllocator) is an allocator that allocates memory from a fixed buffer, and does not make any heap allocations. This is useful when heap usage is not wanted, for example when writing a kernel. It may also be considered for performance reasons. It will give you the error `OutOfMemory` if it has run out of bytes.
 
 ```zig
 test "fixed buffer allocator" {
