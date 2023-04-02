@@ -577,7 +577,7 @@ const Direction = enum { north, south, east, west };
 
 Enums types may have specified (integer) tag types.
 ```zig
-const Value = enum(u2) { zero, one, two };
+const Value = enum(u32) { zero, one, two };
 ```
 
 Enum's ordinal values start at 0. They can be accessed with the built-in function [`@enumToInt`](https://ziglang.org/documentation/master/#enumToInt).
