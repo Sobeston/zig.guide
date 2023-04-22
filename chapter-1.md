@@ -148,7 +148,7 @@ test "for" {
     //character literals are equivalent to integer literals
     const string = [_]u8{ 'a', 'b', 'c' };
 
-    for (string) |character, index| {
+    for (string, 0..) |character, index| {
         _ = character;
         _ = index;
     }
@@ -157,7 +157,7 @@ test "for" {
         _ = character;
     }
 
-    for (string) |_, index| {
+    for (string, 0..) |_, index| {
         _ = index;
     }
 
