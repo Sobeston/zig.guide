@@ -25,11 +25,11 @@ Users are recommended to develop their software with runtime safety enabled, des
 The commands `zig build-exe`, `zig build-lib`, and `zig build-obj` can be used to output executables, libraries and objects, respectively. These commands take in a source file and arguments.
 
 Some common arguments:
-- `--single-threaded`, which asserts the binary is single-threaded. This will turn thread safety measures such as mutexes into no-ops.
-- `--strip`, which removes debug info from the binary.
+- `-fsingle-threaded`, which asserts the binary is single-threaded. This will turn thread safety measures such as mutexes into no-ops.
+- `-fstrip`, which removes debug info from the binary.
 - `--dynamic`, which is used in conjunction with `zig build-lib` to output a dynamic/shared library.
 
-Let's create a tiny hello world. Save this as `tiny-hello.zig`, and run `zig build-exe .\tiny-hello.zig -O ReleaseSmall --strip --single-threaded`. Currently for `x86_64-windows`, this produces a 2.5KiB executable.
+Let's create a tiny hello world. Save this as `tiny-hello.zig`, and run `zig build-exe .\tiny-hello.zig -O ReleaseSmall -fstrip -fsingle-threaded`. Currently for `x86_64-windows`, this produces a 2.5KiB executable.
 
 <!--no_test-->
 ```zig
@@ -46,7 +46,7 @@ pub fn main() void {
 
 By default, Zig will compile for your combination of CPU and OS. This can be overridden by `-target`. Let's compile our tiny hello world to a 64 bit arm linux platform.
 
-`zig build-exe .\tiny-hello.zig -O ReleaseSmall --strip --single-threaded -target aarch64-linux`
+`zig build-exe .\tiny-hello.zig -O ReleaseSmall -fstrip -fsingle-threaded -target aarch64-linux`
 
 [QEMU](https://www.qemu.org/) or similar may be used to conveniently test executables made for foreign platforms.
 
@@ -79,7 +79,7 @@ Details on what architectures, OSes, CPUs and ABIs (details on ABIs in the next 
 
 # Zig Build
 
-The `zig build` command allows users to compile based on a `build.zig` file. `zig init-exe` and `zig-init-lib` can be used to give you a baseline project.
+The `zig build` command allows users to compile based on a `build.zig` file. `zig init-exe` and `zig init-lib` can be used to give you a baseline project.
 
 Let's use `zig init-exe` inside a new folder. This is what you will find.
 ```
