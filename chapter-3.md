@@ -258,13 +258,14 @@ pub fn build(b: *std.build.Builder) void {
     b.default_step = step;
 }
 
-fn myTask(self: *std.build.Step) !void {
+fn myTask(self: *std.build.Step, progress: *std.Progress.Node) !void {
     std.debug.print("Hello!\n", .{});
+    _ = progress;
     _ = self;
 }
 ```
 
-We called `exe.install()` earlier - this adds a build step which tells the builder to build the executable.
+We called `b.installArtifact(exe)` earlier - this adds a build step which tells the builder to build the executable.
 
 # Generating Documentation
 
