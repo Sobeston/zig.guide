@@ -101,14 +101,22 @@ pub fn build(b: *Builder) void {
     // for restricting supported target set are available.
     const target = b.standardTargetOptions(.{});
 
-    // Standard release options allow the person running `zig build` to select
-    // between Debug, ReleaseSafe, ReleaseFast, and ReleaseSmall.
-    const mode = b.standardReleaseOptions();
+    // Standard optimization options allow the person running `zig build` to select
+    // between Debug, ReleaseSafe, ReleaseFast, and ReleaseSmall. Here we do not
+    // set a preferred release mode, allowing the user to decide how to optimize.
+    const optimize = b.standardOptimizeOption(.{});
 
-    const exe = b.addExecutable("init-exe", "src/main.zig");
-    exe.setTarget(target);
-    exe.setBuildMode(mode);
-    exe.install();
+    const exe = b.addExecutable(.{
+        .name = "init-exe",
+        .root_source_file = .{ .path = "src/main.zig" },
+        .target = target,
+        .optimize = optimize,
+    });
+
+    // This declares intent for the executable to be installed into the
+    // standard location when the user invokes the "install" step (the default
+    // step when running `zig build`).
+    b.installArtifact(exe);
 
     const run_cmd = exe.run();
     run_cmd.step.dependOn(b.getInstallStep());
@@ -129,7 +137,7 @@ pub fn main() anyerror!void {
 }
 ```
 
-Upon using the `zig build` command, the executable will appear in the install path. Here we have not specified an install path, so the executable will be saved in `./zig-cache/bin`.
+Upon using the `zig build` command, the executable will appear in the install path. Here we have not specified an install path, so the executable will be saved in `./zig-out/bin`.
 
 # Builder
 
@@ -141,19 +149,22 @@ Zig's [`std.build.Builder`](https://ziglang.org/documentation/master/std/#std;bu
 - the install path
 - build steps
 
-# LibExeObjStep
+# CompileStep
 
-The `std.build.LibExeObjStep` type contains information required to build a library, executable, object, or test.
+The `std.build.CompileStep` type contains information required to build a library, executable, object, or test.
 
-Let's make use of our `Builder` and create a `LibExeObjStep` using `Builder.addExecutable`, which takes in a name and a path to the root of the source.
+Let's make use of our `Builder` and create a `CompileStep` using `Builder.addExecutable`, which takes in a name and a path to the root of the source.
 
 <!--no_test-->
 ```zig
 const Builder = @import("std").build.Builder;
 
 pub fn build(b: *Builder) void {
-    const exe = b.addExecutable("program", "src/main.zig");
-    exe.install();
+    const exe = b.addExecutable(.{
+        .name = "init-exe",
+        .root_source_file = .{ .path = "src/main.zig" },
+    });
+    b.installArtifact(exe);
 }
 ```
 
@@ -304,7 +315,7 @@ test "Force analysis" {
 }
 ```
 
-When using a `build.zig` this may be invoked by setting the `emit_docs` field to `.emit` on a `LibExeObjStep`. We can create a build step to generate docs as follows and invoke it with `$ zig build docs`.
+When using a `build.zig` this may be invoked by setting the `emit_docs` field to `.emit` on a `CompileStep`. We can create a build step to generate docs as follows and invoke it with `$ zig build docs`.
 
 <!--no_test-->
 ```zig
