@@ -168,16 +168,16 @@ pub fn build(b: *Builder) void {
 }
 ```
 
-# Packages
+# Modules
 
-The Zig build system has the concept of packages, which are other source files written in Zig. Let's make use of a package.
+The Zig build system has the concept of modules, which are other source files written in Zig. Let's make use of a module.
 
 From a new folder, run the following commands.
 ```
 zig init-exe
 mkdir libs
 cd libs
-git clone https://github.com/Sobeston/table-helper
+git clone https://github.com/Sobeston/table-helper.git
 ```
 
 Your directory structure should be as follows.
@@ -199,7 +199,10 @@ To your newly made `build.zig`, add the following lines.
 
 <!--no_test-->
 ```zig
-    exe.addPackagePath("table-helper", "libs/table-helper/table-helper.zig");
+    const table_helper = b.addModule("table-helper", .{
+        .source_file = .{ .path = "libs/table-helper/table-helper.zig" }
+    });
+    exe.addModule("table-helper", table_helper);
 ```
 
 Now when run via `zig build`, [`@import`](https://ziglang.org/documentation/master/#import) inside your `main.zig` will work with the string "table-helper". This means that main has the table-helper package. Packages (type [`std.build.Pkg`](https://ziglang.org/documentation/master/std/#std;build.Pkg)) also have a field for dependencies of type `?[]const Pkg`, which is defaulted to null. This allows you to have packages which rely on other packages. 
