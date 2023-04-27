@@ -674,7 +674,7 @@ test "stack" {
     );
     defer pairs.deinit();
 
-    for (string) |char, i| {
+    for (string, 0..) |char, i| {
         if (char == '(') try stack.append(i);
         if (char == ')')
             try pairs.append(.{
@@ -683,7 +683,7 @@ test "stack" {
             });
     }
 
-    for (pairs.items) |pair, i| {
+    for (pairs.items, 0..) |pair, i| {
         try expect(std.meta.eql(pair, switch (i) {
             0 => Pair{ .open = 1, .close = 2 },
             1 => Pair{ .open = 3, .close = 4 },

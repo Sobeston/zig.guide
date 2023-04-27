@@ -941,7 +941,7 @@ Optionals use the syntax `?T` and are used to store the data [`null`](https://zi
 test "optional" {
     var found_index: ?usize = null;
     const data = [_]i32{ 1, 2, 3, 4, 5, 6, 7, 8, 12 };
-    for (data) |v, i| {
+    for (data, 0..) |v, i| {
         if (v == 10) found_index = i;
     }
     try expect(found_index == null);
@@ -1125,7 +1125,7 @@ fn Vec(
 
         fn abs(self: Self) Self {
             var tmp = Self{ .data = undefined };
-            for (self.data) |elem, i| {
+            for (self.data, 0..) |elem, i| {
                 tmp.data[i] = if (elem < 0)
                     -elem
                 else
@@ -1416,7 +1416,7 @@ test "tuple" {
     } ++ .{false} ** 2;
     try expect(values[0] == 1234);
     try expect(values[4] == false);
-    inline for (values) |v, i| {
+    inline for (values, 0..) |v, i| {
         if (i != 2) continue;
         try expect(v);
     }

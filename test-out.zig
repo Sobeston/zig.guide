@@ -2,7 +2,7 @@ const std = @import("std");
 
 pub fn main() !void {
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
-    defer if (gpa.deinit()) @panic("leaked");
+    defer if (gpa.deinit() == std.heap.Check.leak) @panic("leaked");
     const allocator = gpa.allocator();
 
     const files = .{
