@@ -11,7 +11,7 @@ Automatically generated standard library documentation can be found [here](https
 
 The Zig standard library provides a pattern for allocating memory, which allows the programmer to choose exactly how memory allocations are done within the standard library - no allocations happen behind your back in the standard library.
 
-The most basic allocator is [`std.heap.page_allocator`](https://ziglang.org/documentation/master/std/#std;heap.page_allocator). Whenever this allocator makes an allocation it will ask your OS for entire pages of memory; an allocation of a single byte will likely reserve multiple kibibytes. As asking the OS for memory requires a system call this is also extremely inefficient for speed.
+The most basic allocator is [`std.heap.page_allocator`](https://ziglang.org/documentation/master/std/#A;std:heap.page_allocator). Whenever this allocator makes an allocation it will ask your OS for entire pages of memory; an allocation of a single byte will likely reserve multiple kibibytes. As asking the OS for memory requires a system call this is also extremely inefficient for speed.
 
 Here, we allocate 100 bytes as a `[]u8`. Notice how defer is used in conjunction with a free - this is a common pattern for memory management in Zig.
 
@@ -30,7 +30,7 @@ test "allocation" {
 }
 ```
 
-The [`std.heap.FixedBufferAllocator`](https://ziglang.org/documentation/master/std/#std;heap.FixedBufferAllocator) is an allocator that allocates memory into a fixed buffer, and does not make any heap allocations. This is useful when heap usage is not wanted, for example when writing a kernel. It may also be considered for performance reasons. It will give you the error `OutOfMemory` if it has run out of bytes.
+The [`std.heap.FixedBufferAllocator`](https://ziglang.org/documentation/master/std/#A;std:heap.FixedBufferAllocator) is an allocator that allocates memory into a fixed buffer, and does not make any heap allocations. This is useful when heap usage is not wanted, for example when writing a kernel. It may also be considered for performance reasons. It will give you the error `OutOfMemory` if it has run out of bytes.
 
 ```zig
 test "fixed buffer allocator" {
@@ -46,7 +46,7 @@ test "fixed buffer allocator" {
 }
 ```
 
-[`std.heap.ArenaAllocator`](https://ziglang.org/documentation/master/std/#std;heap.ArenaAllocator) takes in a child allocator, and allows you to allocate many times and only free once. Here, `.deinit()` is called on the arena which frees all memory. Using `allocator.free` in this example would be a no-op (i.e. does nothing).
+[`std.heap.ArenaAllocator`](https://ziglang.org/documentation/master/std/#A;std:heap.ArenaAllocator) takes in a child allocator, and allows you to allocate many times and only free once. Here, `.deinit()` is called on the arena which frees all memory. Using `allocator.free` in this example would be a no-op (i.e. does nothing).
 
 ```zig
 test "arena allocator" {
@@ -87,13 +87,13 @@ test "GPA" {
 }
 ```
 
-For high performance (but very few safety features!), [`std.heap.c_allocator`](https://ziglang.org/documentation/master/std/#std;heap.c_allocator) may be considered. This however has the disadvantage of requiring linking Libc, which can be done with `-lc`.
+For high performance (but very few safety features!), [`std.heap.c_allocator`](https://ziglang.org/documentation/master/std/#A;std:heap.c_allocator) may be considered. This however has the disadvantage of requiring linking Libc, which can be done with `-lc`.
 
 Benjamin Feng's talk [*What's a Memory Allocator Anyway?*](https://www.youtube.com/watch?v=vHWiDx_l4V0) goes into more detail on this topic, and covers the implementation of allocators.
 
 # Arraylist
 
-The [`std.ArrayList`](https://ziglang.org/documentation/master/std/#std;ArrayList) is commonly used throughout Zig, and serves as a buffer which can change in size. `std.ArrayList(T)` is similar to C++'s `std::vector<T>` and Rust's `Vec<T>`. The `deinit()` method frees all of the ArrayList's memory. The memory can be read from and written to via its slice field - `.items`.
+The [`std.ArrayList`](https://ziglang.org/documentation/master/std/#A;std:ArrayList) is commonly used throughout Zig, and serves as a buffer which can change in size. `std.ArrayList(T)` is similar to C++'s `std::vector<T>` and Rust's `Vec<T>`. The `deinit()` method frees all of the ArrayList's memory. The memory can be read from and written to via its slice field - `.items`.
 
 Here we will introduce the usage of the testing allocator. This is a special allocator that only works in tests, and can detect memory leaks. In your code, use whatever allocator is appropriate.
 
@@ -139,7 +139,7 @@ test "createFile, write, seekTo, read" {
 }
 ```
 
-The functions [`std.fs.openFileAbsolute`](https://ziglang.org/documentation/master/std/#std;fs.openFileAbsolute) and similar absolute functions exist, but we will not test them here.
+The functions [`std.fs.openFileAbsolute`](https://ziglang.org/documentation/master/std/#A;std:fs.openFileAbsolute) and similar absolute functions exist, but we will not test them here.
 
 We can get various information about files by using `.stat()` on them. `Stat` also contains fields for .inode and .mode, but they are not tested here as they rely on the current OS' types.
 
@@ -188,7 +188,7 @@ test "make dir" {
 
 # Readers and Writers
 
-[`std.io.Writer`](https://ziglang.org/documentation/master/std/#std;io.Writer) and [`std.io.Reader`](https://ziglang.org/documentation/master/std/#std;io.Reader) provide standard ways of making use of IO. `std.ArrayList(u8)` has a `writer` method which gives us a writer. Let's use it.
+[`std.io.Writer`](https://ziglang.org/documentation/master/std/#A;std:io.Writer) and [`std.io.Reader`](https://ziglang.org/documentation/master/std/#A;std:io.Reader) provide standard ways of making use of IO. `std.ArrayList(u8)` has a `writer` method which gives us a writer. Let's use it.
 
 ```zig
 test "io writer usage" {
@@ -202,7 +202,7 @@ test "io writer usage" {
 }
 ```
 
-Here we will use a reader to copy the file's contents into an allocated buffer. The second argument of [`readAllAlloc`](https://ziglang.org/documentation/master/std/#std;fs.File.Reader.readAllAlloc) is the maximum size that it may allocate; if the file is larger than this, it will return `error.StreamTooLong`.
+Here we will use a reader to copy the file's contents into an allocated buffer. The second argument of [`readAllAlloc`](https://ziglang.org/documentation/master/std/#A;std:io.Reader.readAllAlloc) is the maximum size that it may allocate; if the file is larger than this, it will return `error.StreamTooLong`.
 
 ```zig
 test "io reader usage" {
@@ -227,7 +227,7 @@ test "io reader usage" {
 }
 ```
 
-A common usecase for readers is to read until the next line (e.g. for user input). Here we will do this with the [`std.io.getStdIn()`](https://ziglang.org/documentation/master/std/#std;io.getStdIn) file.
+A common usecase for readers is to read until the next line (e.g. for user input). Here we will do this with the [`std.io.getStdIn()`](https://ziglang.org/documentation/master/std/#A;std:io.getStdIn) file.
 
 ```zig
 fn nextLine(reader: anytype, buffer: []u8) !?[]const u8 {
@@ -260,7 +260,7 @@ test "read until next line" {
 }
 ```
 
-An [`std.io.Writer`](https://ziglang.org/documentation/master/std/#std;io.Writer) type consists of a context type, error set, and a write function. The write function must take in the context type and a byte slice. The write function must also return an error union of the Writer type's error set and the amount of bytes written. Let's create a type that implements a writer.
+An [`std.io.Writer`](https://ziglang.org/documentation/master/std/#A;std:io.Writer) type consists of a context type, error set, and a write function. The write function must take in the context type and a byte slice. The write function must also return an error union of the Writer type's error set and the amount of bytes written. Let's create a type that implements a writer.
 
 ```zig
 // Don't create a type like this! Use an
@@ -306,7 +306,7 @@ test "custom writer" {
 
 # Formatting
 
-[`std.fmt`](https://ziglang.org/documentation/master/std/#std;fmt) provides ways to format data to and from strings.
+[`std.fmt`](https://ziglang.org/documentation/master/std/#A;std:fmt) provides ways to format data to and from strings.
 
 A basic example of creating a formatted string. The format string must be compile time known. The `d` here denotes that we want a decimal number.
 
@@ -337,7 +337,7 @@ test "print" {
 }
 ```
 
-Take a moment to appreciate that you now know from top to bottom how printing hello world works. [`std.debug.print`](https://ziglang.org/documentation/master/std/#std;debug.print) works the same, except it writes to stderr and is protected by a mutex.
+Take a moment to appreciate that you now know from top to bottom how printing hello world works. [`std.debug.print`](https://ziglang.org/documentation/master/std/#A;std:debug.print) works the same, except it writes to stderr and is protected by a mutex.
 
 ```zig
 test "hello world" {
@@ -479,7 +479,7 @@ test "json stringify" {
 }
 ```
 
-The json parser requires an allocator for javascript's string, array, and map types. This memory may be freed using [`std.json.parseFree`](https://ziglang.org/documentation/master/std/#std;json.parseFree).
+The json parser requires an allocator for javascript's string, array, and map types. This memory may be freed using [`std.json.parseFree`](https://ziglang.org/documentation/master/std/#A;std:json.parseFree).
 
 ```zig
 test "json parse with strings" {
@@ -547,7 +547,7 @@ test "crypto random numbers" {
 
 # Crypto
 
-[`std.crypto`](https://ziglang.org/documentation/master/std/#std;crypto) includes many cryptographic utilities, including:
+[`std.crypto`](https://ziglang.org/documentation/master/std/#A;std:crypto) includes many cryptographic utilities, including:
 -  AES (Aes128, Aes256)
 -  Diffie-Hellman key exchange (x25519)
 -  Elliptic-curve arithmetic (curve25519, edwards25519, ristretto255)
@@ -559,7 +559,7 @@ This list is inexhaustive. For more in-depth information, try [A tour of std.cry
 
 # Threads
 
-While Zig provides more advanced ways of writing concurrent and parallel code, [`std.Thread`](https://ziglang.org/documentation/master/std/#std;Thread) is available for making use of OS threads. Let's make use of an OS thread.
+While Zig provides more advanced ways of writing concurrent and parallel code, [`std.Thread`](https://ziglang.org/documentation/master/std/#A;std:Thread) is available for making use of OS threads. Let's make use of an OS thread.
 
 ```zig
 fn ticker(step: u8) void {
@@ -584,7 +584,7 @@ Threads, however, aren't particularly useful without strategies for thread safet
 
 # Hash Maps
 
-The standard library provides [`std.AutoHashMap`](https://ziglang.org/documentation/master/std/#std;AutoHashMap), which lets you easily create a hash map type from a key type and a value type. These must be initiated with an allocator.
+The standard library provides [`std.AutoHashMap`](https://ziglang.org/documentation/master/std/#A;std:AutoHashMap), which lets you easily create a hash map type from a key type and a value type. These must be initiated with an allocator.
 
 Let's put some values in a hash map.
 
@@ -634,7 +634,7 @@ test "fetchPut" {
 }
 ```
 
-[`std.StringHashMap`](https://ziglang.org/documentation/master/std/#std;StringHashMap) is also provided for when you need strings as keys.
+[`std.StringHashMap`](https://ziglang.org/documentation/master/std/#A;std:StringHashMap) is also provided for when you need strings as keys.
 
 ```zig
 test "string hashmap" {
@@ -651,13 +651,13 @@ test "string hashmap" {
 }
 ```
 
-[`std.StringHashMap`](https://ziglang.org/documentation/master/std/#std;StringHashMap) and [`std.AutoHashMap`](https://ziglang.org/documentation/master/std/#std;AutoHashMap) are just wrappers for [`std.HashMap`](https://ziglang.org/documentation/master/std/#std;HashMap). If these two do not fulfil your needs, using [`std.HashMap`](https://ziglang.org/documentation/master/std/#std;HashMap) directly gives you much more control.
+[`std.StringHashMap`](https://ziglang.org/documentation/master/std/#A;std:StringHashMap) and [`std.AutoHashMap`](https://ziglang.org/documentation/master/std/#A;std:AutoHashMap) are just wrappers for [`std.HashMap`](https://ziglang.org/documentation/master/std/#A;std:HashMap). If these two do not fulfil your needs, using [`std.HashMap`](https://ziglang.org/documentation/master/std/#A;std:HashMap) directly gives you much more control.
 
-If having your elements backed by an array is wanted behaviour, try [`std.ArrayHashMap`](https://ziglang.org/documentation/master/std/#std;ArrayHashMap) and its wrapper [`std.AutoArrayHashMap`](https://ziglang.org/documentation/master/std/#std;AutoArrayHashMap).
+If having your elements backed by an array is wanted behaviour, try [`std.ArrayHashMap`](https://ziglang.org/documentation/master/std/#A;std:ArrayHashMap) and its wrapper [`std.AutoArrayHashMap`](https://ziglang.org/documentation/master/std/#A;std:AutoArrayHashMap).
 
 # Stacks
 
-[`std.ArrayList`](https://ziglang.org/documentation/master/std/#std;ArrayList) provides the methods necessary to use it as a stack. Here's an example of creating a list of matched brackets.
+[`std.ArrayList`](https://ziglang.org/documentation/master/std/#A;std:ArrayList) provides the methods necessary to use it as a stack. Here's an example of creating a list of matched brackets.
 
 ```zig
 test "stack" {
@@ -707,15 +707,15 @@ test "sorting" {
 }
 ```
 
-[`std.sort.asc`](https://ziglang.org/documentation/master/std/#std;sort.asc) and [`.desc`](https://ziglang.org/documentation/master/std/#std;sort.desc) create a comparison function for the given type at comptime; if non-numerical types should be sorted, the user must provide their own comparison function.
+[`std.sort.asc`](https://ziglang.org/documentation/master/std/#A;std:sort.asc) and [`.desc`](https://ziglang.org/documentation/master/std/#A;std:sort.desc) create a comparison function for the given type at comptime; if non-numerical types should be sorted, the user must provide their own comparison function.
 
-[`std.sort.sort`](https://ziglang.org/documentation/master/std/#std;sort.sort) has a best case of O(n), and an average and worst case of O(n*log(n)).
+[`std.sort.sort`](https://ziglang.org/documentation/master/std/#A;std:sort.sort) has a best case of O(n), and an average and worst case of O(n*log(n)).
 
 # Iterators
 
 It is a common idiom to have a struct type with a `next` function with an optional in its return type, so that the function may return a null to indicate that iteration is finished.
 
-[`std.mem.SplitIterator`](https://ziglang.org/documentation/master/std/#std;mem.SplitIterator) (and the subtly different [`std.mem.TokenIterator`](https://ziglang.org/documentation/master/std/#std;mem.TokenIterator)) is an example of this pattern.
+[`std.mem.SplitIterator`](https://ziglang.org/documentation/master/std/#A;std:mem.SplitIterator) (and the subtly different [`std.mem.TokenIterator`](https://ziglang.org/documentation/master/std/#A;std:mem.TokenIterator)) is an example of this pattern.
 ```zig
 test "split iterator" {
     const text = "robust, optimal, reusable, maintainable, ";
