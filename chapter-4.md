@@ -1,7 +1,7 @@
 ---
 title: "Chapter 4 - Working with C"
 weight: 5
-date: 2021-02-24 17:17:00
+date: 2023-04-28 18:00:00
 description: "Chapter 4 - Learn about how the Zig programming language makes use of C code. This tutorial covers C data types, FFI, building with C, translate-c and more!"
 ---
 
@@ -62,9 +62,7 @@ Let's create an extern struct. This test should be run with `x86_64` with a `gnu
 ```zig
 const expect = @import("std").testing.expect;
 
-const Data = extern struct {
-    a: i32, b: u8, c: f32, d: bool, e: bool
-};
+const Data = extern struct { a: i32, b: u8, c: f32, d: bool, e: bool };
 
 test "hmm" {
     const x = Data{

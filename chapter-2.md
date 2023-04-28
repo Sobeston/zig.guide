@@ -1,7 +1,7 @@
 ---
 title: "Chapter 2 - Standard Patterns"
 weight: 3
-date: 2021-02-15 00:05:00
+date: 2023-04-28 18:00:00
 description: "Chapter 2 - This section of the tutorial will cover the Zig programming language's standard library in detail."
 ---
 
@@ -77,10 +77,11 @@ test "GPA" {
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
     const allocator = gpa.allocator();
     defer {
-        const leaked = gpa.deinit();
-        if (leaked) expect(false) catch @panic("TEST FAIL"); //fail test; can't try in defer as defer is executed after we return
+        const deinit_status = gpa.deinit();
+        //fail test; can't try in defer as defer is executed after we return
+        if (deinit_status == .leak) expect(false) catch @panic("TEST FAIL");
     }
-    
+
     const bytes = try allocator.alloc(u8, 100);
     defer allocator.free(bytes);
 }
@@ -163,20 +164,20 @@ We can make directories and iterate over their contents. Here we will use an ite
 ```zig
 test "make dir" {
     try std.fs.cwd().makeDir("test-tmp");
-    const dir = try std.fs.cwd().openDir(
+    const iter_dir = try std.fs.cwd().openIterableDir(
         "test-tmp",
-        .{ .iterate = true },
+        .{},
     );
     defer {
         std.fs.cwd().deleteTree("test-tmp") catch unreachable;
     }
 
-    _ = try dir.createFile("x", .{});
-    _ = try dir.createFile("y", .{});
-    _ = try dir.createFile("z", .{});
+    _ = try iter_dir.dir.createFile("x", .{});
+    _ = try iter_dir.dir.createFile("y", .{});
+    _ = try iter_dir.dir.createFile("z", .{});
 
     var file_count: usize = 0;
-    var iter = dir.iterate();
+    var iter = iter_dir.iterate();
     while (try iter.next()) |entry| {
         if (entry.kind == .File) file_count += 1;
     }
@@ -286,7 +287,7 @@ const MyByteList = struct {
             self.data[self.items.len..],
             data,
         );
-        self.items = self.data[0..self.items.len + data.len];
+        self.items = self.data[0 .. self.items.len + data.len];
         return data.len;
     }
 
@@ -472,9 +473,7 @@ test "json stringify" {
     var string = std.ArrayList(u8).init(fba.allocator());
     try std.json.stringify(x, .{}, string.writer());
 
-    try expect(eql(
-        u8,
-        string.items,
+    try expect(eql(u8, string.items,
         \\{"lat":5.19976654e+01,"long":-7.40687012e-01}
     ));
 }
@@ -525,8 +524,8 @@ test "random numbers" {
     const c = rand.int(u8);
     const d = rand.intRangeAtMost(u8, 0, 255);
 
-    //suppress unused local constant compile error
-    if (false) _ = .{ a, b, c, d }; 
+    //suppress unused constant compile error
+    _ = .{ a, b, c, d };
 }
 ```
 
@@ -541,8 +540,8 @@ test "crypto random numbers" {
     const c = rand.int(u8);
     const d = rand.intRangeAtMost(u8, 0, 255);
 
-    //suppress unused local constant compile error
-    if (false) _ = .{ a, b, c, d }; 
+    //suppress unused constant compile error
+    _ = .{ a, b, c, d };
 }
 ```
 
@@ -564,7 +563,7 @@ While Zig provides more advanced ways of writing concurrent and parallel code, [
 
 ```zig
 fn ticker(step: u8) void {
-    while(true) {
+    while (true) {
         std.time.sleep(1 * std.time.ns_per_s);
         tick += @as(isize, step);
     }
@@ -674,7 +673,7 @@ test "stack" {
     );
     defer pairs.deinit();
 
-    for (string) |char, i| {
+    for (string, 0..) |char, i| {
         if (char == '(') try stack.append(i);
         if (char == ')')
             try pairs.append(.{
@@ -683,7 +682,7 @@ test "stack" {
             });
     }
 
-    for (pairs.items) |pair, i| {
+    for (pairs.items, 0..) |pair, i| {
         try expect(std.meta.eql(pair, switch (i) {
             0 => Pair{ .open = 1, .close = 2 },
             1 => Pair{ .open = 3, .close = 4 },
@@ -734,9 +733,9 @@ Some iterators have a `!?T` return type, as opposed to ?T. `!?T` requires that w
 
 ```zig
 test "iterator looping" {
-    var iter = (try std.fs.cwd().openDir(
+    var iter = (try std.fs.cwd().openIterableDir(
         ".",
-        .{ .iterate = true },
+        .{},
     )).iterate();
 
     var file_count: usize = 0;
@@ -930,7 +929,7 @@ test "position" {
     var b: [3]u8 = undefined;
     try expect(eql(
         u8,
-        try bufPrint(&b, "{0s}{0s}{1s}", .{"a", "b"}),
+        try bufPrint(&b, "{0s}{0s}{1s}", .{ "a", "b" }),
         "aab",
     ));
 }
