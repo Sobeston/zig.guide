@@ -79,7 +79,7 @@ Details on what architectures, OSes, CPUs and ABIs (details on ABIs in the next 
 
 # Zig Build
 
-The `zig build` command allows users to compile based on a `build.zig` file. `zig init-exe` and `zig-init-lib` can be used to give you a baseline project.
+The `zig build` command allows users to compile based on a `build.zig` file. `zig init-exe` and `zig init-lib` can be used to give you a baseline project.
 
 Let's use `zig init-exe` inside a new folder. This is what you will find.
 ```
