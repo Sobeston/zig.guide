@@ -129,7 +129,7 @@ pub fn main() anyerror!void {
 }
 ```
 
-Upon using the `zig build` command, the executable will appear in the install path. Here we have not specified an install path, so the executable will be saved in `./zig-cache/bin`.
+Upon using the `zig build` command, the executable will appear in the install path. Here we have not specified an install path, so the executable will be saved in `./zig-out/bin`.
 
 # Builder
 
