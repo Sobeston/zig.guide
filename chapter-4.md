@@ -1,7 +1,7 @@
 ---
 title: "Chapter 4 - Working with C"
 weight: 5
-date: 2021-02-24 17:17:00
+date: 2023-04-28 18:00:00
 description: "Chapter 4 - Learn about how the Zig programming language makes use of C code. This tutorial covers C data types, FFI, building with C, translate-c and more!"
 ---
 
@@ -44,7 +44,7 @@ Note: C's void (and Zig's `c_void`) has an unknown non-zero size. Zig's `void` i
 
 Calling conventions describe how functions are called. This includes how arguments are supplied to the function (i.e. where they go - in registers or on the stack, and how), and how the return value is received.
 
-In Zig, the attribute `callconv` may be given to a function. The calling conventions available may be found in [std.builtin.CallingConvention](https://ziglang.org/documentation/master/std/#std;builtin.CallingConvention). Here we make use of the cdecl calling convention.
+In Zig, the attribute `callconv` may be given to a function. The calling conventions available may be found in [std.builtin.CallingConvention](https://ziglang.org/documentation/master/std/#A;std:builtin.CallingConvention). Here we make use of the cdecl calling convention.
 ```zig
 fn add(a: u32, b: u32) callconv(.C) u32 {
     return a + b;
@@ -62,9 +62,7 @@ Let's create an extern struct. This test should be run with `x86_64` with a `gnu
 ```zig
 const expect = @import("std").testing.expect;
 
-const Data = extern struct {
-    a: i32, b: u8, c: f32, d: bool, e: bool
-};
+const Data = extern struct { a: i32, b: u8, c: f32, d: bool, e: bool };
 
 test "hmm" {
     const x = Data{

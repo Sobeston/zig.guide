@@ -141,7 +141,7 @@ Upon using the `zig build` command, the executable will appear in the install pa
 
 # Builder
 
-Zig's [`std.build.Builder`](https://ziglang.org/documentation/master/std/#std;build.Builder) type contains the information used by the build runner. This includes information such as:
+Zig's [`std.Build`](https://ziglang.org/documentation/master/std/#A;std:Build) type contains the information used by the build runner. This includes information such as:
 
 - the build target
 - the release mode

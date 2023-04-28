@@ -2,8 +2,7 @@ const std = @import("std");
 
 pub fn main() !void {
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
-    defer if (gpa.deinit() == std.heap.Check.leak) @panic("leaked");
-    const allocator = gpa.allocator();
+    defer if (gpa.deinit() == .leak) @panic("leaked");
 
     const files = .{
         .{ "chapter-0.md", "test-c0.zig" },

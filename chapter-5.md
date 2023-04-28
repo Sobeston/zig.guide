@@ -1,9 +1,11 @@
 ---
 title: "Chapter 5 - Async"
 weight: 6
-date: 2021-01-08 01:39:00
+date: 2023-04-28 18:00:00
 description: "Chapter 5 - Learn about how the ziglang's async works"
 ---
+
+Warning: The current version of the compiler does not yet support async
 
 # Async
 
@@ -57,12 +59,12 @@ var bar: i32 = 1;
 test "suspend with resume" {
     var frame = async func2();  //1
     resume frame;               //4
-    try expect(bar == 3);           //6
+    try expect(bar == 3);       //6
 }
 
 fn func2() void {
     bar += 1;                   //2
-    suspend {}                    //3
+    suspend {}                  //3
     bar += 1;                   //5
 }
 ```

@@ -1,7 +1,7 @@
 ---
 title: "Chapter 0 - Getting Started"
 weight: 1
-date: 2021-01-23 20:52:00
+date: 2023-04-28 18:00:00
 description: "Ziglearn - A Guide / Tutorial for the Zig programming language. Install and get started with ziglang here."
 ---
 
@@ -9,7 +9,7 @@ description: "Ziglearn - A Guide / Tutorial for the Zig programming language. In
 
 [Zig](https://ziglang.org) is a general-purpose programming language and toolchain for maintaining __robust__, __optimal__, and __reusable__ software.
 
-Warning: the latest major release is 0.9 - Zig is still pre-1.0; usage in production is still not recommended and you may run into compiler bugs.
+Warning: the latest major release is 0.10.1 - Zig is still pre-1.0; usage in production is still not recommended and you may run into compiler bugs.
 
 To follow this guide, we assume you have:
    * Prior experience programming
@@ -19,7 +19,7 @@ Knowing a language like C, C++, Rust, Go, Pascal or similar will be helpful for 
 
 # Installation
 
-**This guide assumes you're using a master build** of Zig as opposed to the latest major release, which means downloading a binary from the site or compiling from source; **the version of Zig in your package manager is likely outdated**. This guide does not support Zig 0.9.1.
+**This guide assumes you're using a master build** of Zig as opposed to the latest major release, which means downloading a binary from the site or compiling from source; **the version of Zig in your package manager is likely outdated**. This guide does not support Zig 0.10.1.
 
 1.  Download and extract a prebuilt master binary of Zig from:
 ```
@@ -57,7 +57,7 @@ https://ziglang.org/download/
 3. Verify your install with `zig version`. The output should look something like
 ```
 $ zig version
-0.9.0-dev.1083+9fa723ee5
+0.11.0-dev.2777+b95cdf0ae
 ```
 
 4. (optional, third party) For completions and go-to-definition in your editor, install the Zig Language Server from:

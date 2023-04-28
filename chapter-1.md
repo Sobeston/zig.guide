@@ -1,7 +1,7 @@
 ---
 title: "Chapter 1 - Basics"
 weight: 2
-date: 2021-02-22 18:27:00
+date: 2023-04-28 18:00:00
 description: "Chapter 1 - This will get you up to speed with almost all of the Zig programming language. This part of the tutorial should be coverable in under an hour."
 ---
 
@@ -644,9 +644,7 @@ test "hmm" {
 
 Structs are Zig's most common kind of composite data type, allowing you to define types that can store a fixed set of named fields. Zig gives no guarantees about the in-memory order of fields in a struct, or its size. Like arrays, structs are also neatly constructed with `T{}` syntax. Here is an example of declaring and filling a struct.
 ```zig
-const Vec3 = struct {
-    x: f32, y: f32, z: f32
-};
+const Vec3 = struct { x: f32, y: f32, z: f32 };
 
 test "struct usage" {
     const my_vector = Vec3{
@@ -678,9 +676,7 @@ error: missing field: 'y'
 
 Fields may be given defaults:
 ```zig
-const Vec4 = struct {
-    x: f32, y: f32, z: f32 = 0, w: f32 = undefined
-};
+const Vec4 = struct { x: f32, y: f32, z: f32 = 0, w: f32 = undefined };
 
 test "struct defaults" {
     const my_vector = Vec4{
@@ -1178,11 +1174,7 @@ test "++" {
 test "**" {
     const pattern = [_]u8{ 0xCC, 0xAA };
     const memory = pattern ** 3;
-    try expect(eql(
-        u8,
-        &memory,
-        &[_]u8{ 0xCC, 0xAA, 0xCC, 0xAA, 0xCC, 0xAA }
-    ));
+    try expect(eql(u8, &memory, &[_]u8{ 0xCC, 0xAA, 0xCC, 0xAA, 0xCC, 0xAA }));
 }
 ```
 
@@ -1258,7 +1250,7 @@ test "while error union capture" {
 For loops.
 ```zig
 test "for capture" {
-    const x = [_]i8{1, 5, 120, -5};
+    const x = [_]i8{ 1, 5, 120, -5 };
     for (x) |v| try expect(@TypeOf(v) == i8);
 }
 ```
@@ -1295,9 +1287,9 @@ As we saw in the Union and Optional sections above, values captured with the `|v
 
 ```zig
 test "for with pointer capture" {
-    var data = [_]u8{1, 2, 3};
-    for (data) |*byte| byte.* += 1;
-    try expect(eql(u8, &data, &[_]u8{2, 3, 4}));
+    var data = [_]u8{ 1, 2, 3 };
+    for (&data) |*byte| byte.* += 1;
+    try expect(eql(u8, &data, &[_]u8{ 2, 3, 4 }));
 }
 ```
 
@@ -1435,7 +1427,7 @@ An example of a sentinel terminated array. The built-in [`@bitCast`](https://zig
 test "sentinel termination" {
     const terminated = [3:0]u8{ 3, 2, 1 };
     try expect(terminated.len == 3);
-    try expect(@bitCast([4]u8, terminated)[3] == 0);
+    try expect(@ptrCast(*const [4]u8, &terminated)[3] == 0);
 }
 ```
 
@@ -1484,7 +1476,7 @@ Sentinel terminated slicing is provided which can be used to create a sentinel t
 ```zig
 test "sentinel terminated slicing" {
     var x = [_:0]u8{255} ** 3;
-    const y = x[0..3:0];
+    const y = x[0..3 :0];
     _ = y;
 }
 ```
@@ -1537,7 +1529,7 @@ test "vector looping" {
     var sum = blk: {
         var tmp: u10 = 0;
         var i: u8 = 0;
-        while (i < len(x)) : (i += 1) tmp += x[i];
+        while (i < 4) : (i += 1) tmp += x[i];
         break :blk tmp;
     };
     try expect(sum == 510);
