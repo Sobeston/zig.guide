@@ -164,11 +164,12 @@ We can make directories and iterate over their contents. Here we will use an ite
 ```zig
 test "make dir" {
     try std.fs.cwd().makeDir("test-tmp");
-    const iter_dir = try std.fs.cwd().openIterableDir(
+    var iter_dir = try std.fs.cwd().openIterableDir(
         "test-tmp",
         .{},
     );
     defer {
+        iter_dir.close();
         std.fs.cwd().deleteTree("test-tmp") catch unreachable;
     }
 
