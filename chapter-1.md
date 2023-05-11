@@ -606,7 +606,22 @@ test "set enum ordinal value" {
 }
 ```
 
-Methods can be given to enums. These act as namespaced functions that can be called with dot syntax.
+When switching on an enum, the branches must be referencing that enum. So as a shorthand, we can omit its name and supply just the value prefixed with a `.`:
+
+```zig
+const Volume = enum { quiet, loud };
+
+test {
+    const volume = Volume.loud;
+    const level = switch (volume) {
+        .quiet => 2,
+        .loud => 11,
+    };
+    try expect(level == 11);
+}
+```
+
+Methods can be given to enums. These act as namespaced functions that can be called with dot syntax. Their arguments can also use the same shorthand as the switch above.
 
 ```zig
 const Suit = enum {
@@ -638,7 +653,6 @@ test "hmm" {
     try expect(Mode.count == 1);
 }
 ```
-
 
 # Structs
 
@@ -736,7 +750,7 @@ test "simple union"...access of inactive union field
            ^
 ```
 
-Tagged unions are unions which use an enum to detect which field is active. Here we make use of payload capturing again, to switch on the tag type of a union while also capturing the value it contains. Here we use a *pointer capture*; captured values are immutable, but with the `|*value|` syntax we can capture a pointer to the values instead of the values themselves. This allows us to use dereferencing to mutate the original value.
+Tagged unions are unions which use an enum to detect which field is active. Switching on a tagged union is similar to switching on the enum itself, but we can also use payload capturing to capture the active value. Here we use a *pointer capture*: captured values are immutable, but with the `|*value|` syntax we can capture a pointer to the value instead of the value itself. We can then use dereferencing to mutate the original value.
 
 ```zig
 const Tag = enum { a, b, c };
