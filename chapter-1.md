@@ -606,7 +606,7 @@ test "set enum ordinal value" {
 }
 ```
 
-Methods can be given to enums. These act as namespaced functions that can be called with dot syntax.
+Functions can be given to enums. These are sometimes called "methods", and act as namespaced functions that can be called with dot syntax. As a convenience, when called from an instance of the enum these methods are automatically passed that instance as their first argument. Thus, `Suit.spades.isClubs()` is equivalent to `Suit.isClubs(Suit.spades)`. Additionally, when calling a method from the enum, we can shorten the argument to omit the enum name and pass it with just a leading dot, as in the example below.
 
 ```zig
 const Suit = enum {
@@ -689,7 +689,7 @@ test "struct defaults" {
 
 Like enums, structs may also contain functions and declarations.
 
-Structs have the unique property that when given a pointer to a struct, one level of dereferencing is done automatically when accessing fields. Notice how in this example, self.x and self.y are accessed in the swap function without needing to dereference the self pointer.
+Similar to enums, methods called from a struct instance will be passed that instance, but this time as a *pointer*. Structs also have an additional special property: when accessing fields from a pointer to a struct, one level of dereferencing is done automatically.
 
 ```zig
 const Stuff = struct {
@@ -709,6 +709,8 @@ test "automatic dereference" {
     try expect(thing.y == 10);
 }
 ```
+
+Notice how these work together in the example: the `thing.swap()` function call receives a pointer to `thing` as the `self` parameter, and then uses that pointer to access `self.x` without needing to dereference it. These shorthands are convenient but optional, they are equivalent to `Stuff.swap(&thing)` and `self.*.x` respectively.
 
 # Unions
 
