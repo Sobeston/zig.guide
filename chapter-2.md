@@ -443,16 +443,20 @@ test "custom fmt" {
 
 # JSON
 
-Let's parse a json string into a struct type, using the streaming parser.
+Let's parse a json string into a struct type, using the parseFromTokenSource with stream reader.
 
 ```zig
 const Place = struct { lat: f32, long: f32 };
 
 test "json parse" {
-    var stream = std.json.TokenStream.init(
+    const allocator = std.testing.allocator;
+
+    var stream = std.io.fixedBufferStream(
         \\{ "lat": 40.684540, "long": -74.401422 }
     );
-    const x = try std.json.parse(Place, &stream, .{});
+    var reader = std.json.reader(allocator, stream.reader());
+    defer reader.deinit();
+    const x = try std.json.parseFromTokenSource(Place, allocator, &reader, .{});
 
     try expect(x.lat == 40.684540);
     try expect(x.long == -74.401422);
@@ -483,23 +487,21 @@ The json parser requires an allocator for javascript's string, array, and map ty
 
 ```zig
 test "json parse with strings" {
-    var stream = std.json.TokenStream.init(
+    var test_allocator = std.testing.allocator;
+    var json =
         \\{ "name": "Joe", "age": 25 }
-    );
+    ;
 
     const User = struct { name: []u8, age: u16 };
 
-    const x = try std.json.parse(
+    const x = try std.json.parseFromSlice(
         User,
-        &stream,
-        .{ .allocator = test_allocator },
+        test_allocator,
+        json,
+        .{},
     );
 
-    defer std.json.parseFree(
-        User,
-        x,
-        .{ .allocator = test_allocator },
-    );
+    defer std.json.parseFree(User, test_allocator, x);
 
     try expect(eql(u8, x.name, "Joe"));
     try expect(x.age == 25);
