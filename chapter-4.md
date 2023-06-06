@@ -36,9 +36,9 @@ Zig provides special `c_` prefixed types for conforming to the C ABI. These do n
 | c_longlong   | long long         | 64                  |
 | c_ulonglong  | unsigned longlong | 64                  |
 | c_longdouble | long double       | N/A                 |
-| c_void       | void              | N/A                 |
+| anyopaque    | void              | N/A                 |
 
-Note: C's void (and Zig's `c_void`) has an unknown non-zero size. Zig's `void` is a true zero-sized type.
+Note: C's void (and Zig's `anyopaque`) has an unknown non-zero size. Zig's `void` is a true zero-sized type.
 
 # Calling conventions
 
