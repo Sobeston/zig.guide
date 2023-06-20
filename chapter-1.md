@@ -1483,7 +1483,7 @@ test "sentinel terminated slicing" {
 
 # Vectors
 
-Zig provides vector types for SIMD. These are not to be conflated with vectors in a mathematical sense, or vectors like C++'s std::vector (for this, see "Arraylist" in chapter 2). Vectors may be created using the [`@Type`](https://ziglang.org/documentation/master/#Type) built-in we used earlier, and [`std.meta.Vector`](https://ziglang.org/documentation/master/std/#std;meta.Vector) provides a shorthand for this.
+Zig provides vector types for SIMD. These are not to be conflated with vectors in a mathematical sense, or vectors like C++'s std::vector (for this, see "Arraylist" in chapter 2). Vectors may be created using the [`@Type`](https://ziglang.org/documentation/master/#Type) built-in we used earlier, and [`@Vector`](https://ziglang.org/documentation/master/std/#A;std:builtin.Type.Vector) provides a shorthand for this.
 
 Vectors can only have child types of booleans, integers, floats and pointers.
 
@@ -1491,20 +1491,19 @@ Operations between vectors with the same child type and length can take place. T
 
 ```zig
 const meta = @import("std").meta;
-const Vector = meta.Vector;
 
 test "vector add" {
-    const x: Vector(4, f32) = .{ 1, -10, 20, -1 };
-    const y: Vector(4, f32) = .{ 2, 10, 0, 1 };
+    const x: @Vector(4, f32) = .{ 1, -10, 20, -1 };
+    const y: @Vector(4, f32) = .{ 2, 10, 0, 1 };
     const z = x + y;
-    try expect(meta.eql(z, Vector(4, f32){ 3, 0, 20, 0 }));
+    try expect(meta.eql(z, @Vector(4, f32){ 3, 0, 20, 0 }));
 }
 ```
 
 Vectors are indexable.
 ```zig
 test "vector indexing" {
-    const x: Vector(4, u8) = .{ 255, 0, 255, 0 };
+    const x: @Vector(4, u8) = .{ 255, 0, 255, 0 };
     try expect(x[0] == 255);
 }
 ```
@@ -1513,23 +1512,22 @@ The built-in function [`@splat`](https://ziglang.org/documentation/master/#splat
 
 ```zig
 test "vector * scalar" {
-    const x: Vector(3, f32) = .{ 12.5, 37.5, 2.5 };
+    const x: @Vector(3, f32) = .{ 12.5, 37.5, 2.5 };
     const y = x * @splat(3, @as(f32, 2));
-    try expect(meta.eql(y, Vector(3, f32){ 25, 75, 5 }));
+    try expect(meta.eql(y, @Vector(3, f32){ 25, 75, 5 }));
 }
 ```
 
-Vectors do not have a `len` field like arrays, but may still be looped over. Here, [`std.mem.len`](https://ziglang.org/documentation/master/std/#std;mem.len) is used as a shortcut for `@typeInfo(@TypeOf(x)).Vector.len`.
+Vectors do not have a `len` field like arrays, but may still be looped over. Their length must be obtained from their `TypeInfo`.
 
 ```zig
-const len = @import("std").mem.len;
-
 test "vector looping" {
-    const x = Vector(4, u8){ 255, 0, 255, 0 };
+    const x = @Vector(4, u8){ 255, 0, 255, 0 };
     var sum = blk: {
         var tmp: u10 = 0;
         var i: u8 = 0;
-        while (i < 4) : (i += 1) tmp += x[i];
+        const len = @typeInfo(@TypeOf(x)).Vector.len;
+        while (i < len) : (i += 1) tmp += x[i];
         break :blk tmp;
     };
     try expect(sum == 510);
