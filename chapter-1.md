@@ -478,14 +478,14 @@ Trying to set a `*T` to the value 0 is detectable illegal behaviour.
 ```zig
 test "naughty pointer" {
     var x: u16 = 0;
-    var y: *u8 = @intToPtr(*u8, x);
+    var y: *u8 = @ptrFromInt(*u8, x);
     _ = y;
 }
 ```
 ```
 test "naughty pointer"...cast causes pointer to be null
 .\tests.zig:241:18: 0x7ff69ebb22bd in test "naughty pointer" (test.obj)
-    var y: *u8 = @intToPtr(*u8, x);
+    var y: *u8 = @ptrFromInt(*u8, x);
                  ^
 ```
 
