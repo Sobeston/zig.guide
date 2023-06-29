@@ -137,7 +137,7 @@ pub fn main() anyerror!void {
 }
 ```
 
-Upon using the `zig build` command, the executable will appear in the install path. Here we have not specified an install path, so the executable will be saved in `./zig-out/bin`.
+Upon using the `zig build` command, the executable will appear in the install path. Here we have not specified an install path, so the executable will be saved in `./zig-out/bin`. A custom install path can be specified using the `override_dest_dir` field in the `Step.Compile` struct.
 
 # Builder
 
