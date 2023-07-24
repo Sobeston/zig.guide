@@ -1529,7 +1529,7 @@ test "vector looping" {
     var sum = blk: {
         var tmp: u10 = 0;
         var i: u8 = 0;
-        while (i < 4) : (i += 1) tmp += x[i];
+        while (i < len(x)) : (i += 1) tmp += x[i];
         break :blk tmp;
     };
     try expect(sum == 510);
