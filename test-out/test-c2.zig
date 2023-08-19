@@ -360,6 +360,7 @@ test "json stringify" {
     var string = std.ArrayList(u8).init(fba.allocator());
     try std.json.stringify(x, .{}, string.writer());
 
+    // TODO: Remove? @dec05eba: You cant compare floating point numbers exactly
     try expectEqualSlices(u8, string.items,
         \\{"lat":5.199766540527344e+01,"long":-7.406870126724243e-01}
     );
