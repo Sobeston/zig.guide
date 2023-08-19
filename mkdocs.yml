@@ -3,6 +3,9 @@ site_name: Zig Help
 markdown_extensions:
   - admonition
   - pymdownx.superfences
+  - toc:
+      title: " "
+      permalink: true
 
 theme:
   name: material
@@ -12,7 +15,7 @@ theme:
     - navigation.sections
     - navigation.expand
     - toc.follow
-    - toc.integrate
+    - navigation.indexes
 
 nav:
   - Home: README.md
