@@ -10,3 +10,11 @@ Repo for https://zighelp.org content. Feedback and PRs welcome.
 
 1. `zig run test-out.zig`
 2. `zig test do_tests.zig`
+
+## TODO
+
+- [ ] CI/CD
+- [ ] colors
+- [ ] light/night themes
+- [ ] i18n
+- [ ] PRs from ziglearn repo
