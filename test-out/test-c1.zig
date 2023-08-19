@@ -280,9 +280,9 @@ const Direction = enum { north, south, east, west };
 const Value = enum(u2) { zero, one, two };
 
 test "enum ordinal value" {
-    try expect(@enumToInt(Value.zero) == 0);
-    try expect(@enumToInt(Value.one) == 1);
-    try expect(@enumToInt(Value.two) == 2);
+    try expect(@intFromEnum(Value.zero) == 0);
+    try expect(@intFromEnum(Value.one) == 1);
+    try expect(@intFromEnum(Value.two) == 2);
 }
 
 const Value2 = enum(u32) {
@@ -293,10 +293,10 @@ const Value2 = enum(u32) {
 };
 
 test "set enum ordinal value" {
-    try expect(@enumToInt(Value2.hundred) == 100);
-    try expect(@enumToInt(Value2.thousand) == 1000);
-    try expect(@enumToInt(Value2.million) == 1000000);
-    try expect(@enumToInt(Value2.next) == 1000001);
+    try expect(@intFromEnum(Value2.hundred) == 100);
+    try expect(@intFromEnum(Value2.thousand) == 1000);
+    try expect(@intFromEnum(Value2.million) == 1000000);
+    try expect(@intFromEnum(Value2.next) == 1000001);
 }
 
 const Suit = enum {
@@ -398,7 +398,7 @@ test "integer widening" {
 
 test "@intCast" {
     const x: u64 = 200;
-    const y = @intCast(u8, x);
+    const y = @as(u8, @intCast(x));
     try expect(@TypeOf(y) == u8);
 }
 
@@ -429,8 +429,8 @@ const more_hex: f64 = 0x1234_5678.9ABC_CDEFp-10;
 
 test "int-float conversion" {
     const a: i32 = 0;
-    const b = @intToFloat(f32, a);
-    const c = @floatToInt(i32, b);
+    const b = @as(f32, @floatFromInt(a));
+    const c = @as(i32, @intFromFloat(b));
     try expect(c == a);
 }
 
@@ -792,7 +792,7 @@ test "tuple" {
 test "sentinel termination" {
     const terminated = [3:0]u8{ 3, 2, 1 };
     try expect(terminated.len == 3);
-    try expect(@ptrCast(*const [4]u8, &terminated)[3] == 0);
+    try expect(@as(*const [4]u8, @ptrCast(&terminated))[3] == 0);
 }
 
 test "string literal" {
@@ -830,30 +830,30 @@ test "sentinel terminated slicing" {
 }
 
 const meta = @import("std").meta;
-const Vector = meta.Vector;
 
 test "vector add" {
-    const x: Vector(4, f32) = .{ 1, -10, 20, -1 };
-    const y: Vector(4, f32) = .{ 2, 10, 0, 1 };
+    const x: @Vector(4, f32) = .{ 1, -10, 20, -1 };
+    const y: @Vector(4, f32) = .{ 2, 10, 0, 1 };
     const z = x + y;
-    try expect(meta.eql(z, Vector(4, f32){ 3, 0, 20, 0 }));
+    try expect(meta.eql(z, @Vector(4, f32){ 3, 0, 20, 0 }));
 }
 
 test "vector indexing" {
-    const x: Vector(4, u8) = .{ 255, 0, 255, 0 };
+    const x: @Vector(4, u8) = .{ 255, 0, 255, 0 };
     try expect(x[0] == 255);
 }
 
 test "vector * scalar" {
-    const x: Vector(3, f32) = .{ 12.5, 37.5, 2.5 };
-    const y = x * @splat(3, @as(f32, 2));
-    try expect(meta.eql(y, Vector(3, f32){ 25, 75, 5 }));
+    const x: @Vector(3, f32) = .{ 12.5, 37.5, 2.5 };
+    const vec: @Vector(3, f32) = @splat(2);
+    const y = x * vec;
+    try expect(meta.eql(y, @Vector(3, f32){ 25, 75, 5 }));
 }
 
 const len = @import("std").mem.len;
 
 test "vector looping" {
-    const x = Vector(4, u8){ 255, 0, 255, 0 };
+    const x = @Vector(4, u8){ 255, 0, 255, 0 };
     var sum = blk: {
         var tmp: u10 = 0;
         var i: u8 = 0;
