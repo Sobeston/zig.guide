@@ -1,5 +1,6 @@
 site_name: zighelp.org
 repo_url: https://github.com/zighelp/zighelp/
+repo_name: zighelp/zighelp
 
 extra:
   generator: false
