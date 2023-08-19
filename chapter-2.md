@@ -98,7 +98,7 @@ The [`std.ArrayList`](https://ziglang.org/documentation/master/std/#A;std:ArrayL
 Here we will introduce the usage of the testing allocator. This is a special allocator that only works in tests, and can detect memory leaks. In your code, use whatever allocator is appropriate.
 
 ```zig
-const eql = std.mem.eql;
+const expectEqualSlices = std.testing.expectEqualSlices;
 const ArrayList = std.ArrayList;
 const test_allocator = std.testing.allocator;
 
@@ -112,7 +112,7 @@ test "arraylist" {
     try list.append('o');
     try list.appendSlice(" World!");
 
-    try expect(eql(u8, list.items, "Hello World!"));
+    try expectEqualSlices(u8, list.items, "Hello World!");
 }
 ```
 
@@ -135,7 +135,7 @@ test "createFile, write, seekTo, read" {
     try file.seekTo(0);
     const bytes_read = try file.readAll(&buffer);
 
-    try expect(eql(u8, buffer[0..bytes_read], "Hello File!"));
+    try expectEqualSlices(u8, buffer[0..bytes_read], "Hello File!");
 }
 ```
 
@@ -152,7 +152,7 @@ test "file stat" {
     defer file.close();
     const stat = try file.stat();
     try expect(stat.size == 0);
-    try expect(stat.kind == .File);
+    try expect(stat.kind == .file);
     try expect(stat.ctime <= std.time.nanoTimestamp());
     try expect(stat.mtime <= std.time.nanoTimestamp());
     try expect(stat.atime <= std.time.nanoTimestamp());
@@ -179,7 +179,7 @@ test "make dir" {
     var file_count: usize = 0;
     var iter = iter_dir.iterate();
     while (try iter.next()) |entry| {
-        if (entry.kind == .File) file_count += 1;
+        if (entry.kind == .file) file_count += 1;
     }
 
     try expect(file_count == 3);
@@ -198,7 +198,7 @@ test "io writer usage" {
         "Hello World!",
     );
     try expect(bytes_written == 12);
-    try expect(eql(u8, list.items, "Hello World!"));
+    try expectEqualSlices(u8, list.items, "Hello World!");
 }
 ```
 
@@ -223,7 +223,7 @@ test "io reader usage" {
     );
     defer test_allocator.free(contents);
 
-    try expect(eql(u8, contents, message));
+    try expectEqualSlices(u8, contents, message);
 }
 ```
 
@@ -300,7 +300,7 @@ test "custom writer" {
     var bytes = MyByteList{};
     _ = try bytes.writer().write("Hello");
     _ = try bytes.writer().write(" Writer!");
-    try expect(eql(u8, bytes.items, "Hello Writer!"));
+    try expectEqualSlices(u8, bytes.items, "Hello Writer!");
 }
 ```
 
@@ -319,7 +319,7 @@ test "fmt" {
     );
     defer test_allocator.free(string);
 
-    try expect(eql(u8, string, "9 + 10 = 19"));
+    try expectEqualSlices(u8, string, "9 + 10 = 19");
 }
 ```
 
@@ -333,7 +333,7 @@ test "print" {
         "{} + {} = {}",
         .{ 9, 10, 19 },
     );
-    try expect(eql(u8, list.items, "9 + 10 = 19"));
+    try expectEqualSlices(u8, list.items, "9 + 10 = 19");
 }
 ```
 
@@ -364,11 +364,11 @@ test "array printing" {
     );
     defer test_allocator.free(string);
 
-    try expect(eql(
+    try expectEqualSlices(
         u8,
         string,
         "{ 1, 4 } + { 2, 5 } = { 3, 9 }",
-    ));
+    );
 }
 ```
 
@@ -414,11 +414,11 @@ test "custom fmt" {
     );
     defer test_allocator.free(john_string);
 
-    try expect(eql(
+    try expectEqualSlices(
         u8,
         john_string,
         "John Carmack (1970-)",
-    ));
+    );
 
     const claude = Person{
         .name = "Claude Shannon",
@@ -433,11 +433,11 @@ test "custom fmt" {
     );
     defer test_allocator.free(claude_string);
 
-    try expect(eql(
+    try expectEqualSlices(
         u8,
         claude_string,
         "Claude Shannon (1916-2001)",
-    ));
+    );
 }
 ```
 
@@ -449,10 +449,11 @@ Let's parse a json string into a struct type, using the streaming parser.
 const Place = struct { lat: f32, long: f32 };
 
 test "json parse" {
-    var stream = std.json.TokenStream.init(
+    const parsed = try std.json.parseFromSlice(Place, test_allocator,
         \\{ "lat": 40.684540, "long": -74.401422 }
-    );
-    const x = try std.json.parse(Place, &stream, .{});
+    , .{});
+    defer parsed.deinit();
+    const x = parsed.value;
 
     try expect(x.lat == 40.684540);
     try expect(x.long == -74.401422);
@@ -473,9 +474,9 @@ test "json stringify" {
     var string = std.ArrayList(u8).init(fba.allocator());
     try std.json.stringify(x, .{}, string.writer());
 
-    try expect(eql(u8, string.items,
-        \\{"lat":5.19976654e+01,"long":-7.40687012e-01}
-    ));
+    try expectEqualSlices(u8, string.items,
+        \\{"lat":5.199766540527344e+01,"long":-7.406870126724243e-01}
+    );
 }
 ```
 
@@ -483,25 +484,15 @@ The json parser requires an allocator for javascript's string, array, and map ty
 
 ```zig
 test "json parse with strings" {
-    var stream = std.json.TokenStream.init(
-        \\{ "name": "Joe", "age": 25 }
-    );
-
     const User = struct { name: []u8, age: u16 };
+    // TODO: Use leaky?
+    const parsed = try std.json.parseFromSlice(User, test_allocator,
+        \\{ "name": "Joe", "age": 25 }
+    , .{});
+    defer parsed.deinit();
+    const x = parsed.value;
 
-    const x = try std.json.parse(
-        User,
-        &stream,
-        .{ .allocator = test_allocator },
-    );
-
-    defer std.json.parseFree(
-        User,
-        x,
-        .{ .allocator = test_allocator },
-    );
-
-    try expect(eql(u8, x.name, "Joe"));
+    try expectEqualSlices(u8, x.name, "Joe");
     try expect(x.age == 25);
 }
 ```
@@ -700,10 +691,10 @@ The standard library provides utilities for in-place sorting slices. Its basic u
 ```zig
 test "sorting" {
     var data = [_]u8{ 10, 240, 0, 0, 10, 5 };
-    std.sort.sort(u8, &data, {}, comptime std.sort.asc(u8));
-    try expect(eql(u8, &data, &[_]u8{ 0, 0, 5, 10, 10, 240 }));
-    std.sort.sort(u8, &data, {}, comptime std.sort.desc(u8));
-    try expect(eql(u8, &data, &[_]u8{ 240, 10, 10, 5, 0, 0 }));
+    std.mem.sort(u8, &data, {}, comptime std.sort.asc(u8));
+    try expectEqualSlices(u8, &data, &[_]u8{ 0, 0, 5, 10, 10, 240 });
+    std.mem.sort(u8, &data, {}, comptime std.sort.desc(u8));
+    try expectEqualSlices(u8, &data, &[_]u8{ 240, 10, 10, 5, 0, 0 });
 }
 ```
 
@@ -720,11 +711,11 @@ It is a common idiom to have a struct type with a `next` function with an option
 test "split iterator" {
     const text = "robust, optimal, reusable, maintainable, ";
     var iter = std.mem.split(u8, text, ", ");
-    try expect(eql(u8, iter.next().?, "robust"));
-    try expect(eql(u8, iter.next().?, "optimal"));
-    try expect(eql(u8, iter.next().?, "reusable"));
-    try expect(eql(u8, iter.next().?, "maintainable"));
-    try expect(eql(u8, iter.next().?, ""));
+    try expectEqualSlices(u8, iter.next().?, "robust");
+    try expectEqualSlices(u8, iter.next().?, "optimal");
+    try expectEqualSlices(u8, iter.next().?, "reusable");
+    try expectEqualSlices(u8, iter.next().?, "maintainable");
+    try expectEqualSlices(u8, iter.next().?, "");
     try expect(iter.next() == null);
 }
 ```
@@ -740,7 +731,7 @@ test "iterator looping" {
 
     var file_count: usize = 0;
     while (try iter.next()) |entry| {
-        if (entry.kind == .File) file_count += 1;
+        if (entry.kind == .file) file_count += 1;
     }
 
     try expect(file_count > 0);
@@ -772,8 +763,8 @@ test "custom iterator" {
         .needle = "e",
     };
 
-    try expect(eql(u8, iter.next().?, "one"));
-    try expect(eql(u8, iter.next().?, "three"));
+    try expectEqualSlices(u8, iter.next().?, "one");
+    try expectEqualSlices(u8, iter.next().?, "three");
     try expect(iter.next() == null);
 }
 ```
@@ -789,13 +780,13 @@ test "hex" {
     var b: [8]u8 = undefined;
 
     _ = try bufPrint(&b, "{X}", .{4294967294});
-    try expect(eql(u8, &b, "FFFFFFFE"));
+    try expectEqualSlices(u8, &b, "FFFFFFFE");
 
     _ = try bufPrint(&b, "{x}", .{4294967294});
-    try expect(eql(u8, &b, "fffffffe"));
+    try expectEqualSlices(u8, &b, "fffffffe");
 
     _ = try bufPrint(&b, "{}", .{std.fmt.fmtSliceHexLower("Zig!")});
-    try expect(eql(u8, &b, "5a696721"));
+    try expectEqualSlices(u8, &b, "5a696721");
 }
 ```
 
@@ -804,11 +795,11 @@ test "hex" {
 ```zig
 test "decimal float" {
     var b: [4]u8 = undefined;
-    try expect(eql(
+    try expectEqualSlices(
         u8,
         try bufPrint(&b, "{d}", .{16.5}),
         "16.5",
-    ));
+    );
 }
 ```
 
@@ -817,7 +808,7 @@ test "decimal float" {
 test "ascii fmt" {
     var b: [1]u8 = undefined;
     _ = try bufPrint(&b, "{c}", .{66});
-    try expect(eql(u8, &b, "B"));
+    try expectEqualSlices(u8, &b, "B");
 }
 ```
 
@@ -827,22 +818,22 @@ test "ascii fmt" {
 test "B Bi" {
     var b: [32]u8 = undefined;
 
-    try expect(eql(u8, try bufPrint(&b, "{}", .{std.fmt.fmtIntSizeDec(1)}), "1B"));
-    try expect(eql(u8, try bufPrint(&b, "{}", .{std.fmt.fmtIntSizeBin(1)}), "1B"));
+    try expectEqualSlices(u8, try bufPrint(&b, "{}", .{std.fmt.fmtIntSizeDec(1)}), "1B");
+    try expectEqualSlices(u8, try bufPrint(&b, "{}", .{std.fmt.fmtIntSizeBin(1)}), "1B");
 
-    try expect(eql(u8, try bufPrint(&b, "{}", .{std.fmt.fmtIntSizeDec(1024)}), "1.024kB"));
-    try expect(eql(u8, try bufPrint(&b, "{}", .{std.fmt.fmtIntSizeBin(1024)}), "1KiB"));
+    try expectEqualSlices(u8, try bufPrint(&b, "{}", .{std.fmt.fmtIntSizeDec(1024)}), "1.024kB");
+    try expectEqualSlices(u8, try bufPrint(&b, "{}", .{std.fmt.fmtIntSizeBin(1024)}), "1KiB");
 
-    try expect(eql(
+    try expectEqualSlices(
         u8,
         try bufPrint(&b, "{}", .{std.fmt.fmtIntSizeDec(1024 * 1024 * 1024)}),
         "1.073741824GB",
-    ));
-    try expect(eql(
+    );
+    try expectEqualSlices(
         u8,
         try bufPrint(&b, "{}", .{std.fmt.fmtIntSizeBin(1024 * 1024 * 1024)}),
         "1GiB",
-    ));
+    );
 }
 ```
 
@@ -852,17 +843,17 @@ test "B Bi" {
 test "binary, octal fmt" {
     var b: [8]u8 = undefined;
 
-    try expect(eql(
+    try expectEqualSlices(
         u8,
         try bufPrint(&b, "{b}", .{254}),
         "11111110",
-    ));
+    );
 
-    try expect(eql(
+    try expectEqualSlices(
         u8,
         try bufPrint(&b, "{o}", .{254}),
         "376",
-    ));
+    );
 }
 ```
 
@@ -870,11 +861,11 @@ test "binary, octal fmt" {
 ```zig
 test "pointer fmt" {
     var b: [16]u8 = undefined;
-    try expect(eql(
+    try expectEqualSlices(
         u8,
-        try bufPrint(&b, "{*}", .{@intToPtr(*u8, 0xDEADBEEF)}),
+        try bufPrint(&b, "{*}", .{@as(*u8, @ptrFromInt(0xDEADBEEF))}),
         "u8@deadbeef",
-    ));
+    );
 }
 ```
 
@@ -883,11 +874,11 @@ test "pointer fmt" {
 test "scientific" {
     var b: [16]u8 = undefined;
 
-    try expect(eql(
+    try expectEqualSlices(
         u8,
         try bufPrint(&b, "{e}", .{3.14159}),
         "3.14159e+00",
-    ));
+    );
 }
 ```
 
@@ -897,11 +888,11 @@ test "string fmt" {
     var b: [6]u8 = undefined;
     const hello: [*:0]const u8 = "hello!";
 
-    try expect(eql(
+    try expectEqualSlices(
         u8,
         try bufPrint(&b, "{s}", .{hello}),
         "hello!",
-    ));
+    );
 }
 ```
 
@@ -927,11 +918,11 @@ Position usage.
 ```zig
 test "position" {
     var b: [3]u8 = undefined;
-    try expect(eql(
+    try expectEqualSlices(
         u8,
         try bufPrint(&b, "{0s}{0s}{1s}", .{ "a", "b" }),
         "aab",
-    ));
+    );
 }
 ```
 
@@ -940,23 +931,23 @@ Fill, alignment and width being used.
 test "fill, alignment, width" {
     var b: [6]u8 = undefined;
 
-    try expect(eql(
+    try expectEqualSlices(
         u8,
         try bufPrint(&b, "{s: <5}", .{"hi!"}),
         "hi!  ",
-    ));
+    );
 
-    try expect(eql(
+    try expectEqualSlices(
         u8,
         try bufPrint(&b, "{s:_^6}", .{"hi!"}),
         "_hi!__",
-    ));
+    );
 
-    try expect(eql(
+    try expectEqualSlices(
         u8,
         try bufPrint(&b, "{s:!>4}", .{"hi!"}),
         "!hi!",
-    ));
+    );
 }
 ```
 
@@ -964,11 +955,11 @@ Using a specifier with precision.
 ```zig
 test "precision" {
     var b: [4]u8 = undefined;
-    try expect(eql(
+    try expectEqualSlices(
         u8,
         try bufPrint(&b, "{d:.2}", .{3.14159}),
         "3.14",
-    ));
+    );
 }
 ```
 

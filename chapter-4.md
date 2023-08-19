@@ -72,13 +72,13 @@ test "hmm" {
         .d = false,
         .e = true,
     };
-    const z = @ptrCast([*]const u8, &x);
+    const z = @as([*]const u8, @ptrCast(&x));
 
-    try expect(@ptrCast(*const i32, z).* == 10005);
-    try expect(@ptrCast(*const u8, z + 4).* == 42);
-    try expect(@ptrCast(*const f32, z + 8).* == -10.5);
-    try expect(@ptrCast(*const bool, z + 12).* == false);
-    try expect(@ptrCast(*const bool, z + 13).* == true);
+    try expect(@as(*const i32, @ptrCast(@alignCast(z))).* == 10005);
+    try expect(@as(*const u8, @ptrCast(z + 4)).* == 42);
+    try expect(@as(*const f32, @ptrCast(@alignCast(z + 8))).* == -10.5);
+    try expect(@as(*const bool, @ptrCast(z + 12)).* == false);
+    try expect(@as(*const bool, @ptrCast(z + 13)).* == true);
 }
 ```
 
