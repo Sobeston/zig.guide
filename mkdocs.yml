@@ -1,0 +1,12 @@
+site_name: My Docs
+
+theme:
+  name: material
+
+nav:
+  - Chapter 0 - Getting Started: chapter-0.md
+  - Chapter 1 - Basics: chapter-1.md
+  - Chapter 2 - Standard Patterns: chapter-2.md
+  - Chapter 3 - Build system: chapter-3.md
+  - Chapter 4 - Working with C: chapter-4.md
+  - Chapter 5 - Async: chapter-5.md

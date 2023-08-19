@@ -21,8 +21,10 @@ pub fn main() !void {
 
     const out_dir = try std.fs.cwd().openDir("test-out", .{});
 
+    const docs_path = try std.fs.cwd().openDir("docs", .{});
+
     inline for (files) |f| {
-        const in = try std.fs.cwd().openFile(f[0], .{});
+        const in = try docs_path.openFile(f[0], .{});
         defer in.close();
 
         const out = try out_dir.createFile(f[1], .{});
