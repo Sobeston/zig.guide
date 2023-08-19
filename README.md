@@ -1,6 +1,6 @@
-# ziglearn
+# zighelp
 
-Repo for https://ziglearn.org content. Feedback and PRs welcome.
+Repo for https://zighelp.org content. Feedback and PRs welcome.
 
 ## How to run the tests
 
