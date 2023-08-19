@@ -20,6 +20,7 @@ theme:
     - navigation.expand
     - toc.follow
     - navigation.indexes
+    - navigation.footer
 
 nav:
   - Home: README.md
