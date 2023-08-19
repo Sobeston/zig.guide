@@ -14,6 +14,7 @@ markdown_extensions:
 
 theme:
   name: material
+  logo: assets/images/logo.svg
   features:
     - navigation.instant
     - navigation.tracking
