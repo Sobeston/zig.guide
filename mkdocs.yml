@@ -1,4 +1,4 @@
-site_name: Zig Help
+site_name: zighelp.org
 
 markdown_extensions:
   - admonition
