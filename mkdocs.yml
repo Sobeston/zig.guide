@@ -1,9 +1,21 @@
 site_name: Zig Help
 
+markdown_extensions:
+  - admonition
+  - pymdownx.superfences
+
 theme:
   name: material
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.sections
+    - navigation.expand
+    - toc.follow
+    - toc.integrate
 
 nav:
+  - Home: README.md
   - Chapter 0 - Getting Started: chapter-0.md
   - Chapter 1 - Basics: chapter-1.md
   - Chapter 2 - Standard Patterns: chapter-2.md

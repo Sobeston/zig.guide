@@ -5,7 +5,7 @@ date: 2023-04-28 18:00:00
 description: "Ziglearn - A Guide / Tutorial for the Zig programming language. Install and get started with ziglang here."
 ---
 
-# Welcome
+## Welcome
 
 [Zig](https://ziglang.org) is a general-purpose programming language and toolchain for maintaining __robust__, __optimal__, and __reusable__ software.
 
@@ -17,7 +17,7 @@ To follow this guide, we assume you have:
 
 Knowing a language like C, C++, Rust, Go, Pascal or similar will be helpful for following this guide. You should have an editor, terminal and internet connection available to you. This guide is unofficial and unaffiliated with the Zig Software Foundation, and is designed to be read in order from the start.
 
-# Installation
+## Installation
 
 **This guide assumes you're using a master build** of Zig as opposed to the latest major release, which means downloading a binary from the site or compiling from source; **the version of Zig in your package manager is likely outdated**. This guide does not support Zig 0.10.1.
 
@@ -66,7 +66,7 @@ https://github.com/zigtools/zls/
 ```
 5. (optional) Join a [Zig community](https://github.com/ziglang/zig/wiki/Community).
 
-# Hello World
+## Hello World
 
 Create a file called `main.zig`, with the following contents:
 
@@ -77,6 +77,7 @@ pub fn main() void {
     std.debug.print("Hello, {s}!\n", .{"World"});
 }
 ```
-###### (note: make sure your file is using spaces for indentation, LF line endings and UTF-8 encoding!)
+
+!!! note "(note: make sure your file is using spaces for indentation, LF line endings and UTF-8 encoding!)"
 
 Use `zig run main.zig` to build and run it. In this example `Hello, World!` will be written to stderr, and is assumed to never fail.

@@ -7,7 +7,7 @@ description: "Chapter 5 - Learn about how the ziglang's async works"
 
 Warning: The current version of the compiler does not yet support async
 
-# Async
+## Async
 
 A functioning understanding of Zig's async requires familiarity with the concept of the call stack. If you have not heard of this before, [check out the wikipedia page](https://en.wikipedia.org/wiki/Call_stack).
 
@@ -22,7 +22,7 @@ With Zig's async functions we can do more than this, with the transfer of contro
 
 The style of Zig's async may be described as suspendible stackless coroutines. Zig's async is very different to something like an OS thread which has a stack, and can only be suspended by the kernel. Furthermore, Zig's async is there to provide you with control flow structures and code generation; async does not imply parallelism or the usage of threads.
 
-# Suspend / Resume
+## Suspend / Resume
 
 In the previous section we talked of how async functions can give control back to the caller, and how the async function can later take control back. This functionality is provided by the keywords [`suspend`, and `resume`](https://ziglang.org/documentation/master/#Suspend-and-Resume). When a function suspends, control flow returns to wherever it was last resumed; when a function is called via an `async` invocation, this is an implicit resume.
 
@@ -69,7 +69,7 @@ fn func2() void {
 }
 ```
 
-# Async / Await
+## Async / Await
 
 Similar to how well formed code has a suspend for every resume, each `async` function invocation with a return value must be matched with an `await`. The value yielded by `await` on the async frame corresponds to the function's return.
 
@@ -88,7 +88,7 @@ test "async / await" {
 
 Using `await` on an async frame of a function which may suspend is only possible from async functions. As such, functions that use `await` on the frame of an async function are also considered async functions. If you can be sure that the potential suspend doesn't happen, `nosuspend await` will stop this from happening.
 
-# Nosuspend
+## Nosuspend
 
 When calling a function which is determined to be async (i.e. it may suspend) without an `async` invocation, the function which called it is also treated as being async. When a function of a concrete (non-async) calling convention is determined to have suspend points, this is a compile error as async requires its own calling convention. This means, for example, that main cannot be async.
 
@@ -152,7 +152,7 @@ C:\zig\lib\zig\std\start.zig:173:65: 0x7ff661dd18ce in std.start.WinStartup (mai
                                                                 ^
 ```
 
-# Async Frames, Suspend Blocks
+## Async Frames, Suspend Blocks
 
 `@Frame(function)` returns the frame type of the function. This works for async functions, and functions without a specific calling convention.
 
@@ -229,7 +229,7 @@ test "anyframe->T" {
 }
 ```
 
-# Basic Event Loop Implementation
+## Basic Event Loop Implementation
 
 An event loop is a design pattern in which events are dispatched and/or waited upon. This will mean some kind of service or runtime that resumes suspended async frames when conditions are met. This is the most powerful and useful use case of Zig's async.
 
@@ -337,7 +337,7 @@ pub fn main() !void {
 }
 ```
 
-# End of Chapter 5
+## End of Chapter 5
 
 This chapter is incomplete and in future should contain usage of [`std.event.Loop`](https://ziglang.org/documentation/master/std/#std;event.Loop), and evented IO.
 

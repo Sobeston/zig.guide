@@ -5,7 +5,7 @@ date: 2023-04-28 18:00:00
 description: "Chapter 1 - This will get you up to speed with almost all of the Zig programming language. This part of the tutorial should be coverable in under an hour."
 ---
 
-# Assignment
+## Assignment
 
 Value assignment has the following syntax: `(const|var) identifier[: type] = value`.
 
@@ -33,7 +33,7 @@ var b: u32 = undefined;
 
 Where possible, `const` values are preferred over `var` values.
 
-# Arrays
+## Arrays
 
 Arrays are denoted by `[N]T`, where `N` is the number of elements in the array and `T` is the type of those elements (i.e., the array's child type).
 
@@ -53,7 +53,7 @@ const array = [_]u8{ 'h', 'e', 'l', 'l', 'o' };
 const length = array.len; // 5
 ```
 
-# If
+## If
 
 Zig's basic if statement is simple in that it only accepts a `bool` value (of values `true` or `false`). There is no concept of truthy or falsy values.
 
@@ -85,7 +85,7 @@ test "if statement expression" {
 }
 ```
 
-# While
+## While
 
 Zig's while loop has three parts - a condition, a block and a continue expression.
 
@@ -140,7 +140,7 @@ test "while with break" {
 }
 ```
 
-# For
+## For
 For loops are used to iterate over arrays (and other types, to be discussed later). For loops follow this syntax. Like while, for loops can use `break` and `continue`. Here we've had to assign values to `_`, as Zig does not allow us to have unused values.
 
 ```zig
@@ -165,7 +165,7 @@ test "for" {
 }
 ```
 
-# Functions
+## Functions
 
 __All function arguments are immutable__ - if a copy is desired the user must explicitly make one. Unlike variables which are snake_case, functions are camelCase. Here's an example of declaring and calling a simple function.
 
@@ -203,7 +203,7 @@ Values can be ignored by using `_` in place of a variable or const declaration. 
 _ = 10;
 ```
 
-# Defer
+## Defer
 
 Defer is used to execute a statement while exiting the current block.
 
@@ -231,7 +231,7 @@ test "multi defer" {
 }
 ```
 
-# Errors
+## Errors
 
 An error set is like an enum (details on Zig's enums later), where each error in the set is a value. There are no exceptions in Zig; errors are values. Let's create an error set.
 
@@ -345,7 +345,7 @@ const C = A || B;
 
 `anyerror` is the global error set which due to being the superset of all error sets, can have an error from any set coerce to a value of it. Its usage should be generally avoided.
 
-# Switch
+## Switch
 
 Zig's `switch` works as both a statement and an expression. The types of all branches must coerce to the type which is being switched upon. All possible values must have an associated branch - values cannot be left out. Cases cannot fall through to other branches.
 
@@ -382,7 +382,7 @@ test "switch expression" {
 }
 ```
 
-# Runtime Safety
+## Runtime Safety
 
 Zig provides a level of safety, where problems may be found during execution. Safety can be left on, or turned off. Zig has many cases of so-called __detectable illegal behaviour__, meaning that illegal behaviour will be caught (causing a panic) with safety on, but will result in undefined behaviour with safety off. Users are strongly recommended to develop and test their software with safety on, despite its speed penalties.
 
@@ -418,7 +418,7 @@ test "out of bounds, no safety" {
 
 Safety is off for some build modes (to be discussed later).
 
-# Unreachable
+## Unreachable
 
 [`unreachable`](https://ziglang.org/documentation/master/#unreachable) is an assertion to the compiler that this statement will not be reached. It can be used to tell the compiler that a branch is impossible, which the optimiser can then take advantage of. Reaching an [`unreachable`](https://ziglang.org/documentation/master/#unreachable) is detectable illegal behaviour.
 
@@ -454,7 +454,7 @@ test "unreachable switch" {
 }
 ```
 
-# Pointers
+## Pointers
 
 Normal pointers in Zig aren't allowed to have 0 or null as a value. They follow the syntax `*T`, where `T` is the child type.
 
@@ -508,7 +508,7 @@ error: cannot assign to constant
 A `*T` coerces to a `*const T`.
 
 
-# Pointer sized integers
+## Pointer sized integers
 
 `usize` and `isize` are given as unsigned and signed integers which are the same size as pointers.
 
@@ -519,13 +519,13 @@ test "usize" {
 }
 ```
 
-# Many-Item Pointers
+## Many-Item Pointers
 
 Sometimes you may have a pointer to an unknown amount of elements. `[*]T` is the solution for this, which works like `*T` but also supports indexing syntax, pointer arithmetic, and slicing. Unlike `*T`, it cannot point to a type which does not have a known size. `*T` coerces to `[*]T`.
 
 These many pointers may point to any amount of elements, including 0 and 1.
 
-# Slices
+## Slices
 
 Slices can be thought of as a pair of `[*]T` (the pointer to the data) and a `usize` (the element count). Their syntax is given as `[]T`, with `T` being the child type. Slices are used heavily throughout Zig for when you need to operate on arbitrary amounts of data. Slices have the same attributes as pointers, meaning that there also exists const slices. For loops also operate over slices. String literals in Zig coerce to `[]const u8`.
 
@@ -566,7 +566,7 @@ test "slices 3" {
 
 Types that may be sliced are: arrays, many pointers and slices.
 
-# Enums
+## Enums
 
 Zig's enums allow you to define types which have a restricted set of named values.
 
@@ -640,7 +640,7 @@ test "hmm" {
 ```
 
 
-# Structs
+## Structs
 
 Structs are Zig's most common kind of composite data type, allowing you to define types that can store a fixed set of named fields. Zig gives no guarantees about the in-memory order of fields in a struct, or its size. Like arrays, structs are also neatly constructed with `T{}` syntax. Here is an example of declaring and filling a struct.
 ```zig
@@ -710,7 +710,7 @@ test "automatic dereference" {
 }
 ```
 
-# Unions
+## Unions
 
 Zig's unions allow you to define types which store one value of many possible typed fields; only one field may be active at one time.
 
@@ -767,7 +767,7 @@ const Tagged = union(enum) { a: u8, b: f32, c: bool };
 const Tagged2 = union(enum) { a: u8, b: f32, c: bool, none };
 ```
 
-# Integer Rules
+## Integer Rules
 
 Zig supports hex, octal and binary integer literals.
 ```zig
@@ -825,7 +825,7 @@ test "well defined overflow" {
 }
 ```
 
-# Floats
+## Floats
 
 Zig's floats are strictly IEEE compliant unless [`@setFloatMode(.Optimized)`](https://ziglang.org/documentation/master/#setFloatMode) is used, which is equivalent to GCC's `-ffast-math`. Floats coerce to larger float types.
 
@@ -866,7 +866,7 @@ test "int-float conversion" {
 }
 ```
 
-# Labelled Blocks
+## Labelled Blocks
 
 Blocks in Zig are expressions and can be given labels, which are used to yield values. Here, we are using a label called blk. Blocks yield values, meaning that they can be used in place of a value. The value of an empty block `{}` is a value of the type `void`.
 
@@ -893,7 +893,7 @@ blk: {
 }
 ```
 
-# Labelled Loops
+## Labelled Loops
 
 Loops can be given labels, allowing you to `break` and `continue` to outer loops.
 
@@ -910,7 +910,7 @@ test "nested continue" {
 }
 ```
 
-# Loops as expressions
+## Loops as expressions
 
 Like `return`, `break` accepts a value. This can be used to yield a value from a loop. Loops in Zig also have an `else` branch on loops, which is evaluated when the loop is not exited from with a `break`.
 
@@ -929,7 +929,7 @@ test "while loop expression" {
 }
 ```
 
-# Optionals
+## Optionals
 
 Optionals use the syntax `?T` and are used to store the data [`null`](https://ziglang.org/documentation/master/#null), or a value of type `T`.
 
@@ -1009,7 +1009,7 @@ Optional pointer and optional slice types do not take up any extra memory, compa
 
 This is how null pointers in Zig work - they must be unwrapped to a non-optional before dereferencing, which stops null pointer dereferences from happening accidentally.
 
-# Comptime
+## Comptime
 
 Blocks of code may be forcibly executed at compile time using the [`comptime`](https://ziglang.org/documentation/master/#comptime) keyword. In this example, the variables x and y are equivalent.
 
@@ -1178,7 +1178,7 @@ test "**" {
 }
 ```
 
-# Payload Captures
+## Payload Captures
 
 Payload captures use the syntax `|value|` and appear in many places, some of which we've seen already. Wherever they appear, they are used to "capture" the value from something.
 
@@ -1293,7 +1293,7 @@ test "for with pointer capture" {
 }
 ```
 
-# Inline Loops
+## Inline Loops
 
 `inline` loops are unrolled, and allow some things to happen which only work at compile time. Here we use a [`for`](https://ziglang.org/documentation/master/#inline-for), but a [`while`](https://ziglang.org/documentation/master/#inline-while) works similarly.
 ```zig
@@ -1307,7 +1307,7 @@ test "inline for" {
 
 Using these for performance reasons is inadvisable unless you've tested that explicitly unrolling is faster; the compiler tends to make better decisions here than you.
 
-# Opaque
+## Opaque
 
 [`opaque`](https://ziglang.org/documentation/master/#opaque) types in Zig have an unknown (albeit non-zero) size and alignment. Because of this these data types cannot be stored directly. These are used to maintain type safety with pointers to types that we don't have information about.
 
@@ -1355,7 +1355,7 @@ test "opaque with declarations" {
 
 The typical usecase of opaque is to maintain type safety when interoperating with C code that does not expose complete type information.
 
-# Anonymous Structs
+## Anonymous Structs
 
 The struct type may be omitted from a struct literal. These literals may coerce to other struct types.
 
@@ -1417,7 +1417,7 @@ test "tuple" {
 }
 ```
 
-# Sentinel Termination
+## Sentinel Termination
 
 Arrays, slices and many pointers may be terminated by a value of their child type. This is known as sentinel termination. These follow the syntax `[N:t]T`, `[:t]T`, and `[*:t]T`, where `t` is a value of the child type `T`.
 
@@ -1481,7 +1481,7 @@ test "sentinel terminated slicing" {
 }
 ```
 
-# Vectors
+## Vectors
 
 Zig provides vector types for SIMD. These are not to be conflated with vectors in a mathematical sense, or vectors like C++'s std::vector (for this, see "Arraylist" in chapter 2). Vectors may be created using the [`@Type`](https://ziglang.org/documentation/master/#Type) built-in we used earlier, and [`std.meta.Vector`](https://ziglang.org/documentation/master/std/#std;meta.Vector) provides a shorthand for this.
 
@@ -1544,7 +1544,7 @@ const arr: [4]f32 = @Vector(4, f32){ 1, 2, 3, 4 };
 
 It is worth noting that using explicit vectors may result in slower software if you do not make the right decisions - the compiler's auto-vectorisation is fairly smart as-is.
 
-# Imports
+## Imports
 
 The built-in function [`@import`](https://ziglang.org/documentation/master/#import) takes in a file, and gives you a struct type based on that file. All declarations labelled as `pub` (for public) will end up in this struct type, ready for use.
 
@@ -1552,7 +1552,7 @@ The built-in function [`@import`](https://ziglang.org/documentation/master/#impo
 
 We will explore more of the standard library in later chapters.
 
-# End Of Chapter 1
+## End Of Chapter 1
 In the next chapter we will cover standard patterns, including many useful areas of the standard library.
 
 Feedback and PRs are welcome.

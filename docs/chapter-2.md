@@ -7,7 +7,7 @@ description: "Chapter 2 - This section of the tutorial will cover the Zig progra
 
 Automatically generated standard library documentation can be found [here](https://ziglang.org/documentation/master/std/). Installing [ZLS](https://github.com/zigtools/zls/) may also help you explore the standard library, which provides completions for it.
 
-# Allocators
+## Allocators
 
 The Zig standard library provides a pattern for allocating memory, which allows the programmer to choose exactly how memory allocations are done within the standard library - no allocations happen behind your back in the standard library.
 
@@ -91,7 +91,7 @@ For high performance (but very few safety features!), [`std.heap.c_allocator`](h
 
 Benjamin Feng's talk [*What's a Memory Allocator Anyway?*](https://www.youtube.com/watch?v=vHWiDx_l4V0) goes into more detail on this topic, and covers the implementation of allocators.
 
-# Arraylist
+## Arraylist
 
 The [`std.ArrayList`](https://ziglang.org/documentation/master/std/#A;std:ArrayList) is commonly used throughout Zig, and serves as a buffer which can change in size. `std.ArrayList(T)` is similar to C++'s `std::vector<T>` and Rust's `Vec<T>`. The `deinit()` method frees all of the ArrayList's memory. The memory can be read from and written to via its slice field - `.items`.
 
@@ -116,7 +116,7 @@ test "arraylist" {
 }
 ```
 
-# Filesystem
+## Filesystem
 
 Let's create and open a file in our current working directory, write to it, and then read from it. Here we have to use `.seekTo` in order to go back to the start of the file before reading what we have written.
 
@@ -186,7 +186,7 @@ test "make dir" {
 }
 ```
 
-# Readers and Writers
+## Readers and Writers
 
 [`std.io.Writer`](https://ziglang.org/documentation/master/std/#A;std:io.Writer) and [`std.io.Reader`](https://ziglang.org/documentation/master/std/#A;std:io.Reader) provide standard ways of making use of IO. `std.ArrayList(u8)` has a `writer` method which gives us a writer. Let's use it.
 
@@ -304,7 +304,7 @@ test "custom writer" {
 }
 ```
 
-# Formatting
+## Formatting
 
 [`std.fmt`](https://ziglang.org/documentation/master/std/#A;std:fmt) provides ways to format data to and from strings.
 
@@ -441,7 +441,7 @@ test "custom fmt" {
 }
 ```
 
-# JSON
+## JSON
 
 Let's parse a json string into a struct type, using the streaming parser.
 
@@ -498,7 +498,7 @@ test "json parse with strings" {
 }
 ```
 
-# Random Numbers
+## Random Numbers
 
 Here we create a new prng using a 64 bit random seed. a, b, c, and d are given random values via this prng. The expressions giving c and d values are equivalent. `DefaultPrng` is `Xoroshiro128`; there are other prngs available in std.rand.
 
@@ -537,7 +537,7 @@ test "crypto random numbers" {
 }
 ```
 
-# Crypto
+## Crypto
 
 [`std.crypto`](https://ziglang.org/documentation/master/std/#A;std:crypto) includes many cryptographic utilities, including:
 -  AES (Aes128, Aes256)
@@ -549,7 +549,7 @@ test "crypto random numbers" {
 
 This list is inexhaustive. For more in-depth information, try [A tour of std.crypto in Zig 0.7.0 - Frank Denis](https://www.youtube.com/watch?v=9t6Y7KoCvyk).
 
-# Threads
+## Threads
 
 While Zig provides more advanced ways of writing concurrent and parallel code, [`std.Thread`](https://ziglang.org/documentation/master/std/#A;std:Thread) is available for making use of OS threads. Let's make use of an OS thread.
 
@@ -574,7 +574,7 @@ test "threading" {
 
 Threads, however, aren't particularly useful without strategies for thread safety.
 
-# Hash Maps
+## Hash Maps
 
 The standard library provides [`std.AutoHashMap`](https://ziglang.org/documentation/master/std/#A;std:AutoHashMap), which lets you easily create a hash map type from a key type and a value type. These must be initiated with an allocator.
 
@@ -647,7 +647,7 @@ test "string hashmap" {
 
 If having your elements backed by an array is wanted behaviour, try [`std.ArrayHashMap`](https://ziglang.org/documentation/master/std/#A;std:ArrayHashMap) and its wrapper [`std.AutoArrayHashMap`](https://ziglang.org/documentation/master/std/#A;std:AutoArrayHashMap).
 
-# Stacks
+## Stacks
 
 [`std.ArrayList`](https://ziglang.org/documentation/master/std/#A;std:ArrayList) provides the methods necessary to use it as a stack. Here's an example of creating a list of matched brackets.
 
@@ -685,7 +685,7 @@ test "stack" {
 }
 ```
 
-# Sorting
+## Sorting
 
 The standard library provides utilities for in-place sorting slices. Its basic usage is as follows.
 
@@ -703,7 +703,7 @@ test "sorting" {
 
 [`std.sort.sort`](https://ziglang.org/documentation/master/std/#A;std:sort.sort) has a best case of O(n), and an average and worst case of O(n*log(n)).
 
-# Iterators
+## Iterators
 
 It is a common idiom to have a struct type with a `next` function with an optional in its return type, so that the function may return a null to indicate that iteration is finished.
 
@@ -770,7 +770,7 @@ test "custom iterator" {
 }
 ```
 
-# Formatting specifiers
+## Formatting specifiers
 [`std.fmt`](https://ziglang.org/documentation/master/std/#std;fmt) provides options for formatting various data types.
 
 `std.fmt.fmtSliceHexLower` and `std.fmt.fmtSliceHexUpper` provide hex formatting for strings as well as `{x}` and `{X}` for ints.
@@ -899,7 +899,7 @@ test "string fmt" {
 
 This list is non-exhaustive.
 
-# Advanced Formatting
+## Advanced Formatting
 
 So far we have only covered formatting specifiers. Format strings actually follow this format, where between each pair of square brackets is a parameter you have to replace with something.
 
@@ -964,7 +964,7 @@ test "precision" {
 }
 ```
 
-# End of Chapter 2
+## End of Chapter 2
 
 This chapter is incomplete. In the future it will contain things such as:
 

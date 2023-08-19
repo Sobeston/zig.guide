@@ -7,7 +7,7 @@ description: "Chapter 4 - Learn about how the Zig programming language makes use
 
 Zig has been designed from the ground up with C interop as a first class feature. In this section we will go over how this works.
 
-# ABI
+## ABI
 
 An ABI *(application binary interface)* is a standard, pertaining to:
 
@@ -21,7 +21,7 @@ Zig natively supports C ABIs for `extern` things; which C ABI is used is dependa
 
 Zig internally does not make use of an ABI, meaning code should explicitly conform to a C ABI where reproducible and defined binary-level behaviour is needed.
 
-# C Primitive Types
+## C Primitive Types
 
 Zig provides special `c_` prefixed types for conforming to the C ABI. These do not have fixed sizes, but rather change in size depending on the ABI being used.
 
@@ -40,7 +40,7 @@ Zig provides special `c_` prefixed types for conforming to the C ABI. These do n
 
 Note: C's void (and Zig's `c_void`) has an unknown non-zero size. Zig's `void` is a true zero-sized type.
 
-# Calling conventions
+## Calling conventions
 
 Calling conventions describe how functions are called. This includes how arguments are supplied to the function (i.e. where they go - in registers or on the stack, and how), and how the return value is received.
 
@@ -53,7 +53,7 @@ fn add(a: u32, b: u32) callconv(.C) u32 {
 
 Marking your functions with the C calling convention is crucial when you're calling Zig from C.
 
-# Extern Structs
+## Extern Structs
 
 Normal structs in Zig do not have a defined layout; `extern` structs are required for when you want the layout of your struct to match the layout of your C ABI.
 
@@ -92,7 +92,7 @@ Note how there are gaps in the middle and at the end - this is called "padding".
 
 As our `x` value is that of an extern struct, we could safely pass it into a C function expecting a `Data`, providing the C function was also compiled with the same `gnu` ABI and CPU arch.
 
-# Alignment
+## Alignment
 
 For circuitry reasons, CPUs access primitive values at certain multiples in memory. This could mean for example that the address of an `f32` value must be a multiple of 4, meaning `f32` has an alignment of 4. This so-called "natural alignment" of primitive data types is dependent on CPU architecture. All alignments are powers of 2.
 
@@ -132,7 +132,7 @@ test "passing aligned data" {
 }
 ```
 
-# Packed Structs
+## Packed Structs
 
 By default all struct fields in Zig are naturally aligned to that of [`@alignOf(FieldType)`](https://ziglang.org/documentation/master/#alignOf) (the ABI size), but without a defined layout. Sometimes you may want to have struct fields with a defined layout that do not conform to your C ABI. `packed` structs allow you to have extremely precise control of your struct fields, allowing you to place your fields on a bit-by-bit basis.
 
@@ -161,7 +161,7 @@ test "packed struct size" {
 
 Currently Zig's packed structs have some long withstanding compiler bugs, and do not currently work for many use cases.
 
-# Bit Aligned Pointers
+## Bit Aligned Pointers
 
 Similar to aligned pointers, bit aligned pointers have extra information in their type which informs how to access the data. These are necessary when the data is not byte-aligned. Bit alignment information is often needed to address fields inside of packed structs.
 
@@ -192,7 +192,7 @@ test "bit aligned pointers" {
 }
 ```
 
-# C Pointers
+## C Pointers
 
 Up until now we have used the following kinds of pointers:
 
@@ -204,7 +204,7 @@ Unlike the aforementioned pointers, C pointers cannot deal with specially aligne
 
 Outside of automatically translated C code, the usage of `[*c]` is almost always a bad idea, and should almost never be used.
 
-# Translate-C
+## Translate-C
 
 Zig provides the command `zig translate-c` for automatic translation from C source code.
 
@@ -230,7 +230,7 @@ In another file you could use `@import("int_sort.zig")` to make use of this func
 
 Currently the code produced may be unnecessarily verbose, though translate-c successfully translates most C code into Zig. You may wish to use translate-c to produce Zig code before editing it into more idiomatic code; a gradual transfer from C to Zig within a codebase is a supported use case.
 
-# cImport
+## cImport
 
 Zig's [`@cImport`](https://ziglang.org/documentation/master/#cImport) builtin is unique in that it takes in an expression, which can only take in [`@cInclude`](https://ziglang.org/documentation/master/#cInclude), [`@cDefine`](https://ziglang.org/documentation/master/#cDefine), and [`@cUndef`](https://ziglang.org/documentation/master/#cUndef). This works similarly to translate-c, translating C code to Zig under the hood.
 
@@ -244,11 +244,11 @@ Similar to [`@import`](https://ziglang.org/documentation/master/#import) this re
 
 cImport is only available when linking libc.
 
-# Linking libc
+## Linking libc
 
 Linking libc can be done via the command line via `-lc`, or via `build.zig` using `exe.linkLibC();`. The libc used is that of the compilation's target; Zig provides libc for many targets.
 
-# Zig cc, Zig c++
+## Zig cc, Zig c++
 
 The Zig executable comes with Clang embedded inside it alongside libraries and headers required to cross compile for other operating systems and architectures.
 
@@ -262,7 +262,7 @@ Some examples in the wild:
 
 - [Using zig cc and zig c++ in combination with cgo to cross compile hugo from aarch64-macos to x86_64-linux, with full static linking](https://twitter.com/croloris/status/1349861344330330114)
 
-# End of Chapter 4
+## End of Chapter 4
 
 This chapter is incomplete. In the future it will contain things such as:
 - Calling C code from Zig and vice versa

@@ -5,7 +5,7 @@ date: 2021-02-12 12:49:00
 description: "Chapter 3 - Ziglang's build system in detail."
 ---
 
-# Build Modes  
+## Build Modes  
 
 Zig provides four build modes, with debug being the default as it produces the shortest compile times.
 
@@ -20,7 +20,7 @@ These may be enabled in `zig run` and `zig test` with the arguments `-O ReleaseS
 
 Users are recommended to develop their software with runtime safety enabled, despite its small speed disadvantage.
 
-# Outputting an Executable
+## Outputting an Executable
 
 The commands `zig build-exe`, `zig build-lib`, and `zig build-obj` can be used to output executables, libraries and objects, respectively. These commands take in a source file and arguments.
 
@@ -42,7 +42,7 @@ pub fn main() void {
 }
 ```
 
-# Cross compilation
+## Cross compilation
 
 By default, Zig will compile for your combination of CPU and OS. This can be overridden by `-target`. Let's compile our tiny hello world to a 64 bit arm linux platform.
 
@@ -77,7 +77,7 @@ Let's compile a binary for a sandybridge CPU (Intel x86_64, circa 2011), so we c
 
 Details on what architectures, OSes, CPUs and ABIs (details on ABIs in the next chapter) are available can be found by running `zig targets`. Note: the output is long, and you may want to pipe it to a file, e.g. `zig targets > targets.json`.
 
-# Zig Build
+## Zig Build
 
 The `zig build` command allows users to compile based on a `build.zig` file. `zig init-exe` and `zig init-lib` can be used to give you a baseline project.
 
@@ -139,7 +139,7 @@ pub fn main() anyerror!void {
 
 Upon using the `zig build` command, the executable will appear in the install path. Here we have not specified an install path, so the executable will be saved in `./zig-out/bin`.
 
-# Builder
+## Builder
 
 Zig's [`std.Build`](https://ziglang.org/documentation/master/std/#A;std:Build) type contains the information used by the build runner. This includes information such as:
 
@@ -149,7 +149,7 @@ Zig's [`std.Build`](https://ziglang.org/documentation/master/std/#A;std:Build) t
 - the install path
 - build steps
 
-# CompileStep
+## CompileStep
 
 The `std.build.CompileStep` type contains information required to build a library, executable, object, or test.
 
@@ -168,7 +168,7 @@ pub fn build(b: *Builder) void {
 }
 ```
 
-# Modules
+## Modules
 
 The Zig build system has the concept of modules, which are other source files written in Zig. Let's make use of a module.
 
@@ -244,7 +244,7 @@ Zig does not yet have an official package manager. Some unofficial experimental 
 
 Some good places to find packages include: [astrolabe.pm](https://astrolabe.pm), [zpm](https://zpm.random-projects.net/), [awesome-zig](https://github.com/nrdmn/awesome-zig/), and the [zig tag on GitHub](https://github.com/topics/zig).
 
-# Build steps
+## Build steps
 
 Build steps are a way of providing tasks for the build runner to  execute. Let's create a build step, and make it the default. When you run `zig build` this will output `Hello!`. 
 
@@ -267,7 +267,7 @@ fn myTask(self: *std.build.Step, progress: *std.Progress.Node) !void {
 
 We called `b.installArtifact(exe)` earlier - this adds a build step which tells the builder to build the executable.
 
-# Generating Documentation
+## Generating Documentation
 
 The Zig compiler comes with automatic documentation generation. This can be invoked by adding `-femit-docs` to your `zig build-{exe, lib, obj}` or `zig run` command. This documentation is saved into `./docs`, as a small static website.
 
@@ -370,7 +370,7 @@ const B = error{
 const C = A || B;
 ```
 
-# End of Chapter 3
+## End of Chapter 3
 
 This chapter is incomplete. In the future it will contain advanced usage of `zig build`.
 

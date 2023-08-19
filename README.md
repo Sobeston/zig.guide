@@ -2,6 +2,8 @@
 
 Repo for https://zighelp.org content. Feedback and PRs welcome.
 
+## Generate docs locally
+
 `mkdocs serve`
 
 ## How to run the tests
