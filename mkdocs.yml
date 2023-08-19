@@ -1,6 +1,9 @@
 site_name: zighelp.org
 repo_url: https://github.com/zighelp/zighelp/
 
+extra:
+  generator: false
+
 markdown_extensions:
   - admonition
   - pymdownx.superfences
