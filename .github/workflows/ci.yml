@@ -22,6 +22,7 @@ jobs:
           cd test-out
           zig fmt --check *.zig
   deploy:
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
