@@ -21,7 +21,7 @@ jobs:
           zig run test-out.zig
           zig test do_tests.zig
           zig fmt --check test-out
-  deploy:
+  mkdocs-gh-deploy:
     needs: test
     runs-on: ubuntu-latest
     steps:

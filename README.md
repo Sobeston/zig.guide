@@ -13,6 +13,6 @@ Repo for https://zighelp.org content. Feedback and PRs welcome.
 
 ## TODO
 
-- [ ] add tests to CI/CD
-- [ ] i18n
 - [ ] PRs from ziglearn repo
+- [ ] make test run on Windows
+- [ ] i18n
