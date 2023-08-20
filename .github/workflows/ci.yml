@@ -19,7 +19,8 @@ jobs:
           zig run test-out.zig
           ls -l test-out
           zig test do_tests.zig
-          zig fmt --check test-out/*.zig
+          cd test-out
+          zig fmt --check *.zig
   deploy:
     runs-on: ubuntu-latest
     steps:
