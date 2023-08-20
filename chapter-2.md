@@ -152,7 +152,7 @@ test "file stat" {
     defer file.close();
     const stat = try file.stat();
     try expect(stat.size == 0);
-    try expect(stat.kind == .File);
+    try expect(stat.kind == .file);
     try expect(stat.ctime <= std.time.nanoTimestamp());
     try expect(stat.mtime <= std.time.nanoTimestamp());
     try expect(stat.atime <= std.time.nanoTimestamp());
@@ -179,7 +179,7 @@ test "make dir" {
     var file_count: usize = 0;
     var iter = iter_dir.iterate();
     while (try iter.next()) |entry| {
-        if (entry.kind == .File) file_count += 1;
+        if (entry.kind == .file) file_count += 1;
     }
 
     try expect(file_count == 3);
@@ -740,7 +740,7 @@ test "iterator looping" {
 
     var file_count: usize = 0;
     while (try iter.next()) |entry| {
-        if (entry.kind == .File) file_count += 1;
+        if (entry.kind == .file) file_count += 1;
     }
 
     try expect(file_count > 0);
