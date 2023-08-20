@@ -229,6 +229,7 @@ test "io reader usage" {
 
 A common usecase for readers is to read until the next line (e.g. for user input). Here we will do this with the [`std.io.getStdIn()`](https://ziglang.org/documentation/master/std/#A;std:io.getStdIn) file.
 
+<!--no_test-->
 ```zig
 fn nextLine(reader: anytype, buffer: []u8) !?[]const u8 {
     var line = (try reader.readUntilDelimiterOrEof(
