@@ -54,7 +54,7 @@ pub fn main() !void {
             }
 
             const this_test = std.mem.trim(u8, token[3..], " \n\t");
-            try out.writer().print("{s}\n\n", .{this_test});
+            try out.writer().print("{s}\n", .{this_test});
         }
     }
 }

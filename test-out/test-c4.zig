@@ -1,7 +1,6 @@
 fn add(a: u32, b: u32) callconv(.C) u32 {
     return a + b;
 }
-
 const expect = @import("std").testing.expect;
 
 const Data = extern struct { a: i32, b: u8, c: f32, d: bool, e: bool };
@@ -22,18 +21,14 @@ test "hmm" {
     try expect(@as(*const bool, @ptrCast(z + 12)).* == false);
     try expect(@as(*const bool, @ptrCast(z + 13)).* == true);
 }
-
 const a1: u8 align(8) = 100;
 const a2 align(8) = @as(u8, 100);
-
 const b1: u64 align(1) = 100;
 const b2 align(1) = @as(u64, 100);
-
 test "aligned pointers" {
     const a: u32 align(8) = 5;
     try expect(@TypeOf(&a) == *align(8) const u32);
 }
-
 fn total(a: *align(64) const [64]u8) u32 {
     var sum: u32 = 0;
     for (a) |elem| sum += elem;
@@ -44,7 +39,6 @@ test "passing aligned data" {
     const x align(64) = [_]u8{10} ** 64;
     try expect(total(&x) == 640);
 }
-
 const MovementState = packed struct {
     running: bool,
     crouching: bool,
@@ -63,7 +57,6 @@ test "packed struct size" {
     };
     _ = state;
 }
-
 test "bit aligned pointers" {
     var x = MovementState{
         .running = false,
@@ -88,4 +81,3 @@ test "bit aligned pointers" {
         .in_air = false,
     }));
 }
-

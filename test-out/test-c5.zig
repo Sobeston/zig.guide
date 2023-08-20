@@ -13,7 +13,6 @@ fn func() void {
     suspend {} //3
     foo += 1; //never reached!
 }
-
 var bar: i32 = 1;
 
 test "suspend with resume" {
@@ -27,7 +26,6 @@ fn func2() void {
     suspend {} //3
     bar += 1; //5
 }
-
 fn func3() u32 {
     return 5;
 }
@@ -36,7 +34,6 @@ test "async / await" {
     var frame = async func3();
     try expect(await frame == 5);
 }
-
 fn add(a: i32, b: i32) i64 {
     return a + b;
 }
@@ -45,7 +42,6 @@ test "@Frame" {
     var frame: @Frame(add) = async add(1, 2);
     try expect(await frame == 3);
 }
-
 fn double(value: u8) u9 {
     suspend {
         resume @frame();
@@ -57,7 +53,6 @@ test "@frame 1" {
     var f = async double(1);
     try expect(nosuspend await f == 2);
 }
-
 const std = @import("std");
 
 fn callLater(comptime laterFn: fn () void, ms: u64) void {
@@ -79,7 +74,6 @@ fn alarm() void {
 test "@frame 2" {
     nosuspend callLater(alarm, 1000);
 }
-
 fn zero(comptime x: anytype) x {
     return 0;
 }
@@ -92,4 +86,3 @@ test "anyframe->T" {
     var frame = async zero(f32);
     try expect(awaiter(&frame) == 0);
 }
-

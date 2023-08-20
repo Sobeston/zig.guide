@@ -10,7 +10,6 @@ test "allocation" {
     try expect(memory.len == 100);
     try expect(@TypeOf(memory) == []u8);
 }
-
 test "fixed buffer allocator" {
     var buffer: [1000]u8 = undefined;
     var fba = std.heap.FixedBufferAllocator.init(&buffer);
@@ -22,7 +21,6 @@ test "fixed buffer allocator" {
     try expect(memory.len == 100);
     try expect(@TypeOf(memory) == []u8);
 }
-
 test "arena allocator" {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     defer arena.deinit();
@@ -32,13 +30,11 @@ test "arena allocator" {
     _ = try allocator.alloc(u8, 10);
     _ = try allocator.alloc(u8, 100);
 }
-
 test "allocator create/destroy" {
     const byte = try std.heap.page_allocator.create(u8);
     defer std.heap.page_allocator.destroy(byte);
     byte.* = 128;
 }
-
 test "GPA" {
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
     const allocator = gpa.allocator();
@@ -51,7 +47,6 @@ test "GPA" {
     const bytes = try allocator.alloc(u8, 100);
     defer allocator.free(bytes);
 }
-
 const expectEqualSlices = std.testing.expectEqualSlices;
 const ArrayList = std.ArrayList;
 const test_allocator = std.testing.allocator;
@@ -68,7 +63,6 @@ test "arraylist" {
 
     try expectEqualSlices(u8, list.items, "Hello World!");
 }
-
 test "createFile, write, seekTo, read" {
     const file = try std.fs.cwd().createFile(
         "junk_file.txt",
@@ -85,7 +79,6 @@ test "createFile, write, seekTo, read" {
 
     try expectEqualSlices(u8, buffer[0..bytes_read], "Hello File!");
 }
-
 test "file stat" {
     const file = try std.fs.cwd().createFile(
         "junk_file2.txt",
@@ -99,7 +92,6 @@ test "file stat" {
     try expect(stat.mtime <= std.time.nanoTimestamp());
     try expect(stat.atime <= std.time.nanoTimestamp());
 }
-
 test "make dir" {
     try std.fs.cwd().makeDir("test-tmp");
     const iter_dir = try std.fs.cwd().openIterableDir(
@@ -122,7 +114,6 @@ test "make dir" {
 
     try expect(file_count == 3);
 }
-
 test "io writer usage" {
     var list = ArrayList(u8).init(test_allocator);
     defer list.deinit();
@@ -132,7 +123,6 @@ test "io writer usage" {
     try expect(bytes_written == 12);
     try expectEqualSlices(u8, list.items, "Hello World!");
 }
-
 test "io reader usage" {
     const message = "Hello File!";
 
@@ -153,7 +143,6 @@ test "io reader usage" {
 
     try expectEqualSlices(u8, contents, message);
 }
-
 // Don't create a type like this! Use an
 // arraylist with a fixed buffer allocator
 const MyByteList = struct {
@@ -193,7 +182,6 @@ test "custom writer" {
     _ = try bytes.writer().write(" Writer!");
     try expectEqualSlices(u8, bytes.items, "Hello Writer!");
 }
-
 test "fmt" {
     const string = try std.fmt.allocPrint(
         test_allocator,
@@ -204,7 +192,6 @@ test "fmt" {
 
     try expectEqualSlices(u8, string, "9 + 10 = 19");
 }
-
 test "print" {
     var list = std.ArrayList(u8).init(test_allocator);
     defer list.deinit();
@@ -214,7 +201,6 @@ test "print" {
     );
     try expectEqualSlices(u8, list.items, "9 + 10 = 19");
 }
-
 test "hello world" {
     const out_file = std.io.getStdOut();
     try out_file.writer().print(
@@ -222,7 +208,6 @@ test "hello world" {
         .{"World"},
     );
 }
-
 test "array printing" {
     const string = try std.fmt.allocPrint(
         test_allocator,
@@ -241,7 +226,6 @@ test "array printing" {
         "{ 1, 4 } + { 2, 5 } = { 3, 9 }",
     );
 }
-
 const Person = struct {
     name: []const u8,
     birth_year: i32,
@@ -306,7 +290,6 @@ test "custom fmt" {
         "Claude Shannon (1916-2001)",
     );
 }
-
 const Place = struct { lat: f32, long: f32 };
 
 test "json parse" {
@@ -319,7 +302,6 @@ test "json parse" {
     try expect(x.lat == 40.684540);
     try expect(x.long == -74.401422);
 }
-
 test "json stringify" {
     const x = Place{
         .lat = 51.997664,
@@ -336,7 +318,6 @@ test "json stringify" {
         \\{"lat":5.199766540527344e+01,"long":-7.406870126724243e-01}
     );
 }
-
 test "json parse with strings" {
     const User = struct { name: []u8, age: u16 };
     // TODO: Use leaky?
@@ -349,7 +330,6 @@ test "json parse with strings" {
     try expectEqualSlices(u8, x.name, "Joe");
     try expect(x.age == 25);
 }
-
 test "random numbers" {
     var prng = std.rand.DefaultPrng.init(blk: {
         var seed: u64 = undefined;
@@ -366,7 +346,6 @@ test "random numbers" {
     //suppress unused constant compile error
     _ = .{ a, b, c, d };
 }
-
 test "crypto random numbers" {
     const rand = std.crypto.random;
 
@@ -378,7 +357,6 @@ test "crypto random numbers" {
     //suppress unused constant compile error
     _ = .{ a, b, c, d };
 }
-
 fn ticker(step: u8) void {
     while (true) {
         std.time.sleep(1 * std.time.ns_per_s);
@@ -395,7 +373,6 @@ test "threading" {
     std.time.sleep(3 * std.time.ns_per_s / 2);
     try expect(tick == 1);
 }
-
 test "hashing" {
     const Point = struct { x: i32, y: i32 };
 
@@ -422,7 +399,6 @@ test "hashing" {
     try expect(sum.x == 10);
     try expect(sum.y == -10);
 }
-
 test "fetchPut" {
     var map = std.AutoHashMap(u8, f32).init(
         test_allocator,
@@ -435,7 +411,6 @@ test "fetchPut" {
     try expect(old.?.value == 10);
     try expect(map.get(255).? == 100);
 }
-
 test "string hashmap" {
     var map = std.StringHashMap(enum { cool, uncool }).init(
         test_allocator,
@@ -448,7 +423,6 @@ test "string hashmap" {
     try expect(map.get("me").? == .cool);
     try expect(map.get("loris").? == .uncool);
 }
-
 test "stack" {
     const string = "(()())";
     var stack = std.ArrayList(usize).init(
@@ -480,7 +454,6 @@ test "stack" {
         }));
     }
 }
-
 test "sorting" {
     var data = [_]u8{ 10, 240, 0, 0, 10, 5 };
     std.mem.sort(u8, &data, {}, comptime std.sort.asc(u8));
@@ -488,7 +461,6 @@ test "sorting" {
     std.mem.sort(u8, &data, {}, comptime std.sort.desc(u8));
     try expectEqualSlices(u8, &data, &[_]u8{ 240, 10, 10, 5, 0, 0 });
 }
-
 test "split iterator" {
     const text = "robust, optimal, reusable, maintainable, ";
     var iter = std.mem.split(u8, text, ", ");
@@ -499,7 +471,6 @@ test "split iterator" {
     try expectEqualSlices(u8, iter.next().?, "");
     try expect(iter.next() == null);
 }
-
 test "iterator looping" {
     var iter = (try std.fs.cwd().openIterableDir(
         ".",
@@ -513,7 +484,6 @@ test "iterator looping" {
 
     try expect(file_count > 0);
 }
-
 const ContainsIterator = struct {
     strings: []const []const u8,
     needle: []const u8,
@@ -540,7 +510,6 @@ test "custom iterator" {
     try expectEqualSlices(u8, iter.next().?, "three");
     try expect(iter.next() == null);
 }
-
 const bufPrint = std.fmt.bufPrint;
 
 test "hex" {
@@ -555,7 +524,6 @@ test "hex" {
     _ = try bufPrint(&b, "{}", .{std.fmt.fmtSliceHexLower("Zig!")});
     try expectEqualSlices(u8, &b, "5a696721");
 }
-
 test "decimal float" {
     var b: [4]u8 = undefined;
     try expectEqualSlices(
@@ -564,13 +532,11 @@ test "decimal float" {
         "16.5",
     );
 }
-
 test "ascii fmt" {
     var b: [1]u8 = undefined;
     _ = try bufPrint(&b, "{c}", .{66});
     try expectEqualSlices(u8, &b, "B");
 }
-
 test "B Bi" {
     var b: [32]u8 = undefined;
 
@@ -591,7 +557,6 @@ test "B Bi" {
         "1GiB",
     );
 }
-
 test "binary, octal fmt" {
     var b: [8]u8 = undefined;
 
@@ -607,7 +572,6 @@ test "binary, octal fmt" {
         "376",
     );
 }
-
 test "pointer fmt" {
     var b: [16]u8 = undefined;
     try expectEqualSlices(
@@ -616,7 +580,6 @@ test "pointer fmt" {
         "u8@deadbeef",
     );
 }
-
 test "scientific" {
     var b: [16]u8 = undefined;
 
@@ -626,7 +589,6 @@ test "scientific" {
         "3.14159e+00",
     );
 }
-
 test "string fmt" {
     var b: [6]u8 = undefined;
     const hello: [*:0]const u8 = "hello!";
@@ -637,7 +599,6 @@ test "string fmt" {
         "hello!",
     );
 }
-
 test "position" {
     var b: [3]u8 = undefined;
     try expectEqualSlices(
@@ -646,7 +607,6 @@ test "position" {
         "aab",
     );
 }
-
 test "fill, alignment, width" {
     var b: [6]u8 = undefined;
 
@@ -668,7 +628,6 @@ test "fill, alignment, width" {
         "!hi!",
     );
 }
-
 test "precision" {
     var b: [4]u8 = undefined;
     try expectEqualSlices(
@@ -677,4 +636,3 @@ test "precision" {
         "3.14",
     );
 }
-
