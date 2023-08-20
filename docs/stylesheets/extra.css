@@ -1,8 +1,8 @@
 [data-md-color-scheme="slate"] {
-  --md-hue: 5;
-  --md-primary-fg-color: #eda73b;
+  --md-hue: 300;
+  --md-primary-fg-color: #ed7e3b;
 }
 
 [data-md-color-scheme="zighelp"] {
-  --md-primary-fg-color: #ff9c04;
+  --md-primary-fg-color: #ff8c47;
 }

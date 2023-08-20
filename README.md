@@ -14,7 +14,5 @@ Repo for https://zighelp.org content. Feedback and PRs welcome.
 ## TODO
 
 - [ ] CI/CD
-- [ ] colors
-- [ ] light/night themes
 - [ ] i18n
 - [ ] PRs from ziglearn repo
