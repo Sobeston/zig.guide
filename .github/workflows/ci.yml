@@ -20,6 +20,8 @@ jobs:
           ls -l test-out
           zig test do_tests.zig
           zig fmt --check test-out
+          cd test-out
+          type test-c3.zig
   deploy:
     needs: test
     runs-on: ubuntu-latest
