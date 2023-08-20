@@ -8,6 +8,8 @@ extra:
 markdown_extensions:
   - admonition
   - pymdownx.superfences
+  - pymdownx.tasklist:
+      custom_checkbox: true
   - toc:
       title: " "
       permalink: true
