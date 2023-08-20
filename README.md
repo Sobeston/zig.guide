@@ -13,6 +13,7 @@ Repo for https://zighelp.org content. Feedback and PRs welcome.
 
 ## TODO
 
+- [ ] HashMap example with dupe
 - [ ] PRs from ziglearn repo
 - [ ] make test run on Windows
 - [ ] i18n
