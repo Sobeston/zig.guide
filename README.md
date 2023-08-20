@@ -14,5 +14,6 @@ Repo for https://zighelp.org content. Feedback and PRs welcome.
 ## TODO
 
 - [ ] point zighelp.org to github pages
+- [ ] add tests to CI/CD
 - [ ] i18n
 - [ ] PRs from ziglearn repo
