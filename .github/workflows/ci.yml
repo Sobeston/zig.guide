@@ -7,6 +7,25 @@ on:
 permissions:
   contents: write
 jobs:
+  test:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{matrix.os}}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: goto-bus-stop/setup-zig@v2
+      - run: |
+          zig run test-out.zig
+          ls -l test-out
+          zig test do_tests.zig
+          zig fmt --check test-out/*.zig
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: goto-bus-stop/setup-zig@v2
+      - run: zig fmt --check src/*.zig
   deploy:
     runs-on: ubuntu-latest
     steps:
