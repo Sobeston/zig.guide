@@ -18,6 +18,8 @@ extra_css:
 theme:
   name: material
   logo: assets/images/logo.svg
+  icon:
+    repo: fontawesome/brands/github
   palette:
     # Palette toggle for automatic mode
     - media: "(prefers-color-scheme)"
