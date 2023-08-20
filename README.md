@@ -13,7 +13,6 @@ Repo for https://zighelp.org content. Feedback and PRs welcome.
 
 ## TODO
 
-- [ ] CI/CD
 - [ ] point zighelp.org to github pages
 - [ ] i18n
 - [ ] PRs from ziglearn repo
