@@ -55,7 +55,6 @@ theme:
     - content.action.view
 
 nav:
-  - Home: README.md
   - Chapter 0 - Getting Started: chapter-0.md
   - Chapter 1 - Basics: chapter-1.md
   - Chapter 2 - Standard Patterns: chapter-2.md
