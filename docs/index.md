@@ -1,6 +1,6 @@
 # Welcome to zighelp.org
 
-Source at https://github.com/zighelp/zighelp
+Source at [https://github.com/zighelp/zighelp](https://github.com/zighelp/zighelp)
 
 ## Why fork of ziglearn?
 
@@ -17,4 +17,4 @@ I have also added tests to CI/CD to make sure the code examples work.
 - [ ] HashMap example with dupe
 - [ ] PRs from ziglearn repo
 - [ ] make test run on Windows
-- [ ] i18n
+- [ ] i18n aka internationalization aka translations
