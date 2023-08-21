@@ -49,7 +49,7 @@ theme:
     - navigation.sections
     - navigation.expand
     - toc.follow
-    - navigation.indexes
+    - toc.integrate
     - navigation.footer
     - content.action.edit
     - content.action.view
