@@ -33,7 +33,7 @@ var b: u32 = undefined;
 
 Where possible, `const` values are preferred over `var` values.
 
-## Arrays
+## Arrays [N]T
 
 Arrays are denoted by `[N]T`, where `N` is the number of elements in the array and `T` is the type of those elements (i.e., the array's child type).
 
@@ -454,7 +454,7 @@ test "unreachable switch" {
 }
 ```
 
-## Pointers
+## Pointers `*T`
 
 Normal pointers in Zig aren't allowed to have 0 or null as a value. They follow the syntax `*T`, where `T` is the child type.
 
@@ -508,7 +508,7 @@ error: cannot assign to constant
 A `*T` coerces to a `*const T`.
 
 
-## Pointer sized integers
+## Pointer sized integers: `usize` and `isize`
 
 `usize` and `isize` are given as unsigned and signed integers which are the same size as pointers.
 
@@ -519,13 +519,13 @@ test "usize" {
 }
 ```
 
-## Many-Item Pointers
+## Many-Item Pointers `[*]T`
 
 Sometimes you may have a pointer to an unknown amount of elements. `[*]T` is the solution for this, which works like `*T` but also supports indexing syntax, pointer arithmetic, and slicing. Unlike `*T`, it cannot point to a type which does not have a known size. `*T` coerces to `[*]T`.
 
 These many pointers may point to any amount of elements, including 0 and 1.
 
-## Slices
+## Slices `[]T`
 
 Slices can be thought of as a pair of `[*]T` (the pointer to the data) and a `usize` (the element count). Their syntax is given as `[]T`, with `T` being the child type. Slices are used heavily throughout Zig for when you need to operate on arbitrary amounts of data. Slices have the same attributes as pointers, meaning that there also exists const slices. For loops also operate over slices. String literals in Zig coerce to `[]const u8`.
 
@@ -866,7 +866,7 @@ test "int-float conversion" {
 }
 ```
 
-## Labelled Blocks
+## Labelled Blocks `:blk {}`
 
 Blocks in Zig are expressions and can be given labels, which are used to yield values. Here, we are using a label called blk. Blocks yield values, meaning that they can be used in place of a value. The value of an empty block `{}` is a value of the type `void`.
 
@@ -929,7 +929,7 @@ test "while loop expression" {
 }
 ```
 
-## Optionals
+## Optionals `?T`
 
 Optionals use the syntax `?T` and are used to store the data [`null`](https://ziglang.org/documentation/master/#null), or a value of type `T`.
 
@@ -1178,7 +1178,7 @@ test "**" {
 }
 ```
 
-## Payload Captures
+## Payload Captures `|n|`
 
 Payload captures use the syntax `|value|` and appear in many places, some of which we've seen already. Wherever they appear, they are used to "capture" the value from something.
 
@@ -1355,7 +1355,7 @@ test "opaque with declarations" {
 
 The typical usecase of opaque is to maintain type safety when interoperating with C code that does not expose complete type information.
 
-## Anonymous Structs
+## Anonymous Structs `.{}`
 
 The struct type may be omitted from a struct literal. These literals may coerce to other struct types.
 
@@ -1417,7 +1417,7 @@ test "tuple" {
 }
 ```
 
-## Sentinel Termination
+## Sentinel Termination: `[N:t]T`, `[:t]T`, and `[*:t]T`
 
 Arrays, slices and many pointers may be terminated by a value of their child type. This is known as sentinel termination. These follow the syntax `[N:t]T`, `[:t]T`, and `[*:t]T`, where `t` is a value of the child type `T`.
 
