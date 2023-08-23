@@ -854,7 +854,7 @@ const nanosecond: f64 = 0.000_000_001;
 const more_hex: f64 = 0x1234_5678.9ABC_CDEFp-10;
 ```
 
-Integers and floats may be converted using the built-in functions [`@intToFloat`](https://ziglang.org/documentation/master/#intToFloat) and [`@floatToInt`](https://ziglang.org/documentation/master/#floatToInt). [`@intToFloat`](https://ziglang.org/documentation/master/#intToFloat) is always safe, whereas [`@floatToInt`](https://ziglang.org/documentation/master/#floatToInt) is detectable illegal behaviour if the float value cannot fit in the integer destination type.
+Integers and floats may be converted using the built-in functions [`@floatFromInt`](https://ziglang.org/documentation/master/#floatFromInt) and [`@intFromFloat`](https://ziglang.org/documentation/master/#intFromFloat). [`@floatFromInt`](https://ziglang.org/documentation/master/#floatFromInt) is always safe, whereas [`@intFromFloat`](https://ziglang.org/documentation/master/#intFromFloat) is detectable illegal behaviour if the float value cannot fit in the integer destination type.
 
 ```zig
 test "int-float conversion" {
