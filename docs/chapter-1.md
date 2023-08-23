@@ -1326,12 +1326,19 @@ test "opaque" {
 }
 ```
 ```
-./test-c1.zig:653:17: error: expected type '*Window', found '*Button'
+tests.zig:11:17: error: expected type '*tests.Window', found '*tests.Button'
     show_window(ok_button);
-                ^
-./test-c1.zig:653:17: note: pointer type child 'Button' cannot cast into pointer type child 'Window'
-    show_window(ok_button);
-                ^
+                ^~~~~~~~~
+tests.zig:11:17: note: pointer type child 'tests.Button' cannot cast into pointer type child 'tests.Window'
+tests.zig:2:16: note: opaque declared here
+const Button = opaque {};
+               ^~~~~~~~~
+tests.zig:1:16: note: opaque declared here
+const Window = opaque {};
+               ^~~~~~~~~
+tests.zig:4:23: note: parameter type declared here
+extern fn show_window(*Window) callconv(.C) void;
+                      ^~~~~~~
 ```
 
 Opaque types may have declarations in their definitions (the same as structs, enums and unions).
