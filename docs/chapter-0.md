@@ -21,10 +21,7 @@ Knowing a language like C, C++, Rust, Go, Pascal or similar will be helpful for 
 
 **This guide assumes you're using a master build** of Zig as opposed to the latest major release, which means downloading a binary from the site or compiling from source; **the version of Zig in your package manager is likely outdated**. This guide does not support Zig 0.10.1.
 
-1.  Download and extract a prebuilt master binary of Zig from:
-```
-https://ziglang.org/download/
-```
+1.  Download and extract a prebuilt master binary of Zig from https://ziglang.org/download/.
 
 2. Add Zig to your path
    - linux, macos, bsd
@@ -60,10 +57,8 @@ $ zig version
 0.11.0-dev.2777+b95cdf0ae
 ```
 
-4. (optional, third party) For completions and go-to-definition in your editor, install the Zig Language Server from:
-```
-https://github.com/zigtools/zls/
-```
+4. (optional, third party) For completions and go-to-definition in your editor, install the Zig Language Server from https://github.com/zigtools/zls/.
+
 5. (optional) Join a [Zig community](https://github.com/ziglang/zig/wiki/Community).
 
 ## Hello World
