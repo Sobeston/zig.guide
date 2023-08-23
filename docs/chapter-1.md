@@ -1066,7 +1066,7 @@ test "returning a type" {
 }
 ```
 
-We can reflect upon types using the built-in [`@typeInfo`](https://ziglang.org/documentation/master/#typeInfo), which takes in a `type` and returns a tagged union. This tagged union type can be found in [`std.builtin.TypeInfo`](https://ziglang.org/documentation/master/std/#std;builtin.TypeInfo) (info on how to make use of imports and std later).
+We can reflect upon types using the built-in [`@typeInfo`](https://ziglang.org/documentation/master/#typeInfo), which takes in a `type` and returns a tagged union. This tagged union type can be found in [`std.builtin.Type`](https://ziglang.org/documentation/master/std/#std;builtin.Type) (info on how to make use of imports and std later).
 
 ```zig
 fn addSmallInts(comptime T: type, a: T, b: T) T {
