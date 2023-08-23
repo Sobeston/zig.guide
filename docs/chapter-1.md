@@ -730,10 +730,9 @@ test "simple union" {
 }
 ```
 ```
-test "simple union"...access of inactive union field
-.\tests.zig:342:12: 0x7ff62c89244a in test "simple union" (test.obj)
+Test [1/1] test.simple union... thread 6604310 panic: access of union field 'float' while field 'int' is active
+./tests.zig:9:11: 0x10487c807 in test.simple union (test)
     result.float = 12.34;
-           ^
 ```
 
 Tagged unions are unions which use an enum to detect which field is active. Here we make use of payload capturing again, to switch on the tag type of a union while also capturing the value it contains. Here we use a *pointer capture*; captured values are immutable, but with the `|*value|` syntax we can capture a pointer to the values instead of the values themselves. This allows us to use dereferencing to mutate the original value.
