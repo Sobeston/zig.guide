@@ -484,9 +484,9 @@ test "naughty pointer" {
 ```
 ```
 test "naughty pointer"...cast causes pointer to be null
-.\tests.zig:241:18: 0x7ff69ebb22bd in test "naughty pointer" (test.obj)
+.\tests.zig:3:18: error: invalid builtin function: '@intToPtr'
     var y: *u8 = @intToPtr(*u8, x);
-                 ^
+                 ^~~~~~~~~~~~~~~~~
 ```
 
 Zig also has const pointers, which cannot be used to modify the referenced data. Referencing a const variable will yield a const pointer.
