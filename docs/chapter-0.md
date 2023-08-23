@@ -73,6 +73,6 @@ pub fn main() void {
 }
 ```
 
-!!! note "(note: make sure your file is using spaces for indentation, LF line endings and UTF-8 encoding!)"
+!!! note "note: make sure your file is using spaces for indentation, LF line endings and UTF-8 encoding!"
 
 Use `zig run main.zig` to build and run it. In this example `Hello, World!` will be written to stderr, and is assumed to never fail.
