@@ -1087,7 +1087,7 @@ test "typeinfo switch" {
 }
 ```
 
-We can use the [`@Type`](https://ziglang.org/documentation/master/#Type) function to create a type from a [`@typeInfo`](https://ziglang.org/documentation/master/#typeInfo). [`@Type`](https://ziglang.org/documentation/master/#Type) is implemented for most types but is notably unimplemented for enums, unions, functions, and structs.
+We can use the [`@Type`](https://ziglang.org/documentation/master/#Type) function to create a type from a [`@typeInfo`](https://ziglang.org/documentation/master/#typeInfo).
 
 Here anonymous struct syntax is used with `.{}`, because the `T` in `T{}` can be inferred. Anonymous structs will be covered in detail later. In this example we will get a compile error if the `Int` tag isn't set.
 
