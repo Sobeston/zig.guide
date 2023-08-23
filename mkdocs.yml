@@ -13,7 +13,7 @@ markdown_extensions:
   - toc:
       title: " "
       permalink: true
-      permalink: "#"
+      permalink: "§"
 
 extra_css:
   - stylesheets/extra.css
