@@ -1107,7 +1107,7 @@ test "@Type" {
 }
 ```
 
-Returning a struct type is how you make generic data structures in Zig. The usage of [`@This`](https://ziglang.org/documentation/master/#This) is required here, which gets the type of the innermost struct, union, or enum. Here [`std.mem.eql`](https://ziglang.org/documentation/master/std/#std;mem.eql) is also used which compares two slices.
+Returning a struct type is how you make generic data structures in Zig. The usage of [`@This`](https://ziglang.org/documentation/master/#This) is required here, which gets the type of the innermost struct, union, or enum. Here [`std.mem.eql`](https://ziglang.org/documentation/master/std/#A;std:mem.eql) is also used which compares two slices.
 
 ```zig
 fn Vec(
