@@ -1,15 +1,8 @@
----
-title: "Chapter 0 - Getting Started"
-weight: 1
-date: 2023-04-28 18:00:00
-description: "Ziglearn - A Guide / Tutorial for the Zig programming language. Install and get started with ziglang here."
----
-
 ## Welcome
 
 [Zig](https://ziglang.org) is a general-purpose programming language and toolchain for maintaining __robust__, __optimal__, and __reusable__ software.
 
-Warning: the latest major release is 0.10.1 - Zig is still pre-1.0; usage in production is still not recommended and you may run into compiler bugs.
+Warning: the latest major release is 0.11 - Zig is still pre-1.0; usage in production is still not recommended and you may run into compiler bugs.
 
 To follow this guide, we assume you have:
    * Prior experience programming

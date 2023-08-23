@@ -1,10 +1,3 @@
----
-title: "Chapter 1 - Basics"
-weight: 2
-date: 2023-04-28 18:00:00
-description: "Chapter 1 - This will get you up to speed with almost all of the Zig programming language. This part of the tutorial should be coverable in under an hour."
----
-
 ## Assignment
 
 Value assignment has the following syntax: `(const|var) identifier[: type] = value`.

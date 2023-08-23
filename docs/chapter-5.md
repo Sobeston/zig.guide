@@ -1,10 +1,3 @@
----
-title: "Chapter 5 - Async"
-weight: 6
-date: 2023-04-28 18:00:00
-description: "Chapter 5 - Learn about how the ziglang's async works"
----
-
 Warning: The current version of the compiler does not yet support async
 
 ## Async
