@@ -1489,11 +1489,11 @@ test "sentinel terminated slicing" {
 
 ## Vectors
 
-Zig provides vector types for SIMD. These are not to be conflated with vectors in a mathematical sense, or vectors like C++'s std::vector (for this, see "Arraylist" in chapter 2). Vectors may be created using the [`@Type`](https://ziglang.org/documentation/master/#Type) built-in we used earlier, and [`std.meta.Vector`](https://ziglang.org/documentation/master/std/#std;meta.Vector) provides a shorthand for this.
+Zig provides vector types for SIMD. These are not to be conflated with vectors in a mathematical sense, or vectors like C++'s std::vector (for this, see "Arraylist" in chapter 2). Vector types are created with the builtin function [@Vector](https://ziglang.org/documentation/master/#Vector).
 
-Vectors can only have child types of booleans, integers, floats and pointers.
+A vector is a group of booleans, [Integers](https://ziglang.org/documentation/master/#Integers), [Floats](#floats), or [Pointers](#pointers-t) which are operated on in parallel, using SIMD instructions if possible.
 
-Operations between vectors with the same child type and length can take place. These operations are performed on each of the values in the vector.[`std.meta.eql`](https://ziglang.org/documentation/master/std/#std;meta.eql) is used here to check for equality between two vectors (also useful for other types like structs).
+Operations between vectors with the same child type and length can take place. These operations are performed on each of the values in the vector.[`std.meta.eql`](https://ziglang.org/documentation/master/std/#A;std:meta.eql) is used here to check for equality between two vectors (also useful for other types like structs).
 
 ```zig
 const meta = @import("std").meta;
@@ -1525,7 +1525,7 @@ test "vector * scalar" {
 }
 ```
 
-Vectors do not have a `len` field like arrays, but may still be looped over. Here, [`std.mem.len`](https://ziglang.org/documentation/master/std/#std;mem.len) is used as a shortcut for `@typeInfo(@TypeOf(x)).Vector.len`.
+Vectors do not have a `len` field like arrays, but may still be looped over. Here, [`std.mem.len`](https://ziglang.org/documentation/master/std/#A;std:mem.len) is used as a shortcut for `@typeInfo(@TypeOf(x)).Vector.len`.
 
 ```zig
 const len = @import("std").mem.len;
