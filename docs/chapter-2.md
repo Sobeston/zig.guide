@@ -1,3 +1,10 @@
+---
+title: "Chapter 2 - Standard Patterns"
+weight: 3
+date: 2023-04-28 18:00:00
+description: "Chapter 2 - This section of the tutorial will cover the Zig programming language's standard library in detail."
+---
+
 Automatically generated standard library documentation can be found [here](https://ziglang.org/documentation/master/std/). Installing [ZLS](https://github.com/zigtools/zls/) may also help you explore the standard library, which provides completions for it.
 
 ## Allocators

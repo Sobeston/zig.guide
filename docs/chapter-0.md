@@ -1,3 +1,10 @@
+---
+title: "Chapter 0 - Getting Started"
+weight: 1
+date: 2023-04-28 18:00:00
+description: "Zighelp - A Guide / Tutorial for the Zig programming language. Install and get started with ziglang here."
+---
+
 ## Welcome
 
 [Zig](https://ziglang.org) is a general-purpose programming language and toolchain for maintaining __robust__, __optimal__, and __reusable__ software.

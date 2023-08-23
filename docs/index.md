@@ -1,3 +1,10 @@
+---
+title: "zighelp.org home"
+weight: 1
+date: 2023-08-23 12:00:00
+description: "Zighelp - A Guide / Tutorial for the Zig programming language. Install and get started with ziglang here."
+---
+
 # Welcome to zighelp.org
 
 Source at [https://github.com/zighelp/zighelp](https://github.com/zighelp/zighelp)

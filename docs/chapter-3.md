@@ -1,3 +1,10 @@
+---
+title: "Chapter 3 - Build system"
+weight: 4
+date: 2021-02-12 12:49:00
+description: "Chapter 3 - Ziglang's build system in detail."
+---
+
 ## Build Modes  
 
 Zig provides four build modes, with debug being the default as it produces the shortest compile times.
