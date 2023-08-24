@@ -24,4 +24,4 @@ I have also added tests to CI/CD to make sure the code examples work.
 - [ ] HashMap example with dupe
 - [ ] PRs from ziglearn repo
 - [ ] make test run on Windows
-- [ ] i18n aka internationalization aka translations
+- [x] i18n aka internationalization aka translations

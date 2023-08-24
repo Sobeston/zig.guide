@@ -5,13 +5,14 @@ pub fn main() !void {
     const allocator = gpa.allocator();
     defer if (gpa.deinit() == .leak) @panic("leaked");
 
+    // TODO check localized pages
     const files = .{
-        .{ "chapter-0.md", "test-c0.zig" },
-        .{ "chapter-1.md", "test-c1.zig" },
-        .{ "chapter-2.md", "test-c2.zig" },
-        .{ "chapter-3.md", "test-c3.zig" },
-        .{ "chapter-4.md", "test-c4.zig" },
-        .{ "chapter-5.md", "test-c5.zig" },
+        .{ "en/chapter-0.md", "test-c0.zig" },
+        .{ "en/chapter-1.md", "test-c1.zig" },
+        .{ "en/chapter-2.md", "test-c2.zig" },
+        .{ "en/chapter-3.md", "test-c3.zig" },
+        .{ "en/chapter-4.md", "test-c4.zig" },
+        .{ "en/chapter-5.md", "test-c5.zig" },
     };
 
     std.fs.cwd().makeDir("test-out") catch |err| switch (err) {
