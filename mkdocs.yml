@@ -6,7 +6,6 @@ extra:
   generator: false
   alternate:
     - name: English
-      link: /en/ 
       lang: en
     - name: Русский (Russian)
       link: /ru/
