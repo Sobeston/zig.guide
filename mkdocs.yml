@@ -71,8 +71,7 @@ validation:
     unrecognized_links: info
 
 nav:
-  - Home: index.md
-  - Chapter 0 - Getting Started: chapter-0.md
+  - Chapter 0 - Getting Started: index.md
   - Chapter 1 - Basics: chapter-1.md
   - Chapter 2 - Standard Patterns: chapter-2.md
   - Chapter 3 - Build system: chapter-3.md

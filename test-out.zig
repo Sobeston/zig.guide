@@ -7,7 +7,7 @@ pub fn main() !void {
 
     // TODO check localized pages
     const files = .{
-        .{ "en/chapter-0.md", "test-c0.zig" },
+        .{ "en/index.md", "test-c0.zig" },
         .{ "en/chapter-1.md", "test-c1.zig" },
         .{ "en/chapter-2.md", "test-c2.zig" },
         .{ "en/chapter-3.md", "test-c3.zig" },
