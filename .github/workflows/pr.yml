@@ -1,4 +1,4 @@
-name: ci
+name: pr
 on:
   pull_request:
   merge_group:
@@ -34,5 +34,5 @@ jobs:
           path: .cache
           restore-keys: |
             mkdocs-material-
-      - run: pip install mkdocs-material==9.1.21
+      - run: pip install -r requirements.txt
       - run: mkdocs build --strict
