@@ -21,8 +21,8 @@ $ deactivate
 
 When creating PR, change default base repository to zighelp/zighelp.
 
-You may also us gh to crete correct PR for you:
+You may also use gh to crete correct PR for you:
 
 `gh pr create --web`
 
-That's because this project is a github fork and there is a [bug still](https://github.com/orgs/community/discussions/11729#discussioncomment-6793106),
+That's because this project is a github fork and there is a [bug still](https://github.com/orgs/community/discussions/11729#discussioncomment-6793106).
