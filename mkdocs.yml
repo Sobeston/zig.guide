@@ -55,6 +55,15 @@ theme:
     - content.action.edit
     - content.action.view
 
+validation:
+  nav:
+    omitted_files: warn
+    absolute_links: info
+  links:
+    not_found: warn
+    absolute_links: info
+    unrecognized_links: info
+
 nav:
   - Home: index.md
   - Chapter 0 - Getting Started: chapter-0.md
