@@ -19,7 +19,7 @@ jobs:
           zig run test-out.zig
           zig test do_tests.zig
           zig fmt --check test-out
-  mkdocs-gh-deploy:
+  mkdocs-build:
     needs: test
     runs-on: ubuntu-latest
     steps:
@@ -35,4 +35,4 @@ jobs:
           restore-keys: |
             mkdocs-material-
       - run: pip install mkdocs-material==9.1.21
-      - run: mkdocs gh-deploy build --strict
+      - run: mkdocs build --strict
