@@ -80,6 +80,7 @@ nav:
   - Chapter 5 - Async: chapter-5.md
 
 plugins:
+  - search
   - i18n:
       docs_structure: folder
       default_language: en
