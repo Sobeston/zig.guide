@@ -1,4 +1,4 @@
-name: ci
+name: pr
 on:
   pull_request:
   merge_group:
