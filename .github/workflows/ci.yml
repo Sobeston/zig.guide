@@ -4,6 +4,8 @@ on:
     branches:
       - master
       - main
+  pull_request:
+  merge_group:
 permissions:
   contents: write
 jobs:
