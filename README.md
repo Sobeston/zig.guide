@@ -17,6 +17,13 @@ $ deactivate
 1. `zig run test-out.zig`
 2. `zig test do_tests.zig`
 
+## TODO
+
+- [ ] HashMap example with dupe
+- [ ] PRs from ziglearn repo
+- [ ] make test run on Windows
+- [x] i18n aka internationalization aka translations
+
 ## Contributing
 
 When creating PR, change default base repository to zighelp/zighelp.
