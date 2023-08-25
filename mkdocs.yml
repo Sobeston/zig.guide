@@ -9,7 +9,7 @@ extra:
       lang: en
     - name: Русский (Russian)
       link: /ru/
-      lang: de
+      lang: ru
 
 markdown_extensions:
   - admonition
