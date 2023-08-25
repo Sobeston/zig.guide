@@ -4,6 +4,13 @@ repo_name: zighelp/zighelp
 
 extra:
   generator: false
+  alternate:
+    - name: English
+      link: /en/ 
+      lang: en
+    - name: Русский (Russian)
+      link: /ru/
+      lang: de
 
 markdown_extensions:
   - admonition
@@ -72,3 +79,20 @@ nav:
   - Chapter 3 - Build system: chapter-3.md
   - Chapter 4 - Working with C: chapter-4.md
   - Chapter 5 - Async: chapter-5.md
+
+plugins:
+  - i18n:
+      docs_structure: folder
+      default_language: en
+      material_alternate: false
+      languages:
+        en:
+          name: English
+          build: true
+        ru:
+          name: Русский (Russian)
+          build: true
+      nav_translations:
+        ru:
+          Home: Главная
+          Chapter 0 - Getting Started: Глава 0 - Начало работы
