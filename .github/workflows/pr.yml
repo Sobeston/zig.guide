@@ -34,5 +34,5 @@ jobs:
           path: .cache
           restore-keys: |
             mkdocs-material-
-      - run: pip install mkdocs-material==9.1.21
+      - run: pip install mkdocs-material==9.1.21 mkdocs-static-i18n==0.56
       - run: mkdocs build --strict
