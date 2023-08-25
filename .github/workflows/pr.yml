@@ -1,9 +1,7 @@
 name: ci
 on:
-  push:
-    branches:
-      - master
-      - main
+  pull_request:
+  merge_group:
 permissions:
   contents: write
 jobs:
@@ -37,4 +35,4 @@ jobs:
           restore-keys: |
             mkdocs-material-
       - run: pip install mkdocs-material==9.1.21
-      - run: mkdocs gh-deploy --force
+      - run: mkdocs gh-deploy build --strict
