@@ -5,77 +5,75 @@ date: 2023-04-28 18:00:00
 description: "Zighelp — Руководство по языку программирования Zig. Начните установку и работу с Zig здесь."
 ---
 
-## TODO actual translation (this is just a showcase)
-## TODO перевода пока нет, это только показательный пример
-
 ## Добро пожаловать
 
 [Zig](https://ziglang.org) — это язык программирования общего назначения и инструмент для создания __надёжного__, __оптимального__ и __переиспользуемого__ ПО.
 
-Внимание: последняя значительная версия 0.11 - Zig всё ещё не дошёл до 1.0; Вы можете столкнуться с багами компилятора, не рекомендуем использовать его в производстве.
+Внимание: последняя значительная версия 0.11 — Zig всё ещё не дошёл до 1.0; Вы можете столкнуться с багами компилятора, не рекомендуем использовать его в производстве.
 
-To follow this guide, we assume you have:
-   * Prior experience programming
-   * Some understanding of low-level programming concepts
+Для следования этому руководству желательно:
+   * Иметь предыдущий опыт разработки
+   * Хотя бы немного понимать некоторые низкоуровневые концепции
 
-Knowing a language like C, C++, Rust, Go, Pascal or similar will be helpful for following this guide. You should have an editor, terminal and internet connection available to you. This guide is unofficial and unaffiliated with the Zig Software Foundation, and is designed to be read in order from the start.
+Знание языков по типу Си, C++, Rust, Go, Паскаля и т.д. также будет весьма полезно. У вас должен быть текстовый редактор, терминал и Интернет-подключение. Это руководство не аффилировано (и не связано) с Zig Software Foundation и предназначено дл последовательного чтения.
 
-## Installation
+## Установка
 
-**This guide assumes you're using a master build** of Zig as opposed to the latest major release, which means downloading a binary from the site or compiling from source; **the version of Zig in your package manager is likely outdated**. This guide does not support Zig 0.10.1.
+**В этом руководстве подразумевается, что вы используете «ночную» сборку (с последнего коммита master ветки)** Zig, а не последнюю выпущенную версию, т.е. вам необходимо скачать её с сайта или собрать из исходного кода; **Скорее всего, в менеджере пакетов вашей системы отслеживаются только выпущенные версии Zig**. Это руководство не поддерживает выпуск Zig 0.10.1.
 
-1.  Download and extract a prebuilt master binary of Zig from https://ziglang.org/download/.
+1.  Скачайте и распакуйте сборку Zig из раздела master в https://ziglang.org/ru/download.
 
-2. Add Zig to your path
-   - linux, macos, bsd
+2. Добавьте Zig в PATH
+   - Linux, MacOS, BSD
 
-      Add the location of your Zig binary to your `PATH` environment variable. For an installation, add `export PATH=$PATH:~/zig` or similar to your `/etc/profile` (system-wide) or `$HOME/.profile`. If these changes do not apply immediately, run the line from your shell.
-   - windows
+      Добавьте путь к исполняемому файлу Zig в вашу переменную окружения `PATH`. Для постоянной работы добавьте команду `export PATH=$PATH:~/zig` (где `~/zig` является путем к исполняемому файлу Zig) в ваш `/etc/profile` (для всей системы) или `$HOME/.profile` (для текущего пользователя). Если эти изменения не сработали сразу, выполните эту команду в текущей командной оболочке или перезапустите терминал.
+   - Windows
 
-      a) System wide (admin powershell)
+      a) На всю систему (PowerShell от администратора)
 
       ```powershell
       [Environment]::SetEnvironmentVariable(
          "Path",
-         [Environment]::GetEnvironmentVariable("Path", "Machine") + ";C:\your-path\zig-windows-x86_64-your-version",
+         [Environment]::GetEnvironmentVariable("Path", "Machine") + ";C:\ваш-путь-к-распакованному\zig-windows-x86_64-ваша-версия",
          "Machine"
       )
       ```
 
-      b) User level (powershell)
+      b) Для текущего пользователя (PowerShell)
 
       ```powershell
       [Environment]::SetEnvironmentVariable(
          "Path",
-         [Environment]::GetEnvironmentVariable("Path", "User") + ";C:\your-path\zig-windows-x86_64-your-version",
+         [Environment]::GetEnvironmentVariable("Path", "User") + ";C:\ваш-путь-к-распакованному\zig-windows-x86_64-ваша-версия",
          "User"
       )
       ```
 
-      Close your terminal and create a new one.
+      После этого перезапустите терминал.
 
-3. Verify your install with `zig version`. The output should look something like
+3. Проверьте вашу установку с помощи `zig version`. Команда должна напечатать что-то наподобии:
 ```
 $ zig version
 0.11.0-dev.2777+b95cdf0ae
 ```
 
-4. (optional, third party) For completions and go-to-definition in your editor, install the Zig Language Server from https://github.com/zigtools/zls/.
+4. (Необязательно, сторонние разработчики) Для автодополнения, перехода к объявлению и прочих полезных штук установите Zig Language Server с https://github.com/zigtools/zls/ (необходим редактор с поддержкой Language Server Protocol).
 
-5. (optional) Join a [Zig community](https://github.com/ziglang/zig/wiki/Community).
+5. (Необязательно) Войдите в [сообщество Zig](https://github.com/ziglang/zig/wiki/Community).
 
-## Hello World
+## Привет, мир!
 
-Create a file called `main.zig`, with the following contents:
+Создайте файл под названием `main.zig` с следующим содержимым:
 
 ```zig
 const std = @import("std");
 
 pub fn main() void {
-    std.debug.print("Hello, {s}!\n", .{"World"});
+    std.debug.print("Привет, {s}!\n", .{"Мир"});
 }
 ```
 
-!!! note "note: make sure your file is using spaces for indentation, LF line endings and UTF-8 encoding!"
+!!! note "примечание: убедитесь, что в вашем файле используется кодировка UTF-8!"
+!!! note "примечание: Если вы используете табуляцию для отступов и/или перевод строки CRLF (стиль Windows), компилятор Zig примет их, но использование `zig fmt` заменит их на пробелы и перевод строки LF (стиль Unix)"
 
-Use `zig run main.zig` to build and run it. In this example `Hello, World!` will be written to stderr, and is assumed to never fail.
+Запустите команду `zig run main.zig` для сборки и запуска этого файла. В этом примере программа напечатает `Привет, Мир!` в stderr (стандартный вывод ошибок).
