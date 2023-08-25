@@ -73,6 +73,7 @@ pub fn main() void {
 }
 ```
 
-!!! note "note: make sure your file is using spaces for indentation, LF line endings and UTF-8 encoding!"
+!!! note "note: make sure your file is encoded via UTF-8 encoding!"
+!!! note "note: If you are using tabs for indentation and/or CRLF line endings in your file, Zig compiler will accept it, but using `zig fmt` will canonicalize them to spaces and LF line endings!"
 
 Use `zig run main.zig` to build and run it. In this example `Hello, World!` will be written to stderr, and is assumed to never fail.
