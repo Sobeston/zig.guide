@@ -15,20 +15,14 @@ Value assignment has the following syntax: `(const|var) identifier[: type] = val
 
 <!--no_test-->
 ```zig
-const constant: i32 = 5;  // signed 32-bit constant
-var variable: u32 = 5000; // unsigned 32-bit variable
-
-// @as performs an explicit type coercion
-const inferred_constant = @as(i32, 5);
-var inferred_variable = @as(u32, 5000);
+{{ assignments }}
 ```
 
 Constants and variables *must* have a value. If no known value can be given, the [`undefined`](https://ziglang.org/documentation/master/#undefined) value, which coerces to any type, may be used as long as a type annotation is provided.
 
 <!--no_test-->
 ```zig
-const a: i32 = undefined;
-var b: u32 = undefined;
+{{ variables }}
 ```
 
 Where possible, `const` values are preferred over `var` values.
@@ -41,16 +35,14 @@ For array literals, `N` may be replaced by `_` to infer the size of the array.
 
 <!--no_test-->
 ```zig
-const a = [5]u8{ 'h', 'e', 'l', 'l', 'o' };
-const b = [_]u8{ 'w', 'o', 'r', 'l', 'd' };
+{{ array_literal }}
 ```
 
 To get the size of an array, simply access the array's `len` field.
 
 <!--no_test-->
 ```zig
-const array = [_]u8{ 'h', 'e', 'l', 'l', 'o' };
-const length = array.len; // 5
+{{ array_len }}
 ```
 
 ## If
@@ -60,29 +52,13 @@ Zig's basic if statement is simple in that it only accepts a `bool` value (of va
 Here we will introduce testing. Save the below code and compile + run it with `zig test file-name.zig`. We will be using the [`expect`](https://ziglang.org/documentation/master/std/#std;testing.expect) function from the standard library, which will cause the test to fail if it's given the value `false`. When a test fails, the error and stack trace will be shown.
 
 ```zig
-const expect = @import("std").testing.expect;
-
-test "if statement" {
-    const a = true;
-    var x: u16 = 0;
-    if (a) {
-        x += 1;
-    } else {
-        x += 2;
-    }
-    try expect(x == 1);
-}
+{{ if_statement }}
 ```
 
 If statements also work as expressions.
 
 ```zig
-test "if statement expression" {
-    const a = true;
-    var x: u16 = 0;
-    x += if (a) 1 else 2;
-    try expect(x == 1);
-}
+{{ if_expression }}
 ```
 
 ## While
@@ -91,53 +67,24 @@ Zig's while loop has three parts - a condition, a block and a continue expressio
 
 Without a continue expression.
 ```zig
-test "while" {
-    var i: u8 = 2;
-    while (i < 100) {
-        i *= 2;
-    }
-    try expect(i == 128);
-}
+{{ while_expression }}
 ```
 
 With a continue expression.
 ```zig
-test "while with continue expression" {
-    var sum: u8 = 0;
-    var i: u8 = 1;
-    while (i <= 10) : (i += 1) {
-        sum += i;
-    }
-    try expect(sum == 55);
-}
+{{ while_continue }}
 ```
 
 With a `continue`.
 
 ```zig
-test "while with continue" {
-    var sum: u8 = 0;
-    var i: u8 = 0;
-    while (i <= 3) : (i += 1) {
-        if (i == 2) continue;
-        sum += i;
-    }
-    try expect(sum == 4);
-}
+{{ while_continue_2 }}
 ```
 
 With a `break`.
 
 ```zig
-test "while with break" {
-    var sum: u8 = 0;
-    var i: u8 = 0;
-    while (i <= 3) : (i += 1) {
-        if (i == 2) break;
-        sum += i;
-    }
-    try expect(sum == 1);
-}
+{{ while_break }}
 ```
 
 ## For

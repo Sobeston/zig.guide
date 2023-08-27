@@ -1,0 +1,3 @@
+signed_32bit_constant = "signed 32-bit constant"
+unsigned_32bit_variable = "unsigned 32-bit variable"
+explicit_coercion = "@as performs an explicit type coercion"
