@@ -12,8 +12,9 @@ description: "Zighelp - A Guide / Tutorial for the Zig programming language. Ins
 Warning: the latest major release is 0.11 - Zig is still pre-1.0; usage in production is still not recommended and you may run into compiler bugs.
 
 To follow this guide, we assume you have:
-   * Prior experience programming
-   * Some understanding of low-level programming concepts
+
+- Prior experience programming
+- Some understanding of low-level programming concepts
 
 Knowing a language like C, C++, Rust, Go, Pascal or similar will be helpful for following this guide. You should have an editor, terminal and internet connection available to you. This guide is unofficial and unaffiliated with the Zig Software Foundation, and is designed to be read in order from the start.
 
