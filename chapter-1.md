@@ -580,12 +580,12 @@ Enums types may have specified (integer) tag types.
 const Value = enum(u2) { zero, one, two };
 ```
 
-Enum's ordinal values start at 0. They can be accessed with the built-in function [`@enumToInt`](https://ziglang.org/documentation/master/#enumToInt).
+Enum's ordinal values start at 0. They can be accessed with the built-in function [`@intFromEnum`](https://ziglang.org/documentation/master/#intFromEnum).
 ```zig
 test "enum ordinal value" {
-    try expect(@enumToInt(Value.zero) == 0);
-    try expect(@enumToInt(Value.one) == 1);
-    try expect(@enumToInt(Value.two) == 2);
+    try expect(@intFromEnum(Value.zero) == 0);
+    try expect(@intFromEnum(Value.one) == 1);
+    try expect(@intFromEnum(Value.two) == 2);
 }
 ```
 
@@ -599,10 +599,10 @@ const Value2 = enum(u32) {
 };
 
 test "set enum ordinal value" {
-    try expect(@enumToInt(Value2.hundred) == 100);
-    try expect(@enumToInt(Value2.thousand) == 1000);
-    try expect(@enumToInt(Value2.million) == 1000000);
-    try expect(@enumToInt(Value2.next) == 1000001);
+    try expect(@intFromEnum(Value2.hundred) == 100);
+    try expect(@intFromEnum(Value2.thousand) == 1000);
+    try expect(@intFromEnum(Value2.million) == 1000000);
+    try expect(@intFromEnum(Value2.next) == 1000001);
 }
 ```
 
