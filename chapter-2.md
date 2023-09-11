@@ -5,13 +5,13 @@ date: 2023-09-11 18:00:00
 description: "Chapter 2 - This section of the tutorial will cover the Zig programming language's standard library in detail."
 ---
 
-Automatically generated standard library documentation can be found [here](https://ziglang.org/documentation/master/std/). Installing [ZLS](https://github.com/zigtools/zls/) may also help you explore the standard library, which provides completions for it.
+Automatically generated standard library documentation can be found [here](https://ziglang.org/documentation/master/std/). Installing [ZLS](https://github.com/zigtools/zls/) may also help you explore the standard library, which provides completions.
 
 # Allocators
 
-The Zig standard library provides a pattern for allocating memory, which allows the programmer to choose exactly how memory allocations are done within the standard library - no allocations happen behind your back in the standard library.
+The Zig standard library provides a pattern for allocating memory, which allows the programmer to choose precisely how memory allocations are done within the standard library - no allocations happen behind your back in the standard library.
 
-The most basic allocator is [`std.heap.page_allocator`](https://ziglang.org/documentation/master/std/#A;std:heap.page_allocator). Whenever this allocator makes an allocation it will ask your OS for entire pages of memory; an allocation of a single byte will likely reserve multiple kibibytes. As asking the OS for memory requires a system call this is also extremely inefficient for speed.
+The most basic allocator is [`std.heap.page_allocator`](https://ziglang.org/documentation/master/std/#A;std:heap.page_allocator). Whenever this allocator makes an allocation, it will ask your OS for entire pages of memory; an allocation of a single byte will likely reserve multiple kibibytes. As asking the OS for memory requires a system call, this is also extremely inefficient for speed.
 
 Here, we allocate 100 bytes as a `[]u8`. Notice how defer is used in conjunction with a free - this is a common pattern for memory management in Zig.
 
@@ -30,7 +30,7 @@ test "allocation" {
 }
 ```
 
-The [`std.heap.FixedBufferAllocator`](https://ziglang.org/documentation/master/std/#A;std:heap.FixedBufferAllocator) is an allocator that allocates memory into a fixed buffer, and does not make any heap allocations. This is useful when heap usage is not wanted, for example when writing a kernel. It may also be considered for performance reasons. It will give you the error `OutOfMemory` if it has run out of bytes.
+The [`std.heap.FixedBufferAllocator`](https://ziglang.org/documentation/master/std/#A;std:heap.FixedBufferAllocator) is an allocator that allocates memory into a fixed buffer and does not make any heap allocations. This is useful when heap usage is not wanted, for example, when writing a kernel. It may also be considered for performance reasons. It will give you the error `OutOfMemory` if it has run out of bytes.
 
 ```zig
 test "fixed buffer allocator" {
@@ -46,7 +46,7 @@ test "fixed buffer allocator" {
 }
 ```
 
-[`std.heap.ArenaAllocator`](https://ziglang.org/documentation/master/std/#A;std:heap.ArenaAllocator) takes in a child allocator, and allows you to allocate many times and only free once. Here, `.deinit()` is called on the arena which frees all memory. Using `allocator.free` in this example would be a no-op (i.e. does nothing).
+[`std.heap.ArenaAllocator`](https://ziglang.org/documentation/master/std/#A;std:heap.ArenaAllocator) takes in a child allocator and allows you to allocate many times and only free once. Here, `.deinit()` is called on the arena, which frees all memory. Using `allocator.free` in this example would be a no-op (i.e. does nothing).
 
 ```zig
 test "arena allocator" {
@@ -87,7 +87,7 @@ test "GPA" {
 }
 ```
 
-For high performance (but very few safety features!), [`std.heap.c_allocator`](https://ziglang.org/documentation/master/std/#A;std:heap.c_allocator) may be considered. This however has the disadvantage of requiring linking Libc, which can be done with `-lc`.
+For high performance (but very few safety features!), [`std.heap.c_allocator`](https://ziglang.org/documentation/master/std/#A;std:heap.c_allocator) may be considered. This,however, has the disadvantage of requiring linking Libc, which can be done with `-lc`.
 
 Benjamin Feng's talk [*What's a Memory Allocator Anyway?*](https://www.youtube.com/watch?v=vHWiDx_l4V0) goes into more detail on this topic, and covers the implementation of allocators.
 
@@ -95,7 +95,7 @@ Benjamin Feng's talk [*What's a Memory Allocator Anyway?*](https://www.youtube.c
 
 The [`std.ArrayList`](https://ziglang.org/documentation/master/std/#A;std:ArrayList) is commonly used throughout Zig, and serves as a buffer which can change in size. `std.ArrayList(T)` is similar to C++'s `std::vector<T>` and Rust's `Vec<T>`. The `deinit()` method frees all of the ArrayList's memory. The memory can be read from and written to via its slice field - `.items`.
 
-Here we will introduce the usage of the testing allocator. This is a special allocator that only works in tests, and can detect memory leaks. In your code, use whatever allocator is appropriate.
+Here we will introduce the usage of the testing allocator. This is a special allocator that only works in tests and can detect memory leaks. In your code, use whatever allocator is appropriate.
 
 ```zig
 const eql = std.mem.eql;
@@ -118,7 +118,7 @@ test "arraylist" {
 
 # Filesystem
 
-Let's create and open a file in our current working directory, write to it, and then read from it. Here we have to use `.seekTo` in order to go back to the start of the file before reading what we have written.
+Let's create and open a file in our current working directory, write to it, and then read from it. Here we have to use `.seekTo` to go back to the start of the file before reading what we have written.
 
 ```zig
 test "createFile, write, seekTo, read" {
@@ -261,7 +261,7 @@ test "read until next line" {
 }
 ```
 
-An [`std.io.Writer`](https://ziglang.org/documentation/master/std/#A;std:io.Writer) type consists of a context type, error set, and a write function. The write function must take in the context type and a byte slice. The write function must also return an error union of the Writer type's error set and the amount of bytes written. Let's create a type that implements a writer.
+An [`std.io.Writer`](https://ziglang.org/documentation/master/std/#A;std:io.Writer) type consists of a context type, error set, and a write function. The write function must take in the context type and a byte slice. The write function must also return an error union of the Writer type's error set and the number of bytes written. Let's create a type that implements a writer.
 
 ```zig
 // Don't create a type like this! Use an
@@ -338,7 +338,7 @@ test "print" {
 }
 ```
 
-Take a moment to appreciate that you now know from top to bottom how printing hello world works. [`std.debug.print`](https://ziglang.org/documentation/master/std/#A;std:debug.print) works the same, except it writes to stderr and is protected by a mutex.
+Take a moment to appreciate that you now know from top to bottom how printing Hello World works. [`std.debug.print`](https://ziglang.org/documentation/master/std/#A;std:debug.print) works the same, except it writes to stderr and is protected by a mutex.
 
 ```zig
 test "hello world" {
@@ -350,7 +350,7 @@ test "hello world" {
 }
 ```
 
-We have used the `{s}` format specifier up until this point to print strings. Here we will use `{any}`, which gives us the default formatting.
+We have used the `{s}` format specifier up until this point to print strings. Here, we will use `{any}`, which gives us the default formatting.
 
 ```zig
 test "array printing" {
@@ -444,7 +444,7 @@ test "custom fmt" {
 
 # JSON
 
-Let's parse a json string into a struct type, using the streaming parser.
+Let's parse a JSON string into a struct type, using the streaming parser.
 
 ```zig
 const Place = struct { lat: f32, long: f32 };
@@ -486,7 +486,7 @@ test "json stringify" {
 }
 ```
 
-The json parser requires an allocator for javascript's string, array, and map types.
+The JSON parser requires an allocator for javascript's string, array, and map types.
 
 ```zig
 test "json parse with strings" {
@@ -506,7 +506,7 @@ test "json parse with strings" {
 
 # Random Numbers
 
-Here we create a new prng using a 64 bit random seed. a, b, c, and d are given random values via this prng. The expressions giving c and d values are equivalent. `DefaultPrng` is `Xoroshiro128`; there are other prngs available in std.rand.
+Here ,we create a new prng using a 64 bit random seed. a, b, c, and d are given random values via this prng. The expressions giving c and d values are equivalent. `DefaultPrng` is `Xoroshiro128`; there are other prngs available in std.rand.
 
 ```zig
 test "random numbers" {
@@ -972,7 +972,7 @@ test "precision" {
 
 # End of Chapter 2
 
-This chapter is incomplete. In the future it will contain things such as:
+This chapter is incomplete. In the future, it will contain things such as:
 
 - Arbitrary Precision Maths
 - Linked Lists

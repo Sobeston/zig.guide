@@ -55,9 +55,9 @@ const length = array.len; // 5
 
 # If
 
-Zig's basic if statement is simple in that it only accepts a `bool` value (of values `true` or `false`). There is no concept of truthy or falsy values.
+Zig's if statements only accept `bool` values (i.e. `true` or `false`). There is no concept of truthy or falsy values.
 
-Here we will introduce testing. Save the below code and compile + run it with `zig test file-name.zig`. We will be using the [`expect`](https://ziglang.org/documentation/master/std/#std;testing.expect) function from the standard library, which will cause the test to fail if it's given the value `false`. When a test fails, the error and stack trace will be shown.
+Here, we will introduce testing. Save the below code and compile + run it with `zig test file-name.zig`. We will be using the [`expect`](https://ziglang.org/documentation/master/std/#std;testing.expect) function from the standard library, which will cause the test to fail if it's given the value `false`. When a test fails, the error and stack trace will be shown.
 
 ```zig
 const expect = @import("std").testing.expect;
@@ -141,7 +141,7 @@ test "while with break" {
 ```
 
 # For
-For loops are used to iterate over arrays (and other types, to be discussed later). For loops follow this syntax. Like while, for loops can use `break` and `continue`. Here we've had to assign values to `_`, as Zig does not allow us to have unused values.
+For loops are used to iterate over arrays (and other types, to be discussed later). For loops follow this syntax. Like while, for loops can use `break` and `continue`. Here, we've had to assign values to `_`, as Zig does not allow us to have unused values.
 
 ```zig
 test "for" {
@@ -167,7 +167,7 @@ test "for" {
 
 # Functions
 
-__All function arguments are immutable__ - if a copy is desired the user must explicitly make one. Unlike variables which are snake_case, functions are camelCase. Here's an example of declaring and calling a simple function.
+__All function arguments are immutable__ - if a copy is desired the user must explicitly make one. Unlike variables, which are snake_case, functions are camelCase. Here's an example of declaring and calling a simple function.
 
 ```zig
 fn addFive(x: u32) u32 {
@@ -194,9 +194,9 @@ test "function recursion" {
     try expect(x == 55);
 }
 ```
-When recursion happens, the compiler is no longer able to work out the maximum stack size. This may result in unsafe behaviour - a stack overflow. Details on how to achieve safe recursion will be covered in future.
+When recursion happens, the compiler is no longer able to work out the maximum stack size, which may result in unsafe behaviour - a stack overflow. Details on how to achieve safe recursion will be covered in future.
 
-Values can be ignored by using `_` in place of a variable or const declaration. This does not work at the global scope (i.e. it only works inside functions and blocks), and is useful for ignoring the values returned from functions if you do not need them.
+Values can be ignored using `_` instead of a variable or const declaration. This does not work at the global scope (i.e. it only works inside functions and blocks) and is useful for ignoring the values returned from functions if you do not need them.
 
 <!--no_test-->
 ```zig
@@ -253,7 +253,7 @@ test "coerce error from a subset to a superset" {
 }
 ```
 
-An error set type and a normal type can be combined with the `!` operator to form an error union type. Values of these types may be an error value, or a value of the normal type.
+An error set type and another type can be combined with the `!` operator to form an error union type. Values of these types may be an error value or a value of the other type.
 
 Let's create a value of an error union type. Here [`catch`](https://ziglang.org/documentation/master/#catch) is used, which is followed by an expression which is evaluated when the value before it is an error. The catch here is used to provide a fallback value, but could instead be a [`noreturn`](https://ziglang.org/documentation/master/#noreturn) - the type of `return`, `while (true)` and others.
 
@@ -267,7 +267,7 @@ test "error union" {
 }
 ```
 
-Functions often return error unions. Here's one using a catch, where the `|err|` syntax receives the value of the error. This is called __payload capturing__, and is used similarly in many places. We'll talk about it in more detail later in the chapter. Side note: some languages use similar syntax for lambdas - this is not the case for Zig.
+Functions often return error unions. Here's one using a catch, where the `|err|` syntax receives the value of the error. This is called __payload capturing__, and is used similarly in many places. We'll talk about it in more detail later in the chapter. Side note: some languages use similar syntax for lambdas - this is not true for Zig.
 
 ```zig
 fn failingFunction() error{Oops}!void {
@@ -282,7 +282,7 @@ test "returning an error" {
 }
 ```
 
-`try x` is a shortcut for `x catch |err| return err`, and is commonly used in places where handling an error isn't appropriate. Zig's [`try`](https://ziglang.org/documentation/master/#try) and [`catch`](https://ziglang.org/documentation/master/#catch) are unrelated to try-catch in other languages.
+`try x` is a shortcut for `x catch |err| return err`, and is commonly used where handling an error isn't appropriate. Zig's [`try`](https://ziglang.org/documentation/master/#try) and [`catch`](https://ziglang.org/documentation/master/#catch) are unrelated to try-catch in other languages.
 
 ```zig
 fn failFn() error{Oops}!i32 {
@@ -318,7 +318,7 @@ test "errdefer" {
 }
 ```
 
-Error unions returned from a function can have their error sets inferred by not having an explicit error set. This inferred error set contains all possible errors which the function may return.
+Error unions returned from a function can have their error sets inferred by not having an explicit error set. This inferred error set contains all possible errors that the function may return.
 
 ```zig
 fn createFile() !void {
@@ -343,7 +343,7 @@ const B = error{ OutOfMemory, PathNotFound };
 const C = A || B;
 ```
 
-`anyerror` is the global error set which due to being the superset of all error sets, can have an error from any set coerce to a value of it. Its usage should be generally avoided.
+`anyerror` is the global error set, which due to being the superset of all error sets, can have an error from any set coerced to it. Its usage should be generally avoided.
 
 # Switch
 
@@ -404,7 +404,7 @@ test "out of bounds"...index out of bounds
              ^
 ```
 
-The user may choose to disable runtime safety for the current block by using the built-in function [`@setRuntimeSafety`](https://ziglang.org/documentation/master/#setRuntimeSafety).
+The user may disable runtime safety for the current block using the built-in function [`@setRuntimeSafety`](https://ziglang.org/documentation/master/#setRuntimeSafety).
 
 ```zig
 test "out of bounds, no safety" {
@@ -420,7 +420,7 @@ Safety is off for some build modes (to be discussed later).
 
 # Unreachable
 
-[`unreachable`](https://ziglang.org/documentation/master/#unreachable) is an assertion to the compiler that this statement will not be reached. It can be used to tell the compiler that a branch is impossible, which the optimiser can then take advantage of. Reaching an [`unreachable`](https://ziglang.org/documentation/master/#unreachable) is detectable illegal behaviour.
+[`unreachable`](https://ziglang.org/documentation/master/#unreachable) is an assertion to the compiler that this statement will not be reached. It can tell the compiler that a branch is impossible, which the optimiser can then take advantage of. Reaching an [`unreachable`](https://ziglang.org/documentation/master/#unreachable) is detectable illegal behaviour.
 
 As it is of the type [`noreturn`](https://ziglang.org/documentation/master/#noreturn), it is compatible with all other types. Here it coerces to u32.
 <!--fail_test-->
@@ -456,7 +456,7 @@ test "unreachable switch" {
 
 # Pointers
 
-Normal pointers in Zig aren't allowed to have 0 or null as a value. They follow the syntax `*T`, where `T` is the child type.
+Normal pointers in Zig cannot have 0 or null as a value. They follow the syntax `*T`, where `T` is the child type.
 
 Referencing is done with `&variable`, and dereferencing is done with `variable.*`.
 
@@ -521,15 +521,15 @@ test "usize" {
 
 # Many-Item Pointers
 
-Sometimes you may have a pointer to an unknown amount of elements. `[*]T` is the solution for this, which works like `*T` but also supports indexing syntax, pointer arithmetic, and slicing. Unlike `*T`, it cannot point to a type which does not have a known size. `*T` coerces to `[*]T`.
+Sometimes, you may have a pointer to an unknown amount of elements. `[*]T` is the solution for this, which works like `*T` but also supports indexing syntax, pointer arithmetic, and slicing. Unlike `*T`, it cannot point to a type which does not have a known size. `*T` coerces to `[*]T`.
 
 These many pointers may point to any amount of elements, including 0 and 1.
 
 # Slices
 
-Slices can be thought of as a pair of `[*]T` (the pointer to the data) and a `usize` (the element count). Their syntax is given as `[]T`, with `T` being the child type. Slices are used heavily throughout Zig for when you need to operate on arbitrary amounts of data. Slices have the same attributes as pointers, meaning that there also exists const slices. For loops also operate over slices. String literals in Zig coerce to `[]const u8`.
+Slices can be thought of as a pair of `[*]T` (the pointer to the data) and a `usize` (the element count). Their syntax is `[]T`, with `T` being the child type. Slices are used heavily throughout Zig for when you need to operate on arbitrary amounts of data. Slices have the same attributes as pointers, meaning that there also exists const slices. For loops also operate over slices. String literals in Zig coerce to `[]const u8`.
 
-Here, the syntax `x[n..m]` is used to create a slice from an array. This is called __slicing__, and creates a slice of the elements starting at `x[n]` and ending at `x[m - 1]`. This example uses a const slice as the values which the slice points to do not need to be modified.
+Here, the syntax `x[n..m]` is used to create a slice from an array. This is called __slicing__, and creates a slice of the elements starting at `x[n]` and ending at `x[m - 1]`. This example uses a const slice, as the values to which the slice points need not be modified.
 
 ```zig
 fn total(values: []const u8) usize {
@@ -554,7 +554,7 @@ test "slices 2" {
 }
 ```
 
-The syntax `x[n..]` can also be used for when you want to slice to the end.
+The syntax `x[n..]` can also be used when you want to slice to the end.
 
 ```zig
 test "slices 3" {
@@ -564,11 +564,11 @@ test "slices 3" {
 }
 ```
 
-Types that may be sliced are: arrays, many pointers and slices.
+Types that may be sliced are arrays, many pointers and slices.
 
 # Enums
 
-Zig's enums allow you to define types which have a restricted set of named values.
+Zig's enums allow you to define types with a restricted set of named values.
 
 Let's declare an enum.
 ```zig
@@ -642,7 +642,7 @@ test "hmm" {
 
 # Structs
 
-Structs are Zig's most common kind of composite data type, allowing you to define types that can store a fixed set of named fields. Zig gives no guarantees about the in-memory order of fields in a struct, or its size. Like arrays, structs are also neatly constructed with `T{}` syntax. Here is an example of declaring and filling a struct.
+Structs are Zig's most common kind of composite data type, allowing you to define types that can store a fixed set of named fields. Zig gives no guarantees about the in-memory order of fields in a struct or its size. Like arrays, structs are also neatly constructed with `T{}` syntax. Here is an example of declaring and filling a struct.
 ```zig
 const Vec3 = struct { x: f32, y: f32, z: f32 };
 
@@ -689,7 +689,7 @@ test "struct defaults" {
 
 Like enums, structs may also contain functions and declarations.
 
-Structs have the unique property that when given a pointer to a struct, one level of dereferencing is done automatically when accessing fields. Notice how in this example, self.x and self.y are accessed in the swap function without needing to dereference the self pointer.
+Structs have the unique property that when given a pointer to a struct, one level of dereferencing is done automatically when accessing fields. Notice how, in this example, self.x and self.y are accessed in the swap function without needing to dereference the self pointer.
 
 ```zig
 const Stuff = struct {
@@ -736,7 +736,7 @@ test "simple union"...access of inactive union field
            ^
 ```
 
-Tagged unions are unions which use an enum to detect which field is active. Here we make use of payload capturing again, to switch on the tag type of a union while also capturing the value it contains. Here we use a *pointer capture*; captured values are immutable, but with the `|*value|` syntax we can capture a pointer to the values instead of the values themselves. This allows us to use dereferencing to mutate the original value.
+Tagged unions are unions which use an enum to detect which field is active. Here we make use of payload capturing again, to switch on the tag type of a union while also capturing the value it contains. Here we use a *pointer capture*; captured values are immutable, but with the `|*value|` syntax, we can capture a pointer to the values instead of the values themselves. This allows us to use dereferencing to mutate the original value.
 
 ```zig
 const Tag = enum { a, b, c };
@@ -806,7 +806,7 @@ test "@intCast" {
 }
 ```
 
-Integers by default are not allowed to overflow. Overflows are detectable illegal behaviour. Sometimes being able to overflow integers in a well defined manner is wanted behaviour. For this use case, Zig provides overflow operators.
+Integers, by default, are not allowed to overflow. Overflows are detectable illegal behaviour. Sometimes, being able to overflow integers in a well-defined manner is a wanted behaviour. For this use case, Zig provides overflow operators.
 
 | Normal Operator | Wrapping Operator |
 |-----------------|-------------------|
@@ -868,7 +868,7 @@ test "int-float conversion" {
 
 # Labelled Blocks
 
-Blocks in Zig are expressions and can be given labels, which are used to yield values. Here, we are using a label called `blk`. Blocks yield values, meaning that they can be used in place of a value. The value of an empty block `{}` is a value of the type `void`.
+Blocks in Zig are expressions and can be given labels, which are used to yield values. Here, we are using a label called `blk`. Blocks yield values, meaning they can be used in place of a value. The value of an empty block `{}` is a value of the type `void`.
 
 ```zig
 test "labelled blocks" {
@@ -967,7 +967,7 @@ test "orelse unreachable" {
 }
 ```
 
-Payload capturing works in many places for optionals, meaning that in the event that it is non-null we can "capture" its non-null value.
+Payload capturing works in many places for optionals, meaning that in the event that it is non-null, we can "capture" its non-null value.
 
 Here we use an `if` optional payload capture; a and b are equivalent here. `if (b) |value|` captures the value of `b` (in the cases where `b` is not null), and makes it available as `value`. As in the union example, the captured value is immutable, but we can still use a pointer capture to modify the value stored in `b`.
 
@@ -1005,7 +1005,7 @@ test "while null capture" {
 }
 ```
 
-Optional pointer and optional slice types do not take up any extra memory, compared to non-optional ones. This is because internally they use the 0 value of the pointer for `null`.
+Optional pointer and optional slice types do not take up any extra memory compared to non-optional ones. This is because internally they use the 0 value of the pointer for `null`.
 
 This is how null pointers in Zig work - they must be unwrapped to a non-optional before dereferencing, which stops null pointer dereferences from happening accidentally.
 
@@ -1295,7 +1295,7 @@ test "for with pointer capture" {
 
 # Inline Loops
 
-`inline` loops are unrolled, and allow some things to happen which only work at compile time. Here we use a [`for`](https://ziglang.org/documentation/master/#inline-for), but a [`while`](https://ziglang.org/documentation/master/#inline-while) works similarly.
+`inline` loops are unrolled, and allow some things to happen that only work at compile time. Here we use a [`for`](https://ziglang.org/documentation/master/#inline-for), but a [`while`](https://ziglang.org/documentation/master/#inline-while) works similarly.
 ```zig
 test "inline for" {
     const types = [_]type{ i32, f32, u8, bool };
@@ -1394,7 +1394,7 @@ fn dump(args: anytype) !void {
 ```
 <!-- TODO: mention tuple slicing when it's implemented -->
 
-Anonymous structs without field names may be created, and are referred to as __tuples__. These have many of the properties that arrays do; tuples can be iterated over, indexed, can be used with the `++` and `**` operators, and have a len field. Internally, these have numbered field names starting at `"0"`, which may be accessed with the special syntax `@"0"` which acts as an escape for the syntax - things inside `@""` are always recognised as identifiers.
+Anonymous structs without field names may be created and are referred to as __tuples__. These have many of the properties that arrays do; tuples can be iterated over, indexed, can be used with the `++` and `**` operators, and have a len field. Internally, these have numbered field names starting at `"0"`, which may be accessed with the special syntax `@"0"` which acts as an escape for the syntax - things inside `@""` are always recognised as identifiers.
 
 An `inline` loop must be used to iterate over the tuple here, as the type of each tuple field may differ.
 

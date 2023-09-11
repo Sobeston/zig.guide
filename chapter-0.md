@@ -15,8 +15,7 @@ To follow this guide, we assume you have:
    * Prior experience programming
    * Some understanding of low-level programming concepts
 
-Knowing a language like C, C++, Rust, Go, Pascal or similar will be helpful for following this guide. You should have an editor, terminal and internet connection available to you. This guide is unofficial and unaffiliated with the Zig Software Foundation, and is designed to be read in order from the start.
-
+Knowing a language like C, C++, Rust, Go, Pascal or similar will help you follow this guide. You must have an editor, terminal and internet connection available to you. This guide is unofficial and unaffiliated with the Zig Software Foundation and is designed to be read in order from the start.
 # Installation
 
 This guide assumes Zig 0.11, which is the latest major release as of writing.
@@ -54,7 +53,7 @@ https://ziglang.org/download/
 
       Close your terminal and create a new one.
 
-3. Verify your install with `zig version`. The output should look like this:
+3. Verify your installation with `zig version`. The output should look like this:
 ```
 $ zig version
 0.11
@@ -79,4 +78,4 @@ pub fn main() void {
 ```
 ###### (note: make sure your file is using spaces for indentation, LF line endings and UTF-8 encoding!)
 
-Use `zig run main.zig` to build and run it. In this example `Hello, World!` will be written to stderr, and is assumed to never fail.
+Use `zig run main.zig` to build and run it. In this example, `Hello, World!` will be written to stderr, and is assumed to never fail.
