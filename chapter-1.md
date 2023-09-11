@@ -912,7 +912,7 @@ test "nested continue" {
 
 # Loops as expressions
 
-Like `return`, `break` accepts a value. This can be used to yield a value from a loop. Loops in Zig also have an `else` branch on loops, which is evaluated when the loop is not exited from with a `break`.
+Like `return`, `break` accepts a value. This can be used to yield a value from a loop. Loops in Zig also have an `else` branch, which is evaluated when the loop is not exited with a `break`.
 
 ```zig
 fn rangeHasNumber(begin: usize, end: usize, number: usize) bool {
