@@ -1521,8 +1521,6 @@ test "vector * scalar" {
 Vectors do not have a `len` field like arrays, but may still be looped over.
 
 ```zig
-const len = @import("std").mem.len;
-
 test "vector looping" {
     const x = @Vector(4, u8){ 255, 0, 255, 0 };
     var sum = blk: {
