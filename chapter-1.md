@@ -1421,7 +1421,7 @@ test "tuple" {
 
 Arrays, slices and many pointers may be terminated by a value of their child type. This is known as sentinel termination. These follow the syntax `[N:t]T`, `[:t]T`, and `[*:t]T`, where `t` is a value of the child type `T`.
 
-An example of a sentinel terminated array. The built-in [`@bitCast`](https://ziglang.org/documentation/master/#bitCast) is used to perform an unsafe bitwise type conversion. This shows us that the last element of the array is followed by a 0 byte.
+An example of a sentinel terminated array. The built-in [`@ptrCast`](https://ziglang.org/documentation/master/#ptrCast) is used to perform an unsafe type conversion. This shows us that the last element of the array is followed by a 0 byte.
 
 ```zig
 test "sentinel termination" {
