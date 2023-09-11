@@ -1,7 +1,7 @@
 ---
 title: "Chapter 4 - Working with C"
 weight: 5
-date: 2023-04-28 18:00:00
+date: 2023-01-11 18:00:00
 description: "Chapter 4 - Learn about how the Zig programming language makes use of C code. This tutorial covers C data types, FFI, building with C, translate-c and more!"
 ---
 

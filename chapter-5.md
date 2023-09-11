@@ -5,7 +5,7 @@ date: 2023-04-28 18:00:00
 description: "Chapter 5 - Learn about how the ziglang's async works"
 ---
 
-Warning: The current version of the compiler does not yet support async
+Warning: The Zig compiler's async support regressed while self hosting, and is not available in 0.11. This is due to change in 0.12.
 
 # Async
 
