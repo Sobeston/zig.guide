@@ -152,7 +152,7 @@ test "file stat" {
     defer file.close();
     const stat = try file.stat();
     try expect(stat.size == 0);
-    try expect(stat.kind == .File);
+    try expect(stat.kind == .file);
     try expect(stat.ctime <= std.time.nanoTimestamp());
     try expect(stat.mtime <= std.time.nanoTimestamp());
     try expect(stat.atime <= std.time.nanoTimestamp());
@@ -179,7 +179,7 @@ test "make dir" {
     var file_count: usize = 0;
     var iter = iter_dir.iterate();
     while (try iter.next()) |entry| {
-        if (entry.kind == .File) file_count += 1;
+        if (entry.kind == .file) file_count += 1;
     }
 
     try expect(file_count == 3);
@@ -449,13 +449,19 @@ Let's parse a json string into a struct type, using the streaming parser.
 const Place = struct { lat: f32, long: f32 };
 
 test "json parse" {
-    var stream = std.json.TokenStream.init(
+    const parsed = try std.json.parseFromSlice(
+        Place,
+        test_allocator,
         \\{ "lat": 40.684540, "long": -74.401422 }
+    ,
+        .{},
     );
-    const x = try std.json.parse(Place, &stream, .{});
+    defer parsed.deinit();
 
-    try expect(x.lat == 40.684540);
-    try expect(x.long == -74.401422);
+    const place = parsed.value;
+
+    try expect(place.lat == 40.684540);
+    try expect(place.long == -74.401422);
 }
 ```
 
@@ -474,35 +480,26 @@ test "json stringify" {
     try std.json.stringify(x, .{}, string.writer());
 
     try expect(eql(u8, string.items,
-        \\{"lat":5.19976654e+01,"long":-7.40687012e-01}
+        \\{"lat":5.199766540527344e+01,"long":-7.406870126724243e-01}
     ));
 }
 ```
 
-The json parser requires an allocator for javascript's string, array, and map types. This memory may be freed using [`std.json.parseFree`](https://ziglang.org/documentation/master/std/#A;std:json.parseFree).
+The json parser requires an allocator for javascript's string, array, and map types.
 
 ```zig
 test "json parse with strings" {
-    var stream = std.json.TokenStream.init(
-        \\{ "name": "Joe", "age": 25 }
-    );
-
     const User = struct { name: []u8, age: u16 };
 
-    const x = try std.json.parse(
-        User,
-        &stream,
-        .{ .allocator = test_allocator },
-    );
+    const parsed = try std.json.parseFromSlice(User, test_allocator,
+        \\{ "name": "Joe", "age": 25 }
+    , .{},);
+    defer parsed.deinit();
 
-    defer std.json.parseFree(
-        User,
-        x,
-        .{ .allocator = test_allocator },
-    );
+    const user = parsed.value;
 
-    try expect(eql(u8, x.name, "Joe"));
-    try expect(x.age == 25);
+    try expect(eql(u8, user.name, "Joe"));
+    try expect(user.age == 25);
 }
 ```
 
@@ -700,9 +697,9 @@ The standard library provides utilities for in-place sorting slices. Its basic u
 ```zig
 test "sorting" {
     var data = [_]u8{ 10, 240, 0, 0, 10, 5 };
-    std.sort.sort(u8, &data, {}, comptime std.sort.asc(u8));
+    std.mem.sort(u8, &data, {}, comptime std.sort.asc(u8));
     try expect(eql(u8, &data, &[_]u8{ 0, 0, 5, 10, 10, 240 }));
-    std.sort.sort(u8, &data, {}, comptime std.sort.desc(u8));
+    std.mem.sort(u8, &data, {}, comptime std.sort.desc(u8));
     try expect(eql(u8, &data, &[_]u8{ 240, 10, 10, 5, 0, 0 }));
 }
 ```
@@ -740,7 +737,7 @@ test "iterator looping" {
 
     var file_count: usize = 0;
     while (try iter.next()) |entry| {
-        if (entry.kind == .File) file_count += 1;
+        if (entry.kind == .file) file_count += 1;
     }
 
     try expect(file_count > 0);
@@ -872,7 +869,7 @@ test "pointer fmt" {
     var b: [16]u8 = undefined;
     try expect(eql(
         u8,
-        try bufPrint(&b, "{*}", .{@intToPtr(*u8, 0xDEADBEEF)}),
+        try bufPrint(&b, "{*}", .{@as(*u8, @ptrFromInt(0xDEADBEEF))}),
         "u8@deadbeef",
     ));
 }
