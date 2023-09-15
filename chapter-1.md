@@ -478,14 +478,14 @@ Trying to set a `*T` to the value 0 is detectable illegal behaviour.
 ```zig
 test "naughty pointer" {
     var x: u16 = 0;
-    var y: *u8 = @intToPtr(*u8, x);
+    var y: *u8 = @ptrFromInt(x);
     _ = y;
 }
 ```
 ```
-test "naughty pointer"...cast causes pointer to be null
-.\tests.zig:241:18: 0x7ff69ebb22bd in test "naughty pointer" (test.obj)
-    var y: *u8 = @intToPtr(*u8, x);
+Test [23/126] test.naughty pointer... thread 21598 panic: cast causes pointer to be null
+./test-c1.zig:252:18: 0x260a91 in test.naughty pointer (test)
+    var y: *u8 = @ptrFromInt(x);
                  ^
 ```
 
@@ -855,7 +855,7 @@ const nanosecond: f64 = 0.000_000_001;
 const more_hex: f64 = 0x1234_5678.9ABC_CDEFp-10;
 ```
 
-Integers and floats may be converted using the built-in functions [`@intToFloat`](https://ziglang.org/documentation/master/#intToFloat) and [`@floatToInt`](https://ziglang.org/documentation/master/#floatToInt). [`@intToFloat`](https://ziglang.org/documentation/master/#intToFloat) is always safe, whereas [`@floatToInt`](https://ziglang.org/documentation/master/#floatToInt) is detectable illegal behaviour if the float value cannot fit in the integer destination type.
+Integers and floats may be converted using the built-in functions [`@floatFromInt`](https://ziglang.org/documentation/0.11.0/#floatFromInt) and [`@intFromFloat`](https://ziglang.org/documentation/0.11.0/#intFromFloat). [`@floatFromInt`](https://ziglang.org/documentation/0.11.0/#floatFromInt) is always safe, whereas [`@intFromFloat`](https://ziglang.org/documentation/0.11.0/#intFromFloat) is detectable illegal behaviour if the float value cannot fit in the integer destination type.
 
 ```zig
 test "int-float conversion" {
