@@ -41,12 +41,12 @@ pub fn main() !void {
                 "<!--no_test-->\n", // this should not be run as a test
                 "<!--fail_test-->\n", // this test should fail TODO: actually check that these tests fail
             }) |skip_prefix| {
-                const offset = @ptrToInt(token.ptr) - @ptrToInt(text.ptr);
+                const offset = @intFromPtr(token.ptr) - @intFromPtr(text.ptr);
                 if (offset >= skip_prefix.len + "```".len) {
                     if (std.mem.eql(
                         u8,
                         skip_prefix,
-                        @intToPtr([*]const u8, @ptrToInt(token.ptr) - (skip_prefix.len + "```".len))[0..skip_prefix.len],
+                        @as([*]const u8, @ptrFromInt(@intFromPtr(token.ptr) - (skip_prefix.len + "```".len)))[0..skip_prefix.len],
                     )) continue :outer;
                 }
             }
