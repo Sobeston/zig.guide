@@ -255,7 +255,7 @@ test "coerce error from a subset to a superset" {
 
 An error set type and another type can be combined with the `!` operator to form an error union type. Values of these types may be an error value or a value of the other type.
 
-Let's create a value of an error union type. Here [`catch`](https://ziglang.org/documentation/master/#catch) is used, which is followed by an expression which is evaluated when the value before it is an error. The catch here is used to provide a fallback value, but could instead be a [`noreturn`](https://ziglang.org/documentation/master/#noreturn) - the type of `return`, `while (true)` and others.
+Let's create a value of an error union type. Here [`catch`](https://ziglang.org/documentation/master/#catch) is used, which is followed by an expression which is evaluated when the value preceding it is an error. The catch here is used to provide a fallback value, but could instead be a [`noreturn`](https://ziglang.org/documentation/master/#noreturn) - the type of `return`, `while (true)` and others.
 
 ```zig
 test "error union" {
@@ -580,7 +580,7 @@ Enums types may have specified (integer) tag types.
 const Value = enum(u2) { zero, one, two };
 ```
 
-Enum's ordinal values start at 0. They can be accessed with the built-in function [`@enumToInt`](https://ziglang.org/documentation/master/#enumToInt).
+Enum's ordinal values start at 0. They can be accessed with the built-in function [`@intFromEnum`](https://ziglang.org/documentation/master/#intFromEnum).
 ```zig
 test "enum ordinal value" {
     try expect(@intFromEnum(Value.zero) == 0);
@@ -606,7 +606,7 @@ test "set enum ordinal value" {
 }
 ```
 
-Methods can be given to enums. These act as namespaced functions that can be called with dot syntax.
+Enums can be given methods. These act as namespaced functions that can be called with the dot syntax.
 
 ```zig
 const Suit = enum {
@@ -656,7 +656,7 @@ test "struct usage" {
 }
 ```
 
-All fields must be given a value.
+Fields may be given defaults:
 
 <!--fail_test-->
 ```zig
