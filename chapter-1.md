@@ -1465,8 +1465,8 @@ test "coercion" {
     const d: [5]u8 = c;
     _ = d;
 
-    var e: [:10]f32 = undefined;
-    const f = e;
+    var e: [:0]f32 = undefined;
+    const f: []f32 = e;
     _ = f;
 }
 ```
