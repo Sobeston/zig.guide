@@ -53,6 +53,19 @@ const array = [_]u8{ 'h', 'e', 'l', 'l', 'o' };
 const length = array.len; // 5
 ```
 
+You can access specific elements using index syntax, or a range of them with slice syntax.  
+To modify or copy ranges referred to by slices, use dereference syntax `.*`.
+
+<!--no_test-->
+```zig
+var array = [_]u8{ 'h', 'e', 'l', 'l', 'o', ' ', 'w', 'o', 'r', 'l', 'd' };
+array[0]      = 'J';                              // array is now "Jello world"
+array[2..5].* = .{'r','r','y'};                   // array is now "Jerry world"
+array[9..].*  = .{'k','s'};                       // array is now "Jerry works"
+array         = ("hi, welcome").*;                // array is now "hi, welcome"
+array         = ("the quick brown fox")[4..15].*; // array is now "quick brown"
+```
+
 # If
 
 Zig's if statements only accept `bool` values (i.e. `true` or `false`). There is no concept of truthy or falsy values.
