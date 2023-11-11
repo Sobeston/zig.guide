@@ -1,0 +1,27 @@
+import CodeBlock from "@theme/CodeBlock";
+
+import While from "!!raw-loader!./4|while.zig";
+import WhileContinueExpression from "!!raw-loader!./4|while-continue-expression.zig";
+import WhileContinue from "!!raw-loader!./4|while-continue.zig";
+import WhileBreak from "!!raw-loader!./4|while-break.zig";
+
+# While loops
+
+Zig's while loop has three parts - a condition, a block and a continue
+expression.
+
+Without a continue expression.
+
+<CodeBlock language="zig">{While}</CodeBlock>
+
+With a continue expression.
+
+<CodeBlock language="zig">{WhileContinueExpression}</CodeBlock>
+
+With a `continue`.
+
+<CodeBlock language="zig">{WhileContinue}</CodeBlock>
+
+With a `break`.
+
+<CodeBlock language="zig">{WhileBreak}</CodeBlock>

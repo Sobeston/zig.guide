@@ -1,0 +1,7 @@
+{
+  "label": "Async",
+  "link": {
+    "type": "generated-index",
+    "description": "Details on how Zig's async features work."
+  }
+}
