@@ -1,0 +1,59 @@
+# Pointers
+
+Normal pointers in Zig cannot have 0 or null as a value. They follow the syntax
+`*T`, where `T` is the child type.
+
+Referencing is done with `&variable`, and dereferencing is done with
+`variable.*`.
+
+```zig
+fn increment(num: *u8) void {
+    num.* += 1;
+}
+
+test "pointers" {
+    var x: u8 = 1;
+    increment(&x);
+    try expect(x == 2);
+}
+```
+
+Trying to set a `*T` to the value 0 is detectable illegal behaviour.
+
+<!--fail_test-->
+
+```zig
+test "naughty pointer" {
+    var x: u16 = 0;
+    var y: *u8 = @ptrFromInt(x);
+    _ = y;
+}
+```
+
+```
+Test [23/126] test.naughty pointer... thread 21598 panic: cast causes pointer to be null
+./test-c1.zig:252:18: 0x260a91 in test.naughty pointer (test)
+    var y: *u8 = @ptrFromInt(x);
+                 ^
+```
+
+Zig also has const pointers, which cannot be used to modify the referenced data.
+Referencing a const variable will yield a const pointer.
+
+<!--fail_test-->
+
+```zig
+test "const pointers" {
+    const x: u8 = 1;
+    var y = &x;
+    y.* += 1;
+}
+```
+
+```
+error: cannot assign to constant
+    y.* += 1;
+        ^
+```
+
+A `*T` coerces to a `*const T`.

@@ -1,0 +1,7 @@
+{
+  "label": "Working with C",
+  "link": {
+    "type": "generated-index",
+    "description": "Zig has been designed from the ground up with C interop as a first-class feature. In this section, we will go over how this works."
+  }
+}
