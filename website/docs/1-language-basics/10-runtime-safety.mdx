@@ -1,3 +1,7 @@
+import CodeBlock from "@theme/CodeBlock";
+
+import SwitchUnreachable from "!!raw-loader!./10|switch-unreachable.zig";
+
 # Runtime Safety
 
 Zig provides a level of safety, where problems may be found during execution.
@@ -8,8 +12,6 @@ safety off. Users are strongly recommended to develop and test their software
 with safety on, despite its speed penalties.
 
 For example, runtime safety protects you from out of bounds indices.
-
-<!--fail_test-->
 
 ```zig
 test "out of bounds" {
@@ -55,8 +57,6 @@ detectable illegal behaviour.
 As it is of the type
 [`noreturn`](https://ziglang.org/documentation/master/#noreturn), it is
 compatible with all other types. Here it coerces to u32.
-
-<!--fail_test-->
 
 ```zig
 test "unreachable" {

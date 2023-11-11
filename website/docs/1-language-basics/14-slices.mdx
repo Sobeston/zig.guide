@@ -1,3 +1,8 @@
+import CodeBlock from "@theme/CodeBlock";
+
+import Slices from "!!raw-loader!./14|slices.zig";
+import Slices2 from "!!raw-loader!./14|slices-2.zig";
+
 # Slices
 
 Slices can be thought of as a pair of `[*]T` (the pointer to the data) and a
@@ -12,30 +17,13 @@ called **slicing**, and creates a slice of the elements starting at `x[n]` and
 ending at `x[m - 1]`. This example uses a const slice, as the values to which
 the slice points need not be modified.
 
-```zig
-fn total(values: []const u8) usize {
-    var sum: usize = 0;
-    for (values) |v| sum += v;
-    return sum;
-}
-test "slices" {
-    const array = [_]u8{ 1, 2, 3, 4, 5 };
-    const slice = array[0..3];
-    try expect(total(slice) == 6);
-}
-```
+<CodeBlock language="zig">{Slices}</CodeBlock>
 
 When these `n` and `m` values are both known at compile time, slicing will
 actually produce a pointer to an array. This is not an issue as a pointer to an
 array i.e. `*[N]T` will coerce to a `[]T`.
 
-```zig
-test "slices 2" {
-    const array = [_]u8{ 1, 2, 3, 4, 5 };
-    const slice = array[0..3];
-    try expect(@TypeOf(slice) == *const [3]u8);
-}
-```
+<CodeBlock language="zig">{Slices2}</CodeBlock>
 
 The syntax `x[n..]` can also be used when you want to slice to the end.
 
