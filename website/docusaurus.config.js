@@ -118,7 +118,7 @@ const config = {
             block: { start: 'highlight-start', end: 'highlight-end' },
           },
           {
-            className: 'theme-code-block-hidden-line',
+            className: 'code-block-hidden',
             line: 'hide-next-line',
             block: { start: 'hide-start', end: 'hide-end' },
           }],
