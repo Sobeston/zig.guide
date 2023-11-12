@@ -43,11 +43,16 @@ pub fn build(b: *std.Build) !void {
     const optimize = b.standardOptimizeOption(.{});
 
     const test_file_paths = try getAllTestPaths(b.allocator);
-    var out_file = try generateMainTestFile(b.allocator, test_file_paths);
+    defer {
+        for (test_file_paths) |test_path| b.allocator.free(test_path);
+        b.allocator.free(test_file_paths);
+    }
+    const out_file = try generateMainTestFile(b.allocator, test_file_paths);
+    defer b.allocator.free(out_file);
 
     // write out our main testing file to zig-cache
-    var write_files = b.addWriteFiles();
-    var test_lazypath = write_files.add("test-main.zig", out_file);
+    const write_files = b.addWriteFiles();
+    const test_lazypath = write_files.add("test-main.zig", out_file);
 
     // copy our zig test files from website/docs into zig-cache
     for (test_file_paths) |test_file_path| {
