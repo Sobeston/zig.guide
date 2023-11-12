@@ -1,7 +1,6 @@
 {
   "label": "Build System",
   "link": {
-    "type": "generated-index",
     "description": "Getting started with the Zig programming language."
   }
 }
