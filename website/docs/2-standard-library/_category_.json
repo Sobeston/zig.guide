@@ -1,7 +1,6 @@
 {
   "label": "Standard Library",
   "link": {
-    "type": "generated-index",
     "description": "Zig's standard library in detail."
   }
 }
