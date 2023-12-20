@@ -71,6 +71,9 @@ const config = {
         disableSwitch: false,
         respectPrefersColorScheme: true,
       },
+      metadata: [
+        { name: 'keywords', content: 'programming, zig, guide, tutorial, ziglang, learn, ziglearn, language, install, book' },
+      ],
       // Replace with your project's social card
       image: 'img/docusaurus-social-card.jpg',
       navbar: {
