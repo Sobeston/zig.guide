@@ -1,6 +1,6 @@
 # ziglearn
 
-Repo for https://ziglearn.org content. Feedback and PRs welcome.
+Repo for https://zig.guide content. Feedback and PRs welcome.
 
 ## Testing
 
