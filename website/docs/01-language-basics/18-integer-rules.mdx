@@ -1,3 +1,9 @@
+import CodeBlock from "@theme/CodeBlock";
+
+import IntegerWidening from "!!raw-loader!./18.integer-widening.zig";
+import IntegerCasting from "!!raw-loader!./18.integer-casting.zig";
+import IntegerSafeOverflow from "!!raw-loader!./18.integer-safe-overflow.zig";
+
 # Integer Rules
 
 Zig supports hex, octal and binary integer literals.
@@ -23,27 +29,14 @@ const big_address: u64 = 0xFF80_0000_0000_0000;
 an integer of another type, providing that the new type can fit all of the
 values that the old type can.
 
-```zig
-test "integer widening" {
-    const a: u8 = 250;
-    const b: u16 = a;
-    const c: u32 = b;
-    try expect(c == a);
-}
-```
+<CodeBlock language="zig">{IntegerWidening}</CodeBlock>
 
 If you have a value stored in an integer that cannot coerce to the type that you
 want, [`@intCast`](https://ziglang.org/documentation/master/#intCast) may be
 used to explicitly convert from one type to the other. If the value given is out
 of the range of the destination type, this is detectable illegal behaviour.
 
-```zig
-test "@intCast" {
-    const x: u64 = 200;
-    const y = @as(u8, @intCast(x));
-    try expect(@TypeOf(y) == u8);
-}
-```
+<CodeBlock language="zig">{IntegerCasting}</CodeBlock>
 
 Integers, by default, are not allowed to overflow. Overflows are detectable
 illegal behaviour. Sometimes, being able to overflow integers in a well-defined
@@ -54,15 +47,9 @@ operators.
 | --------------- | ----------------- |
 | +               | +%                |
 | -               | -%                |
-| *               | *%                |
+| \*              | \*%               |
 | +=              | +%=               |
 | -=              | -%=               |
-| *=              | *%=               |
+| \*=             | \*%=              |
 
-```zig
-test "well defined overflow" {
-    var a: u8 = 255;
-    a +%= 1;
-    try expect(a == 0);
-}
-```
+<CodeBlock language="zig">{IntegerSafeOverflow}</CodeBlock>
