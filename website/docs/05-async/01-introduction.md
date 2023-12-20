@@ -2,8 +2,8 @@
 
 :::danger
 
-Zig's async features have regressed in the compiler and are not present in the
-0.11 Zig release.
+Zig's async features have regressed in the compiler and are not present in the 0.11
+Zig release, and they will likely not be featured in Zig 0.12 either.
 
 :::
 

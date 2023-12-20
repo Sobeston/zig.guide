@@ -1,3 +1,7 @@
+import CodeBlock from "@theme/CodeBlock";
+
+import TaggedUnion from "!!raw-loader!./17.union-tagged.zig";
+
 # Unions
 
 Zig's unions allow you to define types which store one value of many possible
@@ -6,8 +10,6 @@ typed fields; only one field may be active at one time.
 Bare union types do not have a guaranteed memory layout. Because of this, bare
 unions cannot be used to reinterpret memory. Accessing a field in a union which
 is not active is detectable illegal behaviour.
-
-<!--fail_test-->
 
 ```zig
 const Result = union {
@@ -36,26 +38,10 @@ captured values are immutable, but with the `|*value|` syntax, we can capture a
 pointer to the values instead of the values themselves. This allows us to use
 dereferencing to mutate the original value.
 
-```zig
-const Tag = enum { a, b, c };
-
-const Tagged = union(Tag) { a: u8, b: f32, c: bool };
-
-test "switch on tagged union" {
-    var value = Tagged{ .b = 1.5 };
-    switch (value) {
-        .a => |*byte| byte.* += 1,
-        .b => |*float| float.* *= 2,
-        .c => |*b| b.* = !b.*,
-    }
-    try expect(value.b == 3);
-}
-```
+<CodeBlock language="zig">{TaggedUnion}</CodeBlock>
 
 The tag type of a tagged union can also be inferred. This is equivalent to the
 Tagged type above.
-
-<!--no_test-->
 
 ```zig
 const Tagged = union(enum) { a: u8, b: f32, c: bool };

@@ -1,3 +1,7 @@
+import CodeBlock from "@theme/CodeBlock";
+
+import ArrayList from "!!raw-loader!./02.arraylist.zig";
+
 # Arraylist
 
 The
@@ -11,21 +15,4 @@ Here we will introduce the usage of the testing allocator. This is a special
 allocator that only works in tests and can detect memory leaks. In your code,
 use whatever allocator is appropriate.
 
-```zig
-const eql = std.mem.eql;
-const ArrayList = std.ArrayList;
-const test_allocator = std.testing.allocator;
-
-test "arraylist" {
-    var list = ArrayList(u8).init(test_allocator);
-    defer list.deinit();
-    try list.append('H');
-    try list.append('e');
-    try list.append('l');
-    try list.append('l');
-    try list.append('o');
-    try list.appendSlice(" World!");
-
-    try expect(eql(u8, list.items, "Hello World!"));
-}
-```
+<CodeBlock language="zig">{ArrayList}</CodeBlock>

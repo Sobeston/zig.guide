@@ -1,3 +1,9 @@
+import CodeBlock from "@theme/CodeBlock";
+
+import Struct from "!!raw-loader!./16.struct.zig";
+import StructDefaults from "!!raw-loader!./16.struct-defaults.zig";
+import StructDeclarations from "!!raw-loader!./16.struct-declarations.zig";
+
 # Structs
 
 Structs are Zig's most common kind of composite data type, allowing you to
@@ -6,22 +12,9 @@ about the in-memory order of fields in a struct or its size. Like arrays,
 structs are also neatly constructed with `T{}` syntax. Here is an example of
 declaring and filling a struct.
 
-```zig
-const Vec3 = struct { x: f32, y: f32, z: f32 };
+<CodeBlock language="zig">{Struct}</CodeBlock>
 
-test "struct usage" {
-    const my_vector = Vec3{
-        .x = 0,
-        .y = 100,
-        .z = 50,
-    };
-    _ = my_vector;
-}
-```
-
-Fields may be given defaults:
-
-<!--fail_test-->
+Struct fields cannot be implicitly uninitialised:
 
 ```zig
 test "missing struct field" {
@@ -41,17 +34,7 @@ error: missing field: 'y'
 
 Fields may be given defaults:
 
-```zig
-const Vec4 = struct { x: f32, y: f32, z: f32 = 0, w: f32 = undefined };
-
-test "struct defaults" {
-    const my_vector = Vec4{
-        .x = 25,
-        .y = -50,
-    };
-    _ = my_vector;
-}
-```
+<CodeBlock language="zig">{StructDefaults}</CodeBlock>
 
 Like enums, structs may also contain functions and declarations.
 
@@ -60,21 +43,4 @@ level of dereferencing is done automatically when accessing fields. Notice how,
 in this example, self.x and self.y are accessed in the swap function without
 needing to dereference the self pointer.
 
-```zig
-const Stuff = struct {
-    x: i32,
-    y: i32,
-    fn swap(self: *Stuff) void {
-        const tmp = self.x;
-        self.x = self.y;
-        self.y = tmp;
-    }
-};
-
-test "automatic dereference" {
-    var thing = Stuff{ .x = 10, .y = 20 };
-    thing.swap();
-    try expect(thing.x == 20);
-    try expect(thing.y == 10);
-}
-```
+<CodeBlock language="zig">{StructDeclarations}</CodeBlock>
