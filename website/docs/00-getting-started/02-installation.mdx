@@ -1,3 +1,7 @@
+---
+description: Installation instructions for the Zig programming language on Linux, Windows, and macOS.
+---
+
 import Tabs from "@theme/Tabs";
 import TabItem from "@theme/TabItem";
 
@@ -8,6 +12,7 @@ import TabItem from "@theme/TabItem";
     values={[
         {label: 'Linux', value: 'linux'},
         {label: 'Windows', value: 'windows'},
+        {label: 'macOS', value: 'macos'},
     ]}>
     <TabItem value="linux">
     Consider getting Zig from your distribution's [package manager](https://github.com/ziglang/zig/wiki/Install-Zig-from-a-Package-Manager). Most major linux distros package the latest Zig release.
@@ -95,6 +100,14 @@ import TabItem from "@theme/TabItem";
         Close your terminal and create a new one.
 
 
+    </TabItem>
+
+    <TabItem value="macos">
+    Consider getting Zig from a package manager such as [brew](https://brew.sh/).
+
+    ```
+    brew install zig
+    ```
     </TabItem>
 
 </Tabs>
