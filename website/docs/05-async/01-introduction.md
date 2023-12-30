@@ -1,3 +1,7 @@
+---
+pagination_prev: working-with-c/zig-cc
+---
+
 # Introduction
 
 :::danger

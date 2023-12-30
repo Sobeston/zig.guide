@@ -1,3 +1,8 @@
+---
+pagination_next: working-with-c/abi
+---
+
+
 # Generating Documentation
 
 The Zig compiler comes with automatic documentation generation. This can be

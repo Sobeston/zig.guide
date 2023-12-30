@@ -1,3 +1,7 @@
+---
+pagination_next: build-system/build-modes
+---
+
 # Advanced Formatting
 
 So far we have only covered formatting specifiers. Format strings actually
