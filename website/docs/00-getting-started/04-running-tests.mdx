@@ -1,0 +1,45 @@
+import CodeBlock from "@theme/CodeBlock";
+
+import Success from "!!raw-loader!./04.running-tests-success.zig";
+
+# Running Tests
+
+In this guide, code examples are often given as runnable tests. Before proceeding, make sure that you can run them successfully.
+
+### Success
+
+Save the following text as `test_pass.zig`, and run `zig test test_pass.zig`; you should read `All 1 tests  passed.` in your terminal.
+
+<CodeBlock language="zig">{Success}</CodeBlock>
+
+:::note
+
+Some code examples in this guide will have their imports at the top hidden, make sure to get them by clicking the copy button on the top-right of the code block.
+
+:::
+
+### Failure
+
+Now, save the following text as `test_fail.zig` and observe it fail.
+
+```zig
+const std = @import("std");
+const expect = std.testing.expect;
+
+test "always fails" {
+    try expect(false);
+}
+```
+
+Which should output something like:
+
+```
+Test [1/1] test.always fails... FAIL (TestUnexpectedResult)
+/usr/lib/zig/std/testing.zig:515:14: 0x2241ef in expect (test)
+    if (!ok) return error.TestUnexpectedResult;
+             ^
+[...]/test_fail:5:5: 0x224305 in test.always fails (test)
+    try expect(false);
+    ^
+0 passed; 0 skipped; 1 failed.
+```
