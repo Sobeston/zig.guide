@@ -39,3 +39,8 @@ test "crypto random numbers" {
     _ = .{ a, b, c, d };
 }
 ```
+
+:::info
+We can now use our knowledge of std.rand and [make a guessing game together](/posts/a-guessing-game).
+
+:::

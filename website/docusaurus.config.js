@@ -50,6 +50,7 @@ const config = {
           showLastUpdateTime: true,
         },
         blog: {
+          routeBasePath: 'posts',
           showReadingTime: true,
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
@@ -89,7 +90,7 @@ const config = {
             position: 'left',
             label: 'Guide',
           },
-          // { to: '/blog', label: 'Blog', position: 'left' },
+          { to: '/posts', label: 'Posts', position: 'left' },
           {
             href: 'https://github.com/sobeston/ziglearn',
             label: 'GitHub',
