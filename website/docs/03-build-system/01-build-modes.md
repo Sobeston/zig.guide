@@ -1,3 +1,7 @@
+---
+pagination_prev: standard-library/advanced-formatting
+---
+
 # Build Modes
 
 Zig provides four build modes, with debug being the default as it produces the
