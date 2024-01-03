@@ -767,6 +767,32 @@ const Tagged = union(enum) { a: u8, b: f32, c: bool };
 const Tagged2 = union(enum) { a: u8, b: f32, c: bool, none };
 ```
 
+# Boolean Rules
+
+Zig uses the type `bool` for booleans with two values: `true` and `false`.
+
+Logical ands and ors use the `and` and `or` keywords respectively.
+These operations short-circut.
+
+Note: logical negation is expressed with `!` (not a keyword).
+Furthermore, bitwise operators cannot be used with booleans.
+
+```
+test "boolean and and or with short circuits" {
+    const t = true;
+    const f = !t;
+    try expect(t or f);
+    try expect(t and !f);
+
+    // Optionals are covered in more detail later.
+    // Just know that in this case optional_to_induce_error.? is a runtime error.
+    const optional_to_induce_error: ?bool = null;
+    // None of the below cause an error thanks to short-circuiting.
+    try expect(t or optional_to_induce_error.?);
+    try expect(!(f and optional_to_induce_error.?));
+}
+```
+
 # Integer Rules
 
 Zig supports hex, octal and binary integer literals.
