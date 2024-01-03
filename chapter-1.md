@@ -784,7 +784,7 @@ test "boolean and and or with short circuits" {
     try expect(t or f);
     try expect(t and !f);
 
-    // Optionals are coverd in more detail later.
+    // Optionals are covered in more detail later.
     // Just know that in this case optional_to_induce_error.? is a runtime error.
     const optional_to_induce_error: ?bool = null;
     // None of the below cause an error thanks to short-circuiting.
