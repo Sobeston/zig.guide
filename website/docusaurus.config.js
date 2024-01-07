@@ -34,6 +34,14 @@ const config = {
     locales: ['en'],
   },
 
+  scripts: [
+    {
+      src: '//gc.zgo.at/count.js',
+      async: true,
+      "data-goatcounter": "https://ziglearn.goatcounter.com/count",
+    },
+  ],
+
   presets: [
     [
       'classic',
