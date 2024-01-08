@@ -23,7 +23,7 @@ Let's initialise *std.rand.DefaultPrng* with a 64 bit unsigned integer (`u64`). 
 
 ```zig
     var prng = std.rand.DefaultPrng.init(1625953);
-    const rand = &prng.random;
+    const rand = prng.random();
 
     try stdout.print(
         "not-so random number: {}\n",
