@@ -83,8 +83,8 @@ pub fn main() !void {
     var count: u8 = 1;
 
     while (count <= 100) : (count += 1) {
-        const div_3: u2 = @boolToInt(count % 3 == 0);
-        const div_5 = @boolToInt(count % 5 == 0);
+        const div_3: u2 = @intFromBool(count % 3 == 0);
+        const div_5 = @intFromBool(count % 5 == 0);
 
         switch (div_3 * 2 + div_5) {
             0b10 => try stdout.writeAll("Fizz\n"),
