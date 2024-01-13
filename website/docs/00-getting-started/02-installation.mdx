@@ -108,6 +108,44 @@ import TabItem from "@theme/TabItem";
     ```
     brew install zig
     ```
+
+    Alternatively, you could build zig from source. This will keep you up to date with the latest master branch of zig. Start by    cloning the `ziglang/zig` repo
+
+    ```bash
+    git clone https://github.com/ziglang/zig.git
+    ```
+    
+    then run these commands to get ready to build
+    
+    ```bash
+    cd zig
+    mkdir build
+    cd build
+    ```
+    
+    Then you can begin the build process, you will need to have `cmake` installed on your system. You will also need to make sure you have the `zstd` and `llvm` libraries installed on your system via `homebrew`.
+    ```bash
+   cmake .. -DZIG_STATIC_LLVM=ON -DCMAKE_PREFIX_PATH="$(brew --prefix llvm);$(brew --prefix zstd)"
+    ```
+
+    It is necessary to update the `CMAKE_PREFIX_PATH` as shown above when running your `cmake` command. Otherwise, `cmake` will not be able to properly link those libraries and the project will fail to compile.
+
+    Once this command has been run, you can run
+
+    ```bash
+    make install
+    ```
+
+    to begin building. Do note that this will take some time to complete.
+
+    Once this is done, you will want to add the zig binary to your system's `$PATH`. You can either manually copy the `zig` binary to `/usr/local/bin/zig` and the zig library directory to `/usr/local/lib/zig`.
+
+    Alternatively, you can just update your `.bashrc` to create an alias linking `zig` to wherever the zig binary actually resides.
+
+    ```bash
+    alias zig=/usr/local/zig/build/stage3/bin/zig
+    ```
+    
     </TabItem>
 
 </Tabs>
