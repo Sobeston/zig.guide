@@ -21,7 +21,7 @@ const config = {
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
   organizationName: 'sobeston', // Usually your GitHub org/user name.
-  projectName: 'ziglearn', // Usually your repo name.
+  projectName: 'zig.guide', // Usually your repo name.
 
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
@@ -53,7 +53,7 @@ const config = {
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl:
-            'https://github.com/Sobeston/ziglearn/tree/docusaurus/website/',
+            'https://github.com/Sobeston/zig.guide/tree/master/website/',
           showLastUpdateAuthor: true,
           showLastUpdateTime: true,
         },
@@ -63,7 +63,7 @@ const config = {
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl:
-            'https://github.com/Sobeston/ziglearn/tree/docusaurus/website/',
+            'https://github.com/Sobeston/zig.guide/tree/master/website/',
         },
         theme: {
           customCss: './src/css/custom.css',
@@ -88,7 +88,7 @@ const config = {
       navbar: {
         title: 'zig.guide',
         logo: {
-          alt: 'ziglearn.org Logo',
+          alt: 'zig.guide Logo',
           src: 'img/logo.svg',
         },
         items: [
@@ -100,7 +100,7 @@ const config = {
           },
           { to: '/posts', label: 'Posts', position: 'left' },
           {
-            href: 'https://github.com/sobeston/ziglearn',
+            href: 'https://github.com/sobeston/zig.guide',
             label: 'GitHub',
             position: 'right',
           },
@@ -114,7 +114,7 @@ const config = {
             items: [
               {
                 label: 'GitHub',
-                href: 'https://github.com/sobeston/ziglearn',
+                href: 'https://github.com/sobeston/zig.guide',
               },
               {
                 label: 'Mastodon',
