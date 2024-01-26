@@ -33,9 +33,9 @@ To your newly made `build.zig`, add the following lines.
 
 ```zig
 const table_helper = b.addModule("table-helper", .{
-    .source_file = .{ .path = "libs/table-helper/table-helper.zig" }
+    .root_source_file = .{ .path = "libs/table-helper/table-helper.zig" }
 });
-exe.addModule("table-helper", table_helper);
+exe.root_module.addImport("table-helper", table_helper);
 ```
 
 Now when run via `zig build`,
