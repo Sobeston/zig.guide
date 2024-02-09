@@ -9,9 +9,9 @@ const Tagged = union(Tag) { a: u8, b: f32, c: bool };
 test "switch on tagged union" {
     var value = Tagged{ .b = 1.5 };
     switch (value) {
-        .a => |*byte| byte.* += 1,
-        .b => |*float| float.* *= 2,
-        .c => |*b| b.* = !b.*,
+        .a => |*byteVal| byteVal.* += 1,
+        .b => |*floatVal| floatVal.* *= 2,
+        .c => |*boolVal| boolVal.* = !boolVal.*,
     }
     try expect(value.b == 3);
 }
