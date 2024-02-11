@@ -6,6 +6,6 @@ size as pointers.
 ```zig
 test "usize" {
     try expect(@sizeOf(usize) == @sizeOf(*u8));
-    try expect(@sizeOf(isize) == @sizeOf(*u8));
+    try expect(@sizeOf(isize) == @sizeOf(*i8));
 }
 ```
