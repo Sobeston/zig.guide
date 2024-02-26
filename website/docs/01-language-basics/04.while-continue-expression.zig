@@ -8,5 +8,5 @@ test "while with continue expression" {
     while (i <= 10) : (i += 1) {
         sum += i;
     }
-    try expect(sum == 55);
+    try expect(sum == 10);
 }
