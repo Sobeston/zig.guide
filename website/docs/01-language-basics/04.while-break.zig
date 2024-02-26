@@ -9,5 +9,5 @@ test "while with break" {
         if (i == 2) break;
         sum += i;
     }
-    try expect(sum == 1);
+    try expect(sum == 2);
 }
