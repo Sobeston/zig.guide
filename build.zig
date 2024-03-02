@@ -7,7 +7,7 @@ const version_path = std.fmt.comptimePrint(
 );
 
 /// Returns paths to all files inside version_path with a .zig extension
-fn getAllTestPaths(allocator: std.mem.Allocator) ![][]const u8 {
+fn getAllTestPaths(root_dir: std.fs.Dir, allocator: std.mem.Allocator) ![][]const u8 {
     var test_file_paths = std.ArrayList([]const u8).init(allocator);
     errdefer {
         for (test_file_paths.items) |test_path| allocator.free(test_path);
@@ -15,8 +15,8 @@ fn getAllTestPaths(allocator: std.mem.Allocator) ![][]const u8 {
     }
     {
         var dirs = try switch (zig_version.minor) {
-            11 => std.fs.cwd().openIterableDir(version_path, .{}),
-            else => std.fs.cwd().openDir(version_path, .{ .iterate = true }),
+            11 => root_dir.openIterableDir(version_path, .{}),
+            else => root_dir.openDir(version_path, .{ .iterate = true }),
         };
         defer dirs.close();
         var walker = try dirs.walk(allocator);
@@ -53,7 +53,7 @@ pub fn build(b: *std.Build) !void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
 
-    const test_file_paths = try getAllTestPaths(b.allocator);
+    const test_file_paths = try getAllTestPaths(b.build_root.handle, b.allocator);
     defer {
         for (test_file_paths) |test_path| b.allocator.free(test_path);
         b.allocator.free(test_file_paths);
