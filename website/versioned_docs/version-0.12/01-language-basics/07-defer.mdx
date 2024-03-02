@@ -1,0 +1,20 @@
+import CodeBlock from "@theme/CodeBlock";
+
+import Defer from "!!raw-loader!./07.defer.zig";
+import DeferMulti from "!!raw-loader!./07.defer-multi.zig";
+
+# Defer
+
+Defer is used to execute a statement while exiting the current block.
+
+<CodeBlock language="zig">{Defer}</CodeBlock>
+
+When there are multiple defers in a single block, they are executed in reverse
+order.
+
+<CodeBlock language="zig">{DeferMulti}</CodeBlock>
+
+Defer is useful to ensure that resources are cleaned up when they are no longer needed.
+Instead of needing to remember to manually free up the resource,
+you can add a defer statement right next to the statement which allocates that resource.
+

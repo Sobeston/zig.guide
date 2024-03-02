@@ -48,6 +48,7 @@ const config = {
       /** @type {import('@docusaurus/preset-classic').Options} */
       ({
         docs: {
+          includeCurrentVersion: false,
           routeBasePath: '/', // Serve the docs at the site's root
           sidebarPath: './sidebars.js',
           // Please change this to your repo.
@@ -56,6 +57,18 @@ const config = {
             'https://github.com/Sobeston/zig.guide/tree/master/website/',
           showLastUpdateAuthor: true,
           showLastUpdateTime: true,
+          lastVersion: "0.11",
+          versions: {
+            "0.12": {
+              label: 'Zig 0.12.0 (dev)',
+              path: 'master',
+
+            },
+            "0.11": {
+              label: "Zig 0.11.0",
+              path: '/',
+            }
+          },
         },
         blog: {
           routeBasePath: 'posts',
@@ -103,6 +116,11 @@ const config = {
             href: 'https://github.com/sobeston/zig.guide',
             label: 'GitHub',
             position: 'right',
+          },
+          {
+            type: 'docsVersionDropdown',
+            position: 'right',
+            dropdownActiveClassDisabled: true,
           },
         ],
       },
