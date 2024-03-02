@@ -7,7 +7,7 @@ type. This is known as sentinel termination. These follow the syntax `[N:t]T`,
 An example of a sentinel terminated array. The built-in
 [`@ptrCast`](https://ziglang.org/documentation/master/#ptrCast) is used to
 perform an unsafe type conversion. This shows us that the last element of the
-array is followed by a 0 byte.#
+array is followed by a 0 byte.
 
 ```zig
 test "sentinel termination" {
