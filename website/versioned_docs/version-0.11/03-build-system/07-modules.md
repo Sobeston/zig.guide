@@ -81,8 +81,7 @@ Version Date
 
 Zig does not yet have an official package manager. Some unofficial experimental
 package managers however do exist, namely
-[gyro](https://github.com/mattnite/gyro) and
-[zigmod](https://github.com/nektro/zigmod). The `table-helper` package is
+[gyro](https://github.com/mattnite/gyro). The `table-helper` package is
 designed to support both of them.
 
 Some good places to find packages include: [astrolabe.pm](https://astrolabe.pm),
