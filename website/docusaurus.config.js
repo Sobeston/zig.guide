@@ -138,6 +138,10 @@ const config = {
                 label: 'Mastodon',
                 href: 'https://hachyderm.io/@sobeston',
               },
+              {
+                label: 'Sponsor zig.guide',
+                href: 'https://github.com/sponsors/Sobeston',
+              },
             ],
           },
         ],
