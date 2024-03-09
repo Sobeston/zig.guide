@@ -14,8 +14,6 @@ Referencing is done with `&variable`, and dereferencing is done with
 
 Trying to set a `*T` to the value 0 is detectable illegal behaviour.
 
-<!--fail_test-->
-
 ```zig
 test "naughty pointer" {
     var x: u16 = 0;
@@ -33,8 +31,6 @@ Test [23/126] test.naughty pointer... thread 21598 panic: cast causes pointer to
 
 Zig also has const pointers, which cannot be used to modify the referenced data.
 Referencing a const variable will yield a const pointer.
-
-<!--fail_test-->
 
 ```zig
 test "const pointers" {

@@ -4,11 +4,11 @@ import TaggedUnion from "!!raw-loader!./17.union-tagged.zig";
 
 # Unions
 
-Zig's unions allow you to define types which store one value of many possible
+Zig's unions allow you to define types that store one value of many possible
 typed fields; only one field may be active at one time.
 
 Bare union types do not have a guaranteed memory layout. Because of this, bare
-unions cannot be used to reinterpret memory. Accessing a field in a union which
+unions cannot be used to reinterpret memory. Accessing a field in a union that
 is not active is detectable illegal behaviour.
 
 ```zig
@@ -31,7 +31,7 @@ test "simple union"...access of inactive union field
            ^
 ```
 
-Tagged unions are unions which use an enum to detect which field is active. Here
+Tagged unions are unions that use an enum to detect which field is active. Here
 we make use of payload capturing again, to switch on the tag type of a union
 while also capturing the value it contains. Here we use a _pointer capture_;
 captured values are immutable, but with the `|*value|` syntax, we can capture a

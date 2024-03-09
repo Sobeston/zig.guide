@@ -43,8 +43,8 @@ test "orelse unreachable" {
 }
 ```
 
-Payload capturing works in many places for optionals, meaning that in the event
-that it is non-null, we can "capture" its non-null value.
+Both `if` expressions and `while` loops support taking optional values as conditions,
+allowing you to "capture" the inner non-null value.
 
 Here we use an `if` optional payload capture; a and b are equivalent here.
 `if (b) |value|` captures the value of `b` (in the cases where `b` is not null),
