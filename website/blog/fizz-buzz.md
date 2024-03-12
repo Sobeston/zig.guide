@@ -54,7 +54,7 @@ Here we'll print all numbers from 1 to 100 (inclusive). The first argument of `p
     }
 ```
 
-Now we can should test `count` for being multiples of three or five, using if statements. Here we'll introduce the `%` operator, which performs modulus division between a numerator and denometer. When `a % b` equals zero, we know that `a` is a multiple of `b`.
+Now we can test `count` for being multiples of three or five, using if statements. Here we'll introduce the `%` operator, which performs modulus division between a numerator and denominator. When `a % b` equals zero, we know that `a` is a multiple of `b`.
 
 ```zig
     var count: u8 = 1;
