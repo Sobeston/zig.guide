@@ -4,9 +4,9 @@ It is a common idiom to have a struct type with a `next` function with an
 optional in its return type, so that the function may return a null to indicate
 that iteration is finished.
 
-[`std.mem.SplitIterator`](https://ziglang.org/documentation/master/std/#A;std:mem.SplitIterator)
+[`std.mem.SplitIterator`](https://ziglang.org/documentation/master/std/#std.mem.SplitIterator)
 (and the subtly different
-[`std.mem.TokenIterator`](https://ziglang.org/documentation/master/std/#A;std:mem.TokenIterator))
+[`std.mem.TokenIterator`](https://ziglang.org/documentation/master/std/#std.mem.TokenIterator))
 is an example of this pattern.
 
 ```zig

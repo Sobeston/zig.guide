@@ -13,10 +13,10 @@ test "sorting" {
 }
 ```
 
-[`std.sort.asc`](https://ziglang.org/documentation/master/std/#A;std:sort.asc)
-and [`.desc`](https://ziglang.org/documentation/master/std/#A;std:sort.desc)
+[`std.sort.asc`](https://ziglang.org/documentation/master/std/#std.sort.asc)
+and [`.desc`](https://ziglang.org/documentation/master/std/#std.sort.desc)
 create a comparison function for the given type at comptime; if non-numerical
 types should be sorted, the user must provide their own comparison function.
 
-[`std.mem.sort`](https://ziglang.org/documentation/master/std/#A;std:mem.sort)
+[`std.mem.sort`](https://ziglang.org/documentation/master/std/#std.mem.sort)
 has a best case of O(n), and an average and worst case of O(n*log(n)).

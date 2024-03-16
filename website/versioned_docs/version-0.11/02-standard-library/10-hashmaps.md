@@ -1,7 +1,7 @@
 # Hash Maps
 
 The standard library provides
-[`std.AutoHashMap`](https://ziglang.org/documentation/master/std/#A;std:AutoHashMap),
+[`std.AutoHashMap`](https://ziglang.org/documentation/master/std/#std.AutoHashMap),
 which lets you easily create a hash map type from a key type and a value type.
 These must be initiated with an allocator.
 
@@ -54,7 +54,7 @@ test "fetchPut" {
 }
 ```
 
-[`std.StringHashMap`](https://ziglang.org/documentation/master/std/#A;std:StringHashMap)
+[`std.StringHashMap`](https://ziglang.org/documentation/master/std/#std.StringHashMap)
 is also provided for when you need strings as keys.
 
 ```zig
@@ -72,16 +72,16 @@ test "string hashmap" {
 }
 ```
 
-[`std.StringHashMap`](https://ziglang.org/documentation/master/std/#A;std:StringHashMap)
+[`std.StringHashMap`](https://ziglang.org/documentation/master/std/#std.StringHashMap)
 and
-[`std.AutoHashMap`](https://ziglang.org/documentation/master/std/#A;std:AutoHashMap)
+[`std.AutoHashMap`](https://ziglang.org/documentation/master/std/#std.AutoHashMap)
 are just wrappers for
-[`std.HashMap`](https://ziglang.org/documentation/master/std/#A;std:HashMap). If
+[`std.HashMap`](https://ziglang.org/documentation/master/std/#std.HashMap). If
 these two do not fulfil your needs, using
-[`std.HashMap`](https://ziglang.org/documentation/master/std/#A;std:HashMap)
+[`std.HashMap`](https://ziglang.org/documentation/master/std/#std.HashMap)
 directly gives you much more control.
 
 If having your elements backed by an array is wanted behaviour, try
-[`std.ArrayHashMap`](https://ziglang.org/documentation/master/std/#A;std:ArrayHashMap)
+[`std.ArrayHashMap`](https://ziglang.org/documentation/master/std/#std.ArrayHashMap)
 and its wrapper
-[`std.AutoArrayHashMap`](https://ziglang.org/documentation/master/std/#A;std:AutoArrayHashMap).
+[`std.AutoArrayHashMap`](https://ziglang.org/documentation/master/std/#std.AutoArrayHashMap).
