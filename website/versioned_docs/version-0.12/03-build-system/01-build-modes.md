@@ -14,8 +14,8 @@ shortest compile times.
 | ReleaseSmall | No             | Yes, Size     |
 | ReleaseFast  | No             | Yes, Speed    |
 
-These may be enabled in `zig run` and `zig test` with the arguments
-`-O ReleaseSafe`, `-O ReleaseSmall` and `-O ReleaseFast`.
+These may be used with `zig run` and `zig test` with the arguments
+`-O ReleaseSafe`, `-O ReleaseSmall`, and `-O ReleaseFast`.
 
 Users are recommended to develop their software with runtime safety enabled,
 despite its small speed disadvantage.

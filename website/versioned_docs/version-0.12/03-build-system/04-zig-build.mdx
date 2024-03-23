@@ -1,0 +1,152 @@
+import CodeBlock from "@theme/CodeBlock";
+
+import Build from "!!raw-loader!./04.zig-build-hello/build.zig";
+import Hello from "!!raw-loader!./04.zig-build-hello/src/main.zig";
+
+# Zig Build
+
+The `zig build` system allows people to do more advanced things with their Zig
+projects, including:
+
+- Pulling in dependencies
+- Building multiple artifacts (e.g. building both a static and a dynamic library)
+- Providing additional configuration
+- Doing custom tasks at build time
+- Building with multiple steps (e.g. fetching and processing data before compiling)
+
+The Zig build system allows you to fulfil these more complex use cases, without
+bringing in any additional build tools (e.g. cmake, python), all while making good
+use of the compiler's in-built caching system.
+
+# Hello Zig Build
+
+Using the Zig build system requires writing some Zig code. Let's create a
+directory structure as follows.
+
+```
+.
+├── build.zig
+└── src
+    └── main.zig
+```
+
+Defining a build function as shown below acts as our entry point to the build
+system, which will allow us to define a graph of "steps" for the _build runner_
+to perform. Place this code into `build.zig`.
+
+<CodeBlock language="zig">{Build}</CodeBlock>
+
+Place your executable's entry point in `src/main.zig`.
+
+<CodeBlock language="zig">{Hello}</CodeBlock>
+
+We can now run `zig build` which will output our executable.
+
+```
+$ zig build
+$ ./zig-out/bin/hello
+Hello, Zig Build!
+```
+
+# Target & Optimisation Options
+
+Previously, we've used `zig build-exe` with `-target` and `-O` to tell Zig what
+target and optimisation mode to use. When using the Zig build system, these settings are
+now passed into `b.addExecutable`.
+
+Most Zig projects will want to use these standard options.
+
+```zig
+        .target = b.standardTargetOptions(.{}),
+        .optimize = b.standardOptimizeOption(.{}),
+```
+
+When using `standardTargetOptions` and `standardOptimizeOption` your target will
+default to native, meaning that the target of the executable will match the
+computer that it was built on. The optimisation mode will default to debug.
+
+If you run `zig build --help`, you can see that these functions have registered
+project-specific build options.
+
+```
+Project-Specific Options:
+  -Dtarget=[string]            The CPU architecture, OS, and ABI to build for
+  -Dcpu=[string]               Target CPU features to add or subtract
+  -Doptimize=[enum]            Prioritize performance, safety, or binary size (-O flag)
+                                 Supported Values:
+                                   Debug
+                                   ReleaseSafe
+                                   ReleaseFast
+                                   ReleaseSmall
+```
+
+We can now supply them via arguments, e.g.
+
+```
+zig build -Dtarget=x86_64-windows -Dcpu=x86_64_v3 -Doptimize=ReleaseSafe
+```
+
+# Adding an Option
+
+Thanks to the standard target and optimise options, we already have some useful
+build options. In more advanced projects, you may want to add your own
+project-specific options; here is a basic example of creating and using an option
+that changes the executable's name.
+
+```zig
+    const exe_name = b.option(
+        []const u8,
+        "exe_name",
+        "Name of the executable",
+    ) orelse "hello";
+
+    const exe = b.addExecutable(.{
+        .name = exe_name,
+        .root_source_file = .{ .path = "src/main.zig" },
+        .target = b.standardTargetOptions(.{}),
+        .optimize = b.standardOptimizeOption(.{}),
+    });
+```
+
+```
+$ zig build -Dtarget=x86_64-windows -Dexe_name="Hello!"
+$ file zig-out/bin/Hello\!.exe
+zig-out/bin/Hello!.exe: PE32+ executable (console) x86-64, for MS Windows, 7 sections
+```
+
+# Adding a Run Step
+
+We've previously used `zig run` as a convenient shortcut for calling `zig build-exe`
+and then running the resulting binary. We can quite easily do something similar
+using the Zig build system.
+
+```zig
+    b.installArtifact(exe);
+
+    const run_exe = b.addRunArtifact(exe);
+
+    const run_step = b.step("run", "Run the application");
+    run_step.dependOn(&run_exe.step);
+```
+
+```
+$ zig build run
+Hello, Zig Build!
+```
+
+The Zig build system uses a DAG (directed acyclic graph) of steps that it runs
+concurrently. Here we've created a step called "run", which depends on the
+`run_exe` step, which depends on our executable building.
+
+Let's have a look at the breakdown of steps in our build.
+
+```
+$ zig build run --summary all
+Hello, Zig Build!
+Build Summary: 3/3 steps succeeded
+run success
+└─ run hello success 471us MaxRSS:3M
+   └─ zig build-exe hello Debug native success 881ms MaxRSS:220M
+```
+
+We will see more advanced build graphs as we progress.

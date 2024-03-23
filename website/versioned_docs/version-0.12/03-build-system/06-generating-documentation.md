@@ -96,7 +96,7 @@ pub fn build(b: *std.build.Builder) void {
 }
 ```
 
-This generation is experimental, and often fails with complex examples. This is
+This generation is experimental and often fails with complex examples. This is
 used by the
 [standard library documentation](https://ziglang.org/documentation/master/std/).
 
