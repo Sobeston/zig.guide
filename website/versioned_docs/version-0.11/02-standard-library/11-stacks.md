@@ -1,6 +1,6 @@
 # Stacks
 
-[`std.ArrayList`](https://ziglang.org/documentation/master/std/#A;std:ArrayList)
+[`std.ArrayList`](https://ziglang.org/documentation/master/std/#std.ArrayList)
 provides the methods necessary to use it as a stack. Here's an example of
 creating a list of matched brackets.
 

@@ -1,7 +1,7 @@
 # Threads
 
 While Zig provides more advanced ways of writing concurrent and parallel code,
-[`std.Thread`](https://ziglang.org/documentation/master/std/#A;std:Thread) is
+[`std.Thread`](https://ziglang.org/documentation/master/std/#std.Thread) is
 available for making use of OS threads. Let's make use of an OS thread.
 
 ```zig

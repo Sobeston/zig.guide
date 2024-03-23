@@ -1,6 +1,6 @@
 # Crypto
 
-[`std.crypto`](https://ziglang.org/documentation/master/std/#A;std:crypto)
+[`std.crypto`](https://ziglang.org/documentation/master/std/#std.crypto)
 includes many cryptographic utilities, including:
 
 - AES (Aes128, Aes256)

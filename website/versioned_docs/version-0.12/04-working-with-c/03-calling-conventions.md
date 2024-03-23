@@ -6,7 +6,7 @@ the stack, and how), and how the return value is received.
 
 In Zig, the attribute `callconv` may be given to a function. The calling
 conventions available may be found in
-[std.builtin.CallingConvention](https://ziglang.org/documentation/master/std/#A;std:builtin.CallingConvention).
+[std.builtin.CallingConvention](https://ziglang.org/documentation/master/std/#std.builtin.CallingConvention).
 Here we make use of the cdecl calling convention.
 
 ```zig

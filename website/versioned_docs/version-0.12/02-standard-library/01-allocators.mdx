@@ -18,7 +18,7 @@ standard library - no allocations happen behind your back in the standard
 library.
 
 The most basic allocator is
-[`std.heap.page_allocator`](https://ziglang.org/documentation/master/std/#A;std:heap.page_allocator).
+[`std.heap.page_allocator`](https://ziglang.org/documentation/master/std/#std.heap.page_allocator).
 Whenever this allocator makes an allocation, it will ask your OS for entire
 pages of memory; an allocation of a single byte will likely reserve multiple
 kibibytes. As asking the OS for memory requires a system call, this is also
@@ -30,7 +30,7 @@ with a free - this is a common pattern for memory management in Zig.
 <CodeBlock language="zig">{AllocatorsAlloc}</CodeBlock>
 
 The
-[`std.heap.FixedBufferAllocator`](https://ziglang.org/documentation/master/std/#A;std:heap.FixedBufferAllocator)
+[`std.heap.FixedBufferAllocator`](https://ziglang.org/documentation/master/std/#std.heap.FixedBufferAllocator)
 is an allocator that allocates memory into a fixed buffer and does not make any
 heap allocations. This is useful when heap usage is not wanted, for example,
 when writing a kernel. It may also be considered for performance reasons. It
@@ -38,7 +38,7 @@ will give you the error `OutOfMemory` if it has run out of bytes.
 
 <CodeBlock language="zig">{AllocatorsFba}</CodeBlock>
 
-[`std.heap.ArenaAllocator`](https://ziglang.org/documentation/master/std/#A;std:heap.ArenaAllocator)
+[`std.heap.ArenaAllocator`](https://ziglang.org/documentation/master/std/#std.heap.ArenaAllocator)
 takes in a child allocator and allows you to allocate many times and only free
 once. Here, `.deinit()` is called on the arena, which frees all memory. Using
 `allocator.free` in this example would be a no-op (i.e. does nothing).
@@ -59,7 +59,7 @@ still be many times faster than page_allocator.
 <CodeBlock language="zig">{AllocatorsGpa}</CodeBlock>
 
 For high performance (but very few safety features!),
-[`std.heap.c_allocator`](https://ziglang.org/documentation/master/std/#A;std:heap.c_allocator)
+[`std.heap.c_allocator`](https://ziglang.org/documentation/master/std/#std.heap.c_allocator)
 may be considered. This,however, has the disadvantage of requiring linking Libc,
 which can be done with `-lc`.
 
