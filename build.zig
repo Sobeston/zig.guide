@@ -1,12 +1,16 @@
 const std = @import("std");
 const zig_version = @import("builtin").zig_version;
 
+// Used for any unversioned content (for now just /blog)
+const current_minor_version = 11;
+
 const version_path = std.fmt.comptimePrint(
     "website/versioned_docs/version-0.{}/",
     .{zig_version.minor},
 );
 
-/// Returns paths to all files inside version_path with a .zig extension
+/// Returns paths to all files inside version_path with a .zig extension.
+/// Also tests /blog when current_minor_version is detected.
 fn getAllTestPaths(root_dir: std.fs.Dir, allocator: std.mem.Allocator) ![][]const u8 {
     var test_file_paths = std.ArrayList([]const u8).init(allocator);
     errdefer {
@@ -24,7 +28,41 @@ fn getAllTestPaths(root_dir: std.fs.Dir, allocator: std.mem.Allocator) ![][]cons
             if (entry.kind != .file) continue;
             if (!std.mem.endsWith(u8, entry.path, ".zig")) continue;
 
-            try test_file_paths.append(try allocator.dupe(u8, entry.path));
+            const qualified_path = try std.fs.path.join(
+                allocator,
+                &[_][]const u8{ version_path, entry.path },
+            );
+
+            try test_file_paths.append(qualified_path);
+        }
+    }
+
+    if (zig_version.minor != current_minor_version) {
+        std.log.warn("Zig 0.{}.x detected, skipping testing /blog content (requires Zig 0.{}.x)", .{
+            zig_version.minor,
+            current_minor_version,
+        });
+    } else {
+        std.log.info("Zig 0.{}.x detected, testing /blog content", .{
+            zig_version.minor,
+        });
+        const blog_path = "website/blog";
+        var dirs = try switch (zig_version.minor) {
+            11 => root_dir.openIterableDir(blog_path, .{}),
+            else => root_dir.openDir(blog_path, .{ .iterate = true }),
+        };
+        defer dirs.close();
+        var walker = try dirs.walk(allocator);
+        while (try walker.next()) |entry| {
+            if (entry.kind != .file) continue;
+            if (!std.mem.endsWith(u8, entry.path, ".zig")) continue;
+
+            const qualified_path = try std.fs.path.join(
+                allocator,
+                &[_][]const u8{ blog_path, entry.path },
+            );
+
+            try test_file_paths.append(qualified_path);
         }
     }
 
@@ -38,7 +76,7 @@ fn generateMainTestFile(allocator: std.mem.Allocator, test_file_paths: [][]const
     try out_file.appendSlice("const std = @import(\"std\");\n");
     for (test_file_paths) |test_path| {
         try out_file.writer().print(
-            "pub const A{X} = @import(\"" ++ version_path ++ "/{s}\");\n",
+            "pub const A{X} = @import(\"{s}\");\n",
             .{ std.hash.Wyhash.hash(0, test_path), test_path },
         );
     }
@@ -67,7 +105,7 @@ pub fn build(b: *std.Build) !void {
 
     // copy our zig test files from version_path into zig-cache
     for (test_file_paths) |test_file_path| {
-        const path = b.fmt(version_path ++ "{s}", .{test_file_path});
+        const path = b.fmt("{s}", .{test_file_path});
         _ = write_files.addCopyFile(.{ .path = path }, path);
     }
 
@@ -81,4 +119,5 @@ pub fn build(b: *std.Build) !void {
 
     const test_step = b.step("test", "Run unit tests");
     test_step.dependOn(&run_unit_tests.step);
+    b.default_step = test_step;
 }

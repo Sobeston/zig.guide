@@ -9,7 +9,7 @@ We are going to make a program that randomly picks a number from 1 to 100 and as
 
 ### Getting a Random Number
 
-As Zig does not have a runtime, it does not manage a PRNG (pseudorandom number generator) for us. This means that we'll have to create our own PRNG and initialise it with a source of entropy. Let's start with a file called *a_guessing_game.zig*.
+As Zig does not have a runtime, it does not manage a PRNG (pseudorandom number generator) for us. This means that we'll have to create our PRNG and initialise it with a source of entropy. Let's start with a file called *a_guessing_game.zig*.
 
 ```zig
 const std = @import("std");
@@ -19,7 +19,7 @@ pub fn main() !void {
 
 ```
 
-Let's initialise *std.rand.DefaultPrng* with a 64 bit unsigned integer (`u64`). Our `rand` here allows us to access many useful utilities for our PRNG. Here we're asking our PRNG for a random number from 1 to 100, however if our PRNG is initialised with the same number every time our program will always print out the same number.
+Let's initialise *std.rand.DefaultPrng* with a 64 bit unsigned integer (`u64`). Our `rand` here allows us to access many useful utilities for our PRNG. Here we're asking our PRNG for a random number from 1 to 100, however, if our PRNG is initialised with the same number every time our program will always print out the same number.
 
 ```zig
     var prng = std.rand.DefaultPrng.init(1625953);
@@ -38,7 +38,7 @@ For a good source of entropy, it is best to initialise our PRNG with random byte
     try std.os.getrandom(std.mem.asBytes(&seed));
 
     var prng = std.rand.DefaultPrng.init(seed);
-    const rand = &prng.random;
+    const rand = prng.random();
 ```
 
 ### Taking User Input
@@ -53,7 +53,7 @@ pub fn main() !void {
     try std.os.getrandom(std.mem.asBytes(&seed));
 
     var prng = std.rand.DefaultPrng.init(seed);
-    const rand = &prng.random;
+    const rand = prng.random();
 
     const target_number = rand.intRangeAtMost(u8, 1, 100);
 
@@ -96,7 +96,7 @@ pub fn main() !void {
     try std.os.getrandom(std.mem.asBytes(&seed));
 
     var prng = std.rand.DefaultPrng.init(seed);
-    const rand = &prng.random;
+    const rand = prng.random();
 
     const target_number = rand.intRangeAtMost(u8, 1, 100);
 
