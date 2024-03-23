@@ -136,7 +136,7 @@ Hello, Zig Build!
 
 The Zig build system uses a DAG (directed acyclic graph) of steps that it runs
 concurrently. Here we've created a step called "run", which depends on the
-`run_exe` step, which depends on our executable building.
+`run_exe` step, which depends on our compile step.
 
 Let's have a look at the breakdown of steps in our build.
 
