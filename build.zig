@@ -119,5 +119,16 @@ pub fn build(b: *std.Build) !void {
 
     const test_step = b.step("test", "Run unit tests");
     test_step.dependOn(&run_unit_tests.step);
-    b.default_step = test_step;
+
+    const fmt_paths = try b.allocator.alloc([]const u8, 1);
+    fmt_paths[0] = b.build_root.path orelse ".";
+    const fmt = b.addFmt(.{ .paths = fmt_paths, .check = true });
+    const fmt_step = b.step("fmt", "Test all files for correct formatting");
+    fmt_step.dependOn(&fmt.step);
+
+    const test_with_fmt = b.step("test-with-fmt", "Run unit tests & test all files for correct formatting");
+    test_with_fmt.dependOn(test_step);
+    test_with_fmt.dependOn(fmt_step);
+
+    b.default_step = test_with_fmt;
 }
