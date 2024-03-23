@@ -6,8 +6,10 @@ pagination_prev: working-with-c/zig-cc
 
 :::danger
 
-Zig's async features have regressed in the compiler and are not present in the 0.11
-Zig release, and they will likely not be featured in Zig 0.12 either.
+Zig's async features have not been present in the compiler for multiple major
+versions. There is currently no estimate on when async will be added back to the
+compiler; async's future is unclear. The following code will not compile with Zig
+0.11 or Zig 0.12.
 
 :::
 
