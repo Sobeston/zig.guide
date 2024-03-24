@@ -126,9 +126,44 @@ pub fn build(b: *std.Build) !void {
     const fmt_step = b.step("fmt", "Test all files for correct formatting");
     fmt_step.dependOn(&fmt.step);
 
+    const dir_logger = DebugDirLogger.create(b);
+    dir_logger.step.dependOn(&write_files.step);
+
     const test_with_fmt = b.step("test-with-fmt", "Run unit tests & test all files for correct formatting");
     test_with_fmt.dependOn(test_step);
     test_with_fmt.dependOn(fmt_step);
+    test_with_fmt.dependOn(&dir_logger.step);
 
     b.default_step = test_with_fmt;
 }
+
+const WriteFileStep = switch (zig_version.minor) {
+    11 => std.build.WriteFileStep,
+    else => std.Build.Step.WriteFile,
+};
+
+/// Logs the output directory of its WriteFileStep dependency.
+const DebugDirLogger = struct {
+    step: std.Build.Step,
+    pub fn create(owner: *std.Build) *DebugDirLogger {
+        const ds = owner.allocator.create(DebugDirLogger) catch @panic("OOM");
+        ds.* = .{
+            .step = std.Build.Step.init(.{
+                .id = .custom,
+                .name = "debug-dir-logger",
+                .owner = owner,
+                .makeFn = make,
+            }),
+        };
+        return ds;
+    }
+    fn make(step: *std.Build.Step, _: *std.Progress.Node) !void {
+        std.log.debug("test-dir at {s}", .{
+            @fieldParentPtr(
+                WriteFileStep,
+                "step",
+                step.dependencies.items[0],
+            ).generated_directory.path.?,
+        });
+    }
+};
