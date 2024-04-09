@@ -108,6 +108,15 @@ that changes the executable's name.
     });
 ```
 
+If you now run `zig build --help`, we can see that the project-specific build
+options have been expanded to include `exe_name`.
+
+```
+Project-Specific Options:
+  -Dexe_name=[string]          Name of the executable
+  -Dtarget=[string]            The CPU architecture, OS, and ABI to build for
+```
+
 ```
 $ zig build -Dtarget=x86_64-windows -Dexe_name="Hello!"
 $ file zig-out/bin/Hello\!.exe
