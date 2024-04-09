@@ -158,12 +158,11 @@ const DebugDirLogger = struct {
         return ds;
     }
     fn make(step: *std.Build.Step, _: *std.Progress.Node) !void {
-        std.log.debug("test-dir at {s}", .{
-            @fieldParentPtr(
-                WriteFileStep,
-                "step",
-                step.dependencies.items[0],
-            ).generated_directory.path.?,
-        });
+        const dependency = step.dependencies.items[0];
+        if (dependency.id != .write_file) unreachable; // DebugDirLogger only supports a WriteFileStep dependency
+        std.log.debug(
+            "test-dir at {s}",
+            .{@fieldParentPtr(WriteFileStep, "step", dependency).generated_directory.path.?},
+        );
     }
 };
