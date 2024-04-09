@@ -15,7 +15,7 @@ versions of the compiler or any addons. Using `zig cc` and `zig c++` also makes
 use of Zig's caching system to speed up your workflow.
 
 Using Zig, one can easily construct a cross-compiling toolchain for languages
-which make use of a C and/or C++ compiler.
+that use a C and/or C++ compiler.
 
 Some examples in the wild:
 
