@@ -1,0 +1,46 @@
+import CodeBlock from "@theme/CodeBlock";
+
+import Struct from "!!raw-loader!./16.struct.zig";
+import StructDefaults from "!!raw-loader!./16.struct-defaults.zig";
+import StructDeclarations from "!!raw-loader!./16.struct-declarations.zig";
+
+# Structs
+
+Structs are Zig's most common kind of composite data type, allowing you to
+define types that can store a fixed set of named fields. Zig gives no guarantees
+about the in-memory order of fields in a struct or its size. Like arrays,
+structs are also neatly constructed with `T{}` syntax. Here is an example of
+declaring and filling a struct.
+
+<CodeBlock language="zig">{Struct}</CodeBlock>
+
+Struct fields cannot be implicitly uninitialised:
+
+```zig
+test "missing struct field" {
+    const my_vector = Vec3{
+        .x = 0,
+        .z = 50,
+    };
+    _ = my_vector;
+}
+```
+
+```
+error: missing field: 'y'
+    const my_vector = Vec3{
+                        ^
+```
+
+Fields may be given defaults:
+
+<CodeBlock language="zig">{StructDefaults}</CodeBlock>
+
+Like enums, structs may also contain functions and declarations.
+
+Structs have the unique property that when given a pointer to a struct, one
+level of dereferencing is done automatically when accessing fields. Notice how,
+in this example, `self.x` and `self.y` are accessed in the swap function without
+needing to dereference the self pointer.
+
+<CodeBlock language="zig">{StructDeclarations}</CodeBlock>

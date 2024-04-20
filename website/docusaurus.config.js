@@ -57,16 +57,19 @@ const config = {
             'https://github.com/Sobeston/zig.guide/tree/master/website/',
           showLastUpdateAuthor: true,
           showLastUpdateTime: true,
-          lastVersion: "0.11",
+          lastVersion: "0.12",
           versions: {
-            "0.12": {
-              label: 'Zig 0.12.0 (dev)',
+            "0.13": {
+              label: 'Zig 0.13.0 (dev)',
               path: 'master',
-
+            },
+            "0.12": {
+              label: 'Zig 0.12.0',
+              path: '/',
             },
             "0.11": {
               label: "Zig 0.11.0",
-              path: '/',
+              path: '/0.11',
             }
           },
         },

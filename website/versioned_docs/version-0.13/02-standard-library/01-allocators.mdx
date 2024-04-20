@@ -1,0 +1,69 @@
+---
+pagination_prev: language-basics/imports
+---
+
+import CodeBlock from "@theme/CodeBlock";
+
+import AllocatorsAlloc from "!!raw-loader!./01.allocators-alloc.zig";
+import AllocatorsFba from "!!raw-loader!./01.allocators-fba.zig";
+import AllocatorsArena from "!!raw-loader!./01.allocators-arena.zig";
+import AllocatorsCreate from "!!raw-loader!./01.allocators-create.zig";
+import AllocatorsGpa from "!!raw-loader!./01.allocators-gpa.zig";
+
+# Allocators
+
+The Zig standard library provides a pattern for allocating memory, which allows
+the programmer to choose precisely how memory allocations are done within the
+standard library - no allocations happen behind your back in the standard
+library.
+
+The most basic allocator is
+[`std.heap.page_allocator`](https://ziglang.org/documentation/master/std/#std.heap.page_allocator).
+Whenever this allocator makes an allocation, it will ask your OS for entire
+pages of memory; an allocation of a single byte will likely reserve multiple
+kibibytes. As asking the OS for memory requires a system call, this is also
+extremely inefficient for speed.
+
+Here, we allocate 100 bytes as a `[]u8`. Notice how defer is used in conjunction
+with a free - this is a common pattern for memory management in Zig.
+
+<CodeBlock language="zig">{AllocatorsAlloc}</CodeBlock>
+
+The
+[`std.heap.FixedBufferAllocator`](https://ziglang.org/documentation/master/std/#std.heap.FixedBufferAllocator)
+is an allocator that allocates memory into a fixed buffer and does not make any
+heap allocations. This is useful when heap usage is not wanted, for example,
+when writing a kernel. It may also be considered for performance reasons. It
+will give you the error `OutOfMemory` if it has run out of bytes.
+
+<CodeBlock language="zig">{AllocatorsFba}</CodeBlock>
+
+[`std.heap.ArenaAllocator`](https://ziglang.org/documentation/master/std/#std.heap.ArenaAllocator)
+takes in a child allocator and allows you to allocate many times and only free
+once. Here, `.deinit()` is called on the arena, which frees all memory. Using
+`allocator.free` in this example would be a no-op (i.e. does nothing).
+
+<CodeBlock language="zig">{AllocatorsArena}</CodeBlock>
+
+`alloc` and `free` are used for slices. For single items, consider using
+`create` and `destroy`.
+
+<CodeBlock language="zig">{AllocatorsCreate}</CodeBlock>
+
+The Zig standard library also has a general-purpose allocator. This is a safe
+allocator that can prevent double-free, use-after-free and can detect leaks.
+Safety checks and thread safety can be turned off via its configuration struct
+(left empty below). Zig's GPA is designed for safety over performance, but may
+still be many times faster than page_allocator.
+
+<CodeBlock language="zig">{AllocatorsGpa}</CodeBlock>
+
+For high performance (but very few safety features!),
+[`std.heap.c_allocator`](https://ziglang.org/documentation/master/std/#std.heap.c_allocator)
+may be considered. This,however, has the disadvantage of requiring linking Libc,
+which can be done with `-lc`.
+
+Benjamin Feng's talk
+[_What's a Memory Allocator Anyway?_](https://www.youtube.com/watch?v=vHWiDx_l4V0)
+goes into more detail on this topic, and covers the implementation of
+allocators.

@@ -1,0 +1,128 @@
+---
+description: Installation instructions for the Zig programming language on Linux, Windows, and macOS.
+---
+
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+
+# Installation
+
+<Tabs
+    defaultValue="linux"
+    values={[
+        {label: 'Linux', value: 'linux'},
+        {label: 'Windows', value: 'windows'},
+        {label: 'macOS', value: 'macos'},
+    ]}>
+    <TabItem value="linux">
+    Consider getting Zig from your distribution's [package manager](https://github.com/ziglang/zig/wiki/Install-Zig-from-a-Package-Manager). Most major linux distros package the latest Zig release.
+
+    ### Installing manually
+
+    1. [Download](https://ziglang.org/download/#release-0.12.0) a prebuilt version of Zig.
+
+        Choose a build of Zig 0.12 for Linux that matches your CPU architecture. If you're unsure which architecture you're using, this can be found with:
+
+        ```bash
+        uname -m
+        ```
+
+    2. Extract the archive using tar, e.g.
+
+        ```bash
+        tar xf zig-linux-x86_64-0.12.0.tar.xz
+        ```
+
+    3. Add the location of your Zig binary to your path, e.g.
+
+        ```bash
+        echo 'export PATH="$HOME/zig-linux-x86_64-0.12.0:$PATH"' >> ~/.bashrc
+        ```
+    </TabItem>
+    <TabItem value="windows">
+    Consider getting Zig from a package manager such as [chocolatey](https://chocolatey.org/), [scoop](https://scoop.sh/), or [winget](https://learn.microsoft.com/en-us/windows/package-manager/winget/#install-winget).
+
+    All commands shown are to be used inside Powershell.
+
+    ```powershell
+    choco install zig
+    ```
+    ```
+    winget install zig.zig
+    ```
+    ```
+    scoop install zig
+    ```
+
+    ### Installing manually
+
+    1. [Download](https://ziglang.org/download/#release-0.12.0) a prebuilt version of Zig.
+
+        Choose a build of Zig 0.12 for Windows that matches your CPU architecture. Most Windows systems use `x86_64`, also known as `AMD64`. If you're unsure which architecture you're using, this can be found with:
+
+        ```powershell
+        $Env:PROCESSOR_ARCHITECTURE
+        ```
+
+    2. Extract Zig.
+
+    3. Add Zig to your path:
+
+        <Tabs
+        defaultValue="user"
+        values={[
+            {label: 'Current User', value: 'user'},
+            {label: 'System Wide', value: 'system'},
+        ]}>
+        <TabItem value="user">
+
+        ```powershell
+        [Environment]::SetEnvironmentVariable(
+            "Path",
+            [Environment]::GetEnvironmentVariable("Path", "User") + ";C:\_\zig-windows-_",
+            "User"
+        )
+        ```
+        </TabItem>
+
+        <TabItem value="system">
+
+        ```powershell
+        [Environment]::SetEnvironmentVariable(
+            "Path",
+            [Environment]::GetEnvironmentVariable("Path", "Machine") + ";C:\_\zig-windows-_",
+            "Machine"
+        )
+        ```
+        </TabItem>
+        </Tabs>
+
+        Close your terminal and create a new one.
+
+
+    </TabItem>
+
+    <TabItem value="macos">
+    Consider getting Zig from a package manager such as [brew](https://brew.sh/).
+
+    ```
+    brew install zig
+    ```
+    </TabItem>
+
+</Tabs>
+
+### Verifying your install
+
+Verify your installation with `zig version`. The output should look like this:
+
+```
+$ zig version
+0.12.0
+```
+
+### Extras
+
+For completions and go-to-definition in your editor, consider installing the [Zig Language Server](https://github.com/zigtools/zls/#installation).
+
+Consider joining a [Zig community](https://github.com/ziglang/zig/wiki/Community).
