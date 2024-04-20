@@ -31,11 +31,11 @@ Let's initialise *std.rand.DefaultPrng* with a 64 bit unsigned integer (`u64`). 
     );
 ```
 
-For a good source of entropy, it is best to initialise our PRNG with random bytes provided by the OS. Let's ask the OS for some. As Zig doesn't let us declare a variable without a value we've had to give our seed variable the value of `undefined`, which is a special value that coerces to any type. The function *std.os.getrandom* takes in a *slice* of bytes, where a slice is a pointer to a buffer whose length is known at run time. Because of this we've used *std.mem.asBytes* to turn our pointer to a `u64` into a slice of bytes. If *getrandom* succeeds it will fill our seed variable with a random value which we can then initialise the PRNG with.
+For a good source of entropy, it is best to initialise our PRNG with random bytes provided by the OS. Let's ask the OS for some. As Zig doesn't let us declare a variable without a value we've had to give our seed variable the value of `undefined`, which is a special value that coerces to any type. The function *std.posix.getrandom* takes in a *slice* of bytes, where a slice is a pointer to a buffer whose length is known at run time. Because of this we've used *std.mem.asBytes* to turn our pointer to a `u64` into a slice of bytes. If *getrandom* succeeds it will fill our seed variable with a random value which we can then initialise the PRNG with.
 
 ```zig
     var seed: u64 = undefined;
-    try std.os.getrandom(std.mem.asBytes(&seed));
+    try std.posix.getrandom(std.mem.asBytes(&seed));
 
     var prng = std.rand.DefaultPrng.init(seed);
     const rand = prng.random();
@@ -50,7 +50,7 @@ const std = @import("std");
 
 pub fn main() !void {
     var seed: u64 = undefined;
-    try std.os.getrandom(std.mem.asBytes(&seed));
+    try std.posix.getrandom(std.mem.asBytes(&seed));
 
     var prng = std.rand.DefaultPrng.init(seed);
     const rand = prng.random();
@@ -93,7 +93,7 @@ const std = @import("std");
 
 pub fn main() !void {
     var seed: u64 = undefined;
-    try std.os.getrandom(std.mem.asBytes(&seed));
+    try std.posix.getrandom(std.mem.asBytes(&seed));
 
     var prng = std.rand.DefaultPrng.init(seed);
     const rand = prng.random();
