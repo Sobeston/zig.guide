@@ -24,7 +24,7 @@ test "orelse" {
     var a: ?f32 = null;
     var b = a orelse 0;
     try expect(b == 0);
-    try expect(@TypeOf(b) == f32);
+    try expect(@TypeOf(b) == comptime_int);
 }
 ```
 
