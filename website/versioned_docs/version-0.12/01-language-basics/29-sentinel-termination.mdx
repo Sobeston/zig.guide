@@ -17,7 +17,7 @@ An example of a sentinel terminated array. The built-in
 perform an unsafe type conversion. This shows us that the last element of the
 array is followed by a 0 byte.
 
-<CodeBlock language="zig">{SentinelTerminationPtrCast}</CodeBlock>
+<CodeBlock language="zig">{SentinelTerminationPtrcast}</CodeBlock>
 
 The types of string literals is `*const [N:0]u8`, where N is the length of the
 string. This allows string literals to coerce to sentinel terminated slices, and
