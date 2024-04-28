@@ -42,6 +42,14 @@ const config = {
     },
   ],
 
+  plugins: [[require.resolve('docusaurus-lunr-search'), {
+    indexBaseUrl: true,
+    maxHits: 7,
+    disableVersioning: true,
+    excludeRoutes: [
+      '/master/**/*', '/0.11/**/*',
+    ],
+  }]],
   presets: [
     [
       'classic',
