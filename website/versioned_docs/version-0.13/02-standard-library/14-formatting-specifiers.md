@@ -1,6 +1,6 @@
 # Formatting specifiers
 
-[`std.fmt`](https://ziglang.org/documentation/master/std/#std;fmt) provides
+[`std.fmt`](https://ziglang.org/documentation/master/std/#std.fmt) provides
 options for formatting various data types.
 
 `std.fmt.fmtSliceHexLower` and `std.fmt.fmtSliceHexUpper` provide hex formatting
