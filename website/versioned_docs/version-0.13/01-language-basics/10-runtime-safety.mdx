@@ -16,7 +16,7 @@ For example, runtime safety protects you from out of bounds indices.
 ```zig
 test "out of bounds" {
     const a = [3]u8{ 1, 2, 3 };
-    var index: u8 = 5;
+    const index: u8 = 5;
     const b = a[index];
     _ = b;
 }
@@ -37,7 +37,7 @@ function
 test "out of bounds, no safety" {
     @setRuntimeSafety(false);
     const a = [3]u8{ 1, 2, 3 };
-    var index: u8 = 5;
+    const index: u8 = 5;
     const b = a[index];
     _ = b;
 }
