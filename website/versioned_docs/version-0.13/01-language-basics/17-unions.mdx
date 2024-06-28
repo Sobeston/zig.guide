@@ -12,9 +12,15 @@ unions cannot be used to reinterpret memory. Accessing a field in a union that
 is not active is detectable illegal behaviour.
 
 ```zig
+const Result = union {
+    int: i64,
+    float: f64,
+    bool: bool,
+};
+
 test "simple union" {
     var result = Result{ .int = 1234 };
-    result = Result{ .float = 12.34 }; 
+    result.float = Result{12.34 }; 
 ```
 
 ```
