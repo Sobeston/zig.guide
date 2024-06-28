@@ -20,8 +20,7 @@ const Result = union {
 
 test "simple union" {
     var result = Result{ .int = 1234 };
-    result.float = 12.34;
-}
+    result.float = Result{12.34 }; 
 ```
 
 ```
