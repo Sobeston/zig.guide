@@ -14,8 +14,8 @@ literals in Zig coerce to `[]const u8`.
 
 Here, the syntax `x[n..m]` is used to create a slice from an array. This is
 called **slicing**, and creates a slice of the elements starting at `x[n]` and
-ending at `x[m - 1]`. This example uses a const slice, as the values to which
-the slice points need not be modified.
+ending at `x[m - 1]`. This example uses a const slice, as the values
+pointed by the slice do not need to be modified.
 
 <CodeBlock language="zig">{Slices}</CodeBlock>
 
