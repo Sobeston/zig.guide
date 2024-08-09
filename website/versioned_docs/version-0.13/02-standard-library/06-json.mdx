@@ -1,0 +1,20 @@
+import CodeBlock from "@theme/CodeBlock";
+
+import JsonParse from "!!raw-loader!./06.json-parse.zig";
+import JsonStringify from "!!raw-loader!./06.json-stringify.zig";
+import JsonStringifyStrings from "!!raw-loader!./06.json-stringify-strings.zig";
+
+# JSON
+
+Let's parse a JSON string into a struct type, using the streaming parser.
+
+<CodeBlock language="zig">{JsonParse}</CodeBlock>
+
+And using stringify to turn arbitrary data into a string.
+
+<CodeBlock language="zig">{JsonStringify}</CodeBlock>
+
+The JSON parser requires an allocator for javascript's string, array, and map
+types.
+
+<CodeBlock language="zig">{JsonStringifyStrings}</CodeBlock>
