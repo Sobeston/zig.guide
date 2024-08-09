@@ -41,6 +41,7 @@ test "out of bounds, no safety" {
     var index: u8 = 5;
     const b = a[index];
     _ = b;
+    _ = &index;
 }
 ```
 
