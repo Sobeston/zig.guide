@@ -1,0 +1,76 @@
+import CodeBlock from "@theme/CodeBlock";
+
+import Writer from "!!raw-loader!./04.readers-and-writers-writer.zig";
+import Reader from "!!raw-loader!./04.readers-and-writers-reader.zig";
+import Custom from "!!raw-loader!./04.readers-and-writers-custom.zig";
+
+# Readers and Writers
+
+[`std.io.Writer`](https://ziglang.org/documentation/master/std/#std.io.Writer)
+and
+[`std.io.Reader`](https://ziglang.org/documentation/master/std/#std.io.Reader)
+provide standard ways of making use of IO. `std.ArrayList(u8)` has a `writer`
+method which gives us a writer. Let's use it.
+
+<CodeBlock language="zig">{Writer}</CodeBlock>
+
+Here we will use a reader to copy the file's contents into an allocated buffer.
+The second argument of
+[`readAllAlloc`](https://ziglang.org/documentation/master/std/#std.io.Reader.readAllAlloc)
+is the maximum size that it may allocate; if the file is larger than this, it
+will return `error.StreamTooLong`.
+
+<CodeBlock language="zig">{Reader}</CodeBlock>
+
+A common usecase for readers is to read until the next line (e.g. for user
+input). Here we will do this with the
+[`std.io.getStdIn()`](https://ziglang.org/documentation/master/std/#std.io.getStdIn)
+file.
+
+{/* Code snippet not tested as it uses stdin/stdout */}
+
+```zig
+// hide-start
+const std = @import("std");
+const expect = std.testing.expect;
+const eql = std.mem.eql;
+// hide-end
+
+fn nextLine(reader: anytype, buffer: []u8) !?[]const u8 {
+    var line = (try reader.readUntilDelimiterOrEof(
+        buffer,
+        '\n',
+    )) orelse return null;
+    // trim annoying windows-only carriage return character
+    if (@import("builtin").os.tag == .windows) {
+        return std.mem.trimRight(u8, line, "\r");
+    } else {
+        return line;
+    }
+}
+
+test "read until next line" {
+    const stdout = std.io.getStdOut();
+    const stdin = std.io.getStdIn();
+
+    try stdout.writeAll(
+        \\ Enter your name:
+    );
+
+    var buffer: [100]u8 = undefined;
+    const input = (try nextLine(stdin.reader(), &buffer)).?;
+    try stdout.writer().print(
+        "Your name is: \"{s}\"\n",
+        .{input},
+    );
+}
+```
+
+An
+[`std.io.Writer`](https://ziglang.org/documentation/master/std/#std.io.Writer)
+type consists of a context type, error set, and a write function. The write
+function must take in the context type and a byte slice. The write function must
+also return an error union of the Writer type's error set and the number of
+bytes written. Let's create a type that implements a writer.
+
+<CodeBlock language="zig">{Custom}</CodeBlock>

@@ -2,7 +2,7 @@ const std = @import("std");
 const zig_version = @import("builtin").zig_version;
 
 // Used for any unversioned content (for now just /blog)
-const current_minor_version = 12;
+const current_minor_version = 13;
 
 const version_path = std.fmt.comptimePrint(
     "website/versioned_docs/version-0.{}/",
@@ -106,7 +106,8 @@ pub fn build(b: *std.Build) !void {
     // copy our zig test files from version_path into zig-cache
     for (test_file_paths) |test_file_path| {
         const path = b.fmt("{s}", .{test_file_path});
-        _ = write_files.addCopyFile(.{ .path = path }, path);
+        // TODO: don't use cwd_relative...
+        _ = write_files.addCopyFile(.{ .cwd_relative = path }, path);
     }
 
     const unit_tests = b.addTest(.{
@@ -157,7 +158,7 @@ const DebugDirLogger = struct {
         };
         return ds;
     }
-    fn make(step: *std.Build.Step, _: *std.Progress.Node) !void {
+    fn make(step: *std.Build.Step, _: std.Progress.Node) !void {
         const dependency = step.dependencies.items[0];
         if (dependency.id != .write_file) unreachable; // DebugDirLogger only supports a WriteFileStep dependency
         std.log.debug(

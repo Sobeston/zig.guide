@@ -1,0 +1,72 @@
+import CodeBlock from "@theme/CodeBlock";
+
+import ErrorSet from "!!raw-loader!./08.error-set.zig";
+import ErrorSetCoercion from "!!raw-loader!./08.error-set-coercion.zig";
+import ErrorUnion from "!!raw-loader!./08.error-union.zig";
+import ErrorPayloadCapture from "!!raw-loader!./08.error-payload-capture.zig";
+import ErrorTry from "!!raw-loader!./08.error-try.zig";
+import Errdefer from "!!raw-loader!./08.errdefer.zig";
+import ErrorSetInferred from "!!raw-loader!./08.error-set-inferred.zig";
+import ErrorSetMerge from "!!raw-loader!./08.error-set-merge.zig";
+
+# Errors
+
+An error set is like an enum (details on Zig's enums later), where each error in
+the set is a value. There are no exceptions in Zig; errors are values. Let's
+create an error set.
+
+<CodeBlock language="zig">{ErrorSet}</CodeBlock>
+
+Error sets coerce to their supersets.
+
+<CodeBlock language="zig">{ErrorSetCoercion}</CodeBlock>
+
+An error set type and another type can be combined with the `!` operator to form
+an error union type. Values of these types may be an error value or a value of
+the other type.
+
+Let's create a value of an error union type. Here
+[`catch`](https://ziglang.org/documentation/master/#catch) is used, which is
+followed by an expression which is evaluated when the value preceding it is an
+error. The catch here is used to provide a fallback value, but could instead be
+a [`noreturn`](https://ziglang.org/documentation/master/#noreturn) - the type of
+`return`, `while (true)` and others.
+
+<CodeBlock language="zig">{ErrorUnion}</CodeBlock>
+
+Functions often return error unions. Here's one using a catch, where the `|err|`
+syntax receives the value of the error. This is called **payload capturing**,
+and is used similarly in many places. We'll talk about it in more detail later
+in the chapter. Side note: some languages use similar syntax for lambdas - this
+is not true for Zig.
+
+<CodeBlock language="zig">{ErrorPayloadCapture}</CodeBlock>
+
+`try x` is a shortcut for `x catch |err| return err`, and is commonly used where
+handling an error isn't appropriate. Zig's
+[`try`](https://ziglang.org/documentation/master/#try) and
+[`catch`](https://ziglang.org/documentation/master/#catch) are unrelated to
+try-catch in other languages.
+
+<CodeBlock language="zig">{ErrorTry}</CodeBlock>
+
+[`errdefer`](https://ziglang.org/documentation/master/#errdefer) works like
+[`defer`](https://ziglang.org/documentation/master/#defer), but only executing
+when the function is returned from with an error inside of the
+[`errdefer`](https://ziglang.org/documentation/master/#errdefer)'s block.
+
+<CodeBlock language="zig">{Errdefer}</CodeBlock>
+
+Error unions returned from a function can have their error sets inferred by not
+having an explicit error set. This inferred error set contains all possible
+errors that the function may return.
+
+<CodeBlock language="zig">{ErrorSetInferred}</CodeBlock>
+
+Error sets can be merged.
+
+<CodeBlock language="zig">{ErrorSetMerge}</CodeBlock>
+
+`anyerror` is the global error set, which due to being the superset of all error
+sets, can have an error from any set coerced to it. Its usage should be
+generally avoided.

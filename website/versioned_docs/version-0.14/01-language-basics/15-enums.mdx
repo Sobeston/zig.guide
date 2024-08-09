@@ -1,0 +1,43 @@
+import CodeBlock from "@theme/CodeBlock";
+
+import EnumOrdinal from "!!raw-loader!./15.enum-ordinal.zig";
+import EnumOrdinalOverride from "!!raw-loader!./15.enum-ordinal-override.zig";
+import EnumMethods from "!!raw-loader!./15.enum-methods.zig";
+import EnumDeclarations from "!!raw-loader!./15.enum-declarations.zig";
+
+# Enums
+
+Zig's enums allow you to define types with a restricted set of named values.
+
+Let's declare an enum.
+
+```zig
+const Direction = enum { north, south, east, west };
+```
+
+Enums types may have specified (integer) tag types.
+
+```zig
+const Value = enum(u2) { zero, one, two };
+```
+
+Enum's ordinal values start at 0. They can be accessed with the built-in
+function
+[`@intFromEnum`](https://ziglang.org/documentation/master/#intFromEnum).
+
+<CodeBlock language="zig">{EnumOrdinal}</CodeBlock>
+
+Values can be overridden, with the next values continuing from there.
+
+<CodeBlock language="zig">{EnumOrdinalOverride}</CodeBlock>
+
+Enums can be given methods. These act as namespaced functions that can be called
+with the dot syntax.
+
+<CodeBlock language="zig">{EnumMethods}</CodeBlock>
+
+Enums can also be given `var` and `const` declarations. These act as namespaced
+globals and their values are unrelated and unattached to instances of the enum
+type.
+
+<CodeBlock language="zig">{EnumDeclarations}</CodeBlock>
