@@ -1,0 +1,31 @@
+import CodeBlock from "@theme/CodeBlock";
+
+import IteratorsSplit from "!!raw-loader!./13.iterators-split.zig";
+import IteratorsLooping from "!!raw-loader!./13.iterators-looping.zig";
+import IteratorsCustom from "!!raw-loader!./13.iterators-custom.zig";
+
+# Iterators
+
+It is a common idiom to have a struct type with a `next` function with an
+optional in its return type, so that the function may return a null to indicate
+that iteration is finished.
+
+[`std.mem.SplitIterator`](https://ziglang.org/documentation/master/std/#std.mem.SplitIterator)
+(and the subtly different
+[`std.mem.TokenIterator`](https://ziglang.org/documentation/master/std/#std.mem.TokenIterator))
+is an example of this pattern.
+
+<CodeBlock language="zig">{IteratorsSplit}</CodeBlock>
+
+Some iterators have a `!?T` return type, as opposed to ?T. `!?T` requires that
+we unpack the error union before the optional, meaning that the work done to get
+to the next iteration may error. Here is an example of doing this with a loop.
+[`cwd`](https://ziglang.org/documentation/master/std/#std;fs.cwd) has to be
+opened with iterate permissions for the directory iterator to work.
+
+<CodeBlock language="zig">{IteratorsLooping}</CodeBlock>
+
+Here we will implement a custom iterator. This will iterate over a slice of
+strings, yielding the strings which contain a given string.
+
+<CodeBlock language="zig">{IteratorsCustom}</CodeBlock>
