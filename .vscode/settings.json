@@ -1,0 +1,9 @@
+{
+    "files.exclude": {
+        "**/version-0.11/**": true,
+        "**/version-0.12/**": true
+    },
+    "search.exclude": {
+        "**/i18n/**": true
+    }
+}
