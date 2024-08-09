@@ -18,8 +18,8 @@ this example, the variables x and y are equivalent.
 
 <CodeBlock language="zig">{ComptimeBlocks}</CodeBlock>
 
-Integer literals are of the type `comptime_int`. These are special in that they
-have no size (they cannot be used at runtime!), and they have arbitrary
+Integer literals are of the type `comptime_int`. These are special in a way that
+they have no size (they cannot be used at runtime!), and they have arbitrary
 precision. `comptime_int` values coerce to any integer type that can hold them.
 They also coerce to floats. Character literals are of this type.
 
