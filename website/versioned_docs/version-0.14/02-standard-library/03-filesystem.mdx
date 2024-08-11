@@ -20,6 +20,9 @@ We can get various information about files by using `.stat()` on them. `Stat`
 also contains fields for .inode and .mode, but they are not tested here as they
 rely on the current OS' types.
 
+When the Enum type is known from context, it can be omitted, so we can
+compare `stat.kind` to `.file` instead of `Kind.file`.
+
 <CodeBlock language="zig">{Stat}</CodeBlock>
 
 We can make directories and iterate over their contents. Here we will use an
