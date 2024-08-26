@@ -30,8 +30,8 @@ The syntax `x[n..]` can also be used when you want to slice to the end.
 ```zig
 test "slices 3" {
     var array = [_]u8{ 1, 2, 3, 4, 5 };
-    var slice = array[0..];
-    _ = slice;
+    const slice = array[0..];
+    try expect(slice.len == array.len);
 }
 ```
 
