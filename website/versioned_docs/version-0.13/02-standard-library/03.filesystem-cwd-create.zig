@@ -10,8 +10,7 @@ test "createFile, write, seekTo, read" {
     );
     defer file.close();
 
-    const bytes_written = try file.writeAll("Hello File!");
-    _ = bytes_written;
+    try file.writeAll("Hello File!");
 
     var buffer: [100]u8 = undefined;
     try file.seekTo(0);
