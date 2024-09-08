@@ -102,7 +102,7 @@ that changes the executable's name.
 
     const exe = b.addExecutable(.{
         .name = exe_name,
-        .root_source_file = .{ .path = "src/main.zig" },
+        .root_source_file = b.path("src/main.zig"),
         .target = b.standardTargetOptions(.{}),
         .optimize = b.standardOptimizeOption(.{}),
     });
