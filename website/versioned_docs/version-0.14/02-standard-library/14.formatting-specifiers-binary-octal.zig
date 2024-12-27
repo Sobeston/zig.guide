@@ -1,26 +1,18 @@
 // hide-start
 const std = @import("std");
-const eql = std.mem.eql;
-const expect = std.testing.expect;
+const expectEqualStrings = std.testing.expectEqualStrings;
 const bufPrint = std.fmt.bufPrint;
 // hide-end
-test "B Bi" {
-    var b: [32]u8 = undefined;
+test "binary, octal fmt" {
+    var b: [8]u8 = undefined;
 
-    try expect(eql(u8, try bufPrint(&b, "{}", .{std.fmt.fmtIntSizeDec(1)}), "1B"));
-    try expect(eql(u8, try bufPrint(&b, "{}", .{std.fmt.fmtIntSizeBin(1)}), "1B"));
+    try expectEqualStrings(
+        "11111110",
+        try bufPrint(&b, "{b}", .{254}),
+    );
 
-    try expect(eql(u8, try bufPrint(&b, "{}", .{std.fmt.fmtIntSizeDec(1024)}), "1.024kB"));
-    try expect(eql(u8, try bufPrint(&b, "{}", .{std.fmt.fmtIntSizeBin(1024)}), "1KiB"));
-
-    try expect(eql(
-        u8,
-        try bufPrint(&b, "{}", .{std.fmt.fmtIntSizeDec(1024 * 1024 * 1024)}),
-        "1.073741824GB",
-    ));
-    try expect(eql(
-        u8,
-        try bufPrint(&b, "{}", .{std.fmt.fmtIntSizeBin(1024 * 1024 * 1024)}),
-        "1GiB",
-    ));
+    try expectEqualStrings(
+        "376",
+        try bufPrint(&b, "{o}", .{254}),
+    );
 }

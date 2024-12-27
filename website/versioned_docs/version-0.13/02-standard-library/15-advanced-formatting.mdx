@@ -2,6 +2,12 @@
 pagination_next: build-system/build-modes
 ---
 
+import CodeBlock from "@theme/CodeBlock";
+
+import Position from "!!raw-loader!./15.advanced-formatting-position.zig";
+import FillAlignmentWidth from "!!raw-loader!./15.advanced-formatting-fill-alignment-width.zig";
+import Precision from "!!raw-loader!./15.advanced-formatting-precision.zig";
+
 # Advanced Formatting
 
 So far we have only covered formatting specifiers. Format strings actually
@@ -21,52 +27,12 @@ you have to replace with something.
 
 Position usage.
 
-```zig
-test "position" {
-    var b: [3]u8 = undefined;
-    try expect(eql(
-        u8,
-        try bufPrint(&b, "{0s}{0s}{1s}", .{ "a", "b" }),
-        "aab",
-    ));
-}
-```
+<CodeBlock language="zig">{Position}</CodeBlock>
 
 Fill, alignment and width being used.
 
-```zig
-test "fill, alignment, width" {
-    var b: [6]u8 = undefined;
-
-    try expect(eql(
-        u8,
-        try bufPrint(&b, "{s: <5}", .{"hi!"}),
-        "hi!  ",
-    ));
-
-    try expect(eql(
-        u8,
-        try bufPrint(&b, "{s:_^6}", .{"hi!"}),
-        "_hi!__",
-    ));
-
-    try expect(eql(
-        u8,
-        try bufPrint(&b, "{s:!>4}", .{"hi!"}),
-        "!hi!",
-    ));
-}
-```
+<CodeBlock language="zig">{FillAlignmentWidth}</CodeBlock>
 
 Using a specifier with precision.
 
-```zig
-test "precision" {
-    var b: [4]u8 = undefined;
-    try expect(eql(
-        u8,
-        try bufPrint(&b, "{d:.2}", .{3.14159}),
-        "3.14",
-    ));
-}
-```
+<CodeBlock language="zig">{Precision}</CodeBlock>
