@@ -1,0 +1,23 @@
+---
+pagination_next: build-system/build-modes
+---
+
+import CodeBlock from "@theme/CodeBlock";
+
+import HttpSendRequest from "!!raw-loader!./16.http-send-request.zig";
+import HttpReceiveResponse from "!!raw-loader!./16.http-receive-response.zig";
+
+# HTTP
+
+## Client
+
+We have already learned a lot about [Allocators](/standard-library/allocators), [ArrayLists](/standard-library/arraylist), and [JSON](/standard-library/json) parsing, let's combine our knowledge and send our first HTTP request with Zig
+
+<CodeBlock language="zig">{HttpSendRequest}</CodeBlock>
+
+
+## Server
+
+To showcase spinning-up the http server we're going to use the approach from the [Threads](/standard-library/threads) chapter which we read before
+
+<CodeBlock language="zig">{HttpReceiveResponse}</CodeBlock>
