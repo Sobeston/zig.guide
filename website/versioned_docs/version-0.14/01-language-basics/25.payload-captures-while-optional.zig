@@ -3,13 +3,13 @@ const expect = @import("std").testing.expect;
 
 //hide-end
 test "while optional" {
-    var i: ?u32 = 10;
-    while (i) |num| : (i.? -= 1) {
-        try expect(@TypeOf(num) == u32);
-        if (num == 1) {
-            i = null;
-            break;
-        }
+    const sequence = [_]?u8{ 0xFF, 0xCC, 0x00, null };
+
+    var i: usize = 0;
+    while (sequence[i]) |num| : (i += 1) {
+        try expect(@TypeOf(num) == u8);
     }
-    try expect(i == null);
+
+    try expect(i == 3);
+    try expect(sequence[i] == null);
 }
