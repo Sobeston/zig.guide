@@ -9,13 +9,13 @@ Slices can be thought of as a pair of `[*]T` (the pointer to the data) and a
 `usize` (the element count). Their syntax is `[]T`, with `T` being the child
 type. Slices are used heavily throughout Zig for when you need to operate on
 arbitrary amounts of data. Slices have the same attributes as pointers, meaning
-that there also exists const slices. For loops also operate over slices. String
+that const slices also exist. `for` loops also operate over slices. String
 literals in Zig coerce to `[]const u8`.
 
 Here, the syntax `x[n..m]` is used to create a slice from an array. This is
 called **slicing**, and creates a slice of the elements starting at `x[n]` and
-ending at `x[m - 1]`. This example uses a const slice, as the values to which
-the slice points need not be modified.
+ending at `x[m - 1]`. This example uses a const slice, as the values
+pointed by the slice do not need to be modified.
 
 <CodeBlock language="zig">{Slices}</CodeBlock>
 

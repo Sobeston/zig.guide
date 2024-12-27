@@ -16,9 +16,10 @@ Trying to set a `*T` to the value 0 is detectable illegal behaviour.
 
 ```zig
 test "naughty pointer" {
-    var x: u16 = 0;
+    var x: u16 = 5;
+    x -= 5;
     var y: *u8 = @ptrFromInt(x);
-    _ = y;
+    y = y;
 }
 ```
 
