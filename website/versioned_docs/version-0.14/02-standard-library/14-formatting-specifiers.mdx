@@ -1,3 +1,14 @@
+import CodeBlock from "@theme/CodeBlock";
+
+import Hex from "!!raw-loader!./14.formatting-specifiers-hex.zig";
+import Decimal from "!!raw-loader!./14.formatting-specifiers-decimal.zig";
+import Ascii from "!!raw-loader!./14.formatting-specifiers-ascii.zig";
+import ByteSizes from "!!raw-loader!./14.formatting-specifiers-byte-sizes.zig";
+import BinaryOctal from "!!raw-loader!./14.formatting-specifiers-binary-octal.zig";
+import Pointer from "!!raw-loader!./14.formatting-specifiers-pointer.zig";
+import Scientific from "!!raw-loader!./14.formatting-specifiers-scientific.zig";
+import Strings from "!!raw-loader!./14.formatting-specifiers-strings.zig";
+
 # Formatting specifiers
 
 [`std.fmt`](https://ziglang.org/documentation/master/std/#std.fmt) provides
@@ -6,22 +17,7 @@ options for formatting various data types.
 `std.fmt.fmtSliceHexLower` and `std.fmt.fmtSliceHexUpper` provide hex formatting
 for strings as well as `{x}` and `{X}` for ints.
 
-```zig
-const bufPrint = std.fmt.bufPrint;
-
-test "hex" {
-    var b: [8]u8 = undefined;
-
-    _ = try bufPrint(&b, "{X}", .{4294967294});
-    try expect(eql(u8, &b, "FFFFFFFE"));
-
-    _ = try bufPrint(&b, "{x}", .{4294967294});
-    try expect(eql(u8, &b, "fffffffe"));
-
-    _ = try bufPrint(&b, "{}", .{std.fmt.fmtSliceHexLower("Zig!")});
-    try expect(eql(u8, &b, "5a696721"));
-}
-```
+<CodeBlock language="zig">{Hex}</CodeBlock>
 
 `{d}` performs decimal formatting for numeric types.
 
