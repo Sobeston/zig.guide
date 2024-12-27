@@ -1,0 +1,46 @@
+---
+pagination_next: working-with-c/abi
+---
+
+import CodeBlock from "@theme/CodeBlock";
+
+import Main from "!!raw-loader!./06.generating-documentation/src/main.zig";
+import Build from "!!raw-loader!./06.generating-documentation/build.zig";
+ 
+# Generating Documentation
+
+Zig's documentation generation makes use of _doc comments_, using `///`. These
+doc comments will "attach" themselves to the declarations found under them.
+File-level doc comments can also be made at the top of a file with `//!`.
+
+The Zig compiler comes with documentation generation. This can be invoked by
+adding `-femit-docs` to your `zig build-{exe, lib, obj}` or `zig run`command.
+This documentation is saved into `./docs`, as a small static website.
+
+Here we will save this file as `src/main.zig` and build documentation for it with
+`zig build-lib -femit-docs src/main.zig`.
+
+<CodeBlock language="zig">{Main}</CodeBlock>
+
+We should now have a folder called `docs/`. To view these docs nicely, you may
+want to start a (local) static web server. Here's some commands you might be
+able to use on your system without installing anything new:
+
+- `caddy file-server --root docs/ --listen :8000`
+- `python -m http.server 8000 -d docs/`
+
+Take a few minutes to browse around. Notice that the left side of an error set
+merge will take precedence over the right side, when it comes to differing doc
+comments on the same error name. In our case this means that
+`OpenError.InvalidSheet` will have the doc comment from
+`OpenFileError.InvalidSheet`, rather than from `ParseError.InvalidSheet`.
+
+The Zig compiler itself has the `zig std` command, which automatically serves a
+web server with the standard library documentation, however as of writing this
+server isn't exposed to the build system. The Zig standard library documentation
+can also be found [here](https://ziglang.org/documentation/master/std/).
+
+When using Zig Build, generated docs can be found by using `getEmittedDocs()` on
+a Compile step. Here's an example of a `build.zig` that generates documentation:
+
+<CodeBlock language="zig">{Build}</CodeBlock>
