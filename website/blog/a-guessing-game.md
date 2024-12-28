@@ -5,9 +5,9 @@ tags:
   - Zig 0.13.0
 ---
 
-<meta name="fediverse:creator" content="@sobeston@hachyderm.io" />
-
 # A Guessing Game
+
+<meta name="fediverse:creator" content="@sobeston@hachyderm.io" />
 
 We are going to make a program that randomly picks a number from 1 to 100 and asks us to guess it, telling us if our number is too big or two small.
 

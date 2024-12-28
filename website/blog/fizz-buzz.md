@@ -5,9 +5,9 @@ tags:
   - Zig 0.13.0
 ---
 
-<meta name="fediverse:creator" content="@sobeston@hachyderm.io" />
-
 # Fizz Buzz
+
+<meta name="fediverse:creator" content="@sobeston@hachyderm.io" />
 
 Let's start playing with Zig by solving a problem together.
 
