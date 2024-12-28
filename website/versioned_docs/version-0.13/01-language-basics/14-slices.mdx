@@ -12,12 +12,36 @@ Slices are sometimes referred to as "fat pointers" as they're typically double
 the size of a normal pointer. Slices are the most common way to pass around
 buffers in Zig.
 
+:::go
+Slices in Zig are in many ways similar to slices in Go, and use similar syntax
+(e.g. `array[start..end]` over `array[start:end]`). However, there is one very
+important diference.
+
+In Go, there is no explicit ownership or memory management. This means that the
+data that a slice points to is effectively "owned" by the garbage collector.
+However in Zig, a slice is roughly what go calls a "slice header" (i.e. the
+struct that contains the pointer, length, and in Go's case, the cap). This has
+important implications:
+
+- Zig slices do not have a Cap field, as they will not automatically resize -
+  they are not tied to allocation.
+- The validity and lifetime of the backing memory is in the hands of the
+  programmer.
+
+For a resizeable/appendable buffer with ownership, have a look at
+[ArrayList](../02-standard-library/02-arraylist.mdx).
+
+:::
+
 Unlike many-item pointers, `for` loops work on slices.
 
 The syntax `x[n..m]` is used to create a slice from an array, an operation known
 as **slicing**. This creates a "slice" - a view into the array consisting of a
-pointer and a length - spanning the elements from `x[n]` to `x[m - 1]`. In this
-example, a `const` slice is used as the elements don't need to be modified.
+pointer and a length. Slicing includes the first element (`n`), but excludes the
+last element (`m`).
+
+In this example, a `const` slice is used in the `total` function as it doesn't
+write to the slice's buffer.
 
 <CodeBlock language="zig">{Slices}</CodeBlock>
 

@@ -68,7 +68,7 @@ const config = {
           showLastUpdateTime: true,
           lastVersion: "0.13",
           admonitions: {
-            keywords: ['cpp'],
+            keywords: ['cpp', 'go'],
             extendDefaults: true
           },
           versions: {

@@ -2,6 +2,7 @@ import React from "react";
 import AdmonitionTypeNote from "@theme/Admonition/Type/Note";
 import AdmonitionTypeTip from "@theme/Admonition/Type/Tip";
 import AdmonitionTypeCpp from "@theme/Admonition/Type/Cpp";
+import AdmonitionTypeGo from "@theme/Admonition/Type/Go";
 import AdmonitionTypeInfo from "@theme/Admonition/Type/Info";
 import AdmonitionTypeWarning from "@theme/Admonition/Type/Warning";
 import AdmonitionTypeDanger from "@theme/Admonition/Type/Danger";
@@ -16,6 +17,7 @@ const admonitionTypes: typeof AdmonitionTypes = {
   warning: AdmonitionTypeWarning,
   danger: AdmonitionTypeDanger,
   cpp: AdmonitionTypeCpp,
+  go: AdmonitionTypeGo,
 };
 
 // Undocumented legacy admonition type aliases
