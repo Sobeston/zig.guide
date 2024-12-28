@@ -5,8 +5,6 @@ import AdmonitionTypes from "@theme/Admonition/Types";
 
 function getAdmonitionTypeComponent(type: string): ComponentType<Props> {
   const component = AdmonitionTypes[type];
-
-  console.log(AdmonitionTypes[type]);
   if (component) {
     return component;
   }
