@@ -3,6 +3,7 @@ import AdmonitionTypeNote from "@theme/Admonition/Type/Note";
 import AdmonitionTypeTip from "@theme/Admonition/Type/Tip";
 import AdmonitionTypeCpp from "@theme/Admonition/Type/Cpp";
 import AdmonitionTypeGo from "@theme/Admonition/Type/Go";
+import AdmonitionTypeJs from "@theme/Admonition/Type/Js";
 import AdmonitionTypeInfo from "@theme/Admonition/Type/Info";
 import AdmonitionTypeWarning from "@theme/Admonition/Type/Warning";
 import AdmonitionTypeDanger from "@theme/Admonition/Type/Danger";
@@ -18,6 +19,7 @@ const admonitionTypes: typeof AdmonitionTypes = {
   danger: AdmonitionTypeDanger,
   cpp: AdmonitionTypeCpp,
   go: AdmonitionTypeGo,
+  js: AdmonitionTypeJs,
 };
 
 // Undocumented legacy admonition type aliases
