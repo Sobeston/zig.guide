@@ -4,9 +4,9 @@ const expect = @import("std").testing.expect;
 //hide-end
 fn GetBiggerInt(comptime T: type) type {
     return @Type(.{
-        .Int = .{
-            .bits = @typeInfo(T).Int.bits + 1,
-            .signedness = @typeInfo(T).Int.signedness,
+        .int = .{
+            .bits = @typeInfo(T).int.bits + 1,
+            .signedness = @typeInfo(T).int.signedness,
         },
     });
 }

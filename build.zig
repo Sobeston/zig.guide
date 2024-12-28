@@ -153,12 +153,22 @@ const DebugDirLogger = struct {
                 .id = .custom,
                 .name = "debug-dir-logger",
                 .owner = owner,
-                .makeFn = make,
+                .makeFn = if (zig_version.minor >= 14) makeZig0_14 else makeZig0_13,
             }),
         };
         return ds;
     }
-    fn make(step: *std.Build.Step, _: std.Progress.Node) !void {
+
+    fn makeZig0_13(step: *std.Build.Step, _: std.Progress.Node) !void {
+        const dependency = step.dependencies.items[0];
+        if (dependency.id != .write_file) unreachable; // DebugDirLogger only supports a WriteFileStep dependency
+        std.log.debug(
+            "test-dir at {s}",
+            .{@as(*WriteFileStep, @fieldParentPtr("step", dependency)).generated_directory.path.?},
+        );
+    }
+
+    fn makeZig0_14(step: *std.Build.Step, _: std.Build.Step.MakeOptions) !void {
         const dependency = step.dependencies.items[0];
         if (dependency.id != .write_file) unreachable; // DebugDirLogger only supports a WriteFileStep dependency
         std.log.debug(

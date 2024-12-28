@@ -4,8 +4,8 @@ const expect = @import("std").testing.expect;
 //hide-end
 fn addSmallInts(comptime T: type, a: T, b: T) T {
     return switch (@typeInfo(T)) {
-        .ComptimeInt => a + b,
-        .Int => |info| if (info.bits <= 16)
+        .comptime_int => a + b,
+        .int => |info| if (info.bits <= 16)
             a + b
         else
             @compileError("ints too large"),
