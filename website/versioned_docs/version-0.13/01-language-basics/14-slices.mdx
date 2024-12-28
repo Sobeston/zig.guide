@@ -5,23 +5,25 @@ import Slices2 from "!!raw-loader!./14.slices-2.zig";
 
 # Slices
 
-Slices can be thought of as a pair of `[*]T` (the pointer to the data) and a
-`usize` (the element count). Their syntax is `[]T`, with `T` being the child
-type. Slices are used heavily throughout Zig for when you need to operate on
-arbitrary amounts of data. Slices have the same attributes as pointers, meaning
-that const slices also exist. `for` loops also operate over slices. String
-literals in Zig coerce to `[]const u8`.
+Slices can be thought of many-item pointers (`[*]T`) with a length (`usize`).
+These use the syntax `[]T`. Slices are easier to use safely and more convinient
+than many-item pointers, as they store the valid length of the buffer with them.
+Slices are sometimes referred to as "fat pointers" as they're typically double
+the size of a normal pointer. Slices are the most common way to pass around
+buffers in Zig.
 
-Here, the syntax `x[n..m]` is used to create a slice from an array. This is
-called **slicing**, and creates a slice of the elements starting at `x[n]` and
-ending at `x[m - 1]`. This example uses a const slice, as the values
-pointed by the slice do not need to be modified.
+Unlike many-item pointers, `for` loops work on slices.
+
+The syntax `x[n..m]` is used to create a slice from an array, an operation known
+as **slicing**. This creates a "slice" - a view into the array consisting of a
+pointer and a length - spanning the elements from `x[n]` to `x[m - 1]`. In this
+example, a `const` slice is used as the elements don't need to be modified.
 
 <CodeBlock language="zig">{Slices}</CodeBlock>
 
 When these `n` and `m` values are both known at compile time, slicing will
 actually produce a pointer to an array. This is not an issue as a pointer to an
-array i.e. `*[N]T` will coerce to a `[]T`.
+array i.e. `*[N]T` will coerce to a slice - `[]T`.
 
 <CodeBlock language="zig">{Slices2}</CodeBlock>
 
@@ -35,7 +37,17 @@ test "slices 3" {
 }
 ```
 
-Types that may be sliced are arrays, many pointers and slices.
+Let's again compare our pointer types.
+
+| Feature         | `*T`              | `*[N]T`            | `[*]T`                           | `[]T`               |
+| --------------- | ----------------- | ------------------ | -------------------------------- | ------------------- |
+| Dereferenceable | Yes, e.g. `ptr.*` | No                 | No                               | No                  |
+| Indexable       | No                | Yes                | Yes                              | Yes                 |
+| Sliceable       | No                | Yes                | Yes                              | Yes                 |
+| Element Count   | Always 1          | Compile-time known | Unknown                          | Runtime known       |
+| Arithmetic      | No                | No                 | Yes, e.g. `ptr + 1` or `ptr - 1` | No                  |
+| Size            | @sizeOf(usize)    | @sizeOf(usize)     | @sizeOf(usize)                   | @sizeOf(usize) \* 2 |
+| Attributes      | Yes               | Yes                | Yes                              | Yes                 |
 
 :::info
 We can now apply our knowledge and [make another program together](/posts/fahrenheit-to-celsius).
