@@ -67,6 +67,10 @@ const config = {
           showLastUpdateAuthor: true,
           showLastUpdateTime: true,
           lastVersion: "0.13",
+          admonitions: {
+            keywords: ['cpp'],
+            extendDefaults: true
+          },
           versions: {
             "0.14": {
               label: 'Zig 0.14.0 (dev)',
