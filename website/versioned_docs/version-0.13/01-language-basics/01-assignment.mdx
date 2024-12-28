@@ -29,12 +29,12 @@ coerces to any type, may be used as long as a type annotation is provided.
 
 :::js
 
-If you're familiar with Javascript, you might be used to using `undefined` as a
+If you're familiar with JavaScript, you might be used to using `undefined` as a
 way to represent a variable that hasn't been initialised, or to represent an
 absense of value.
 
 However in Zig, using `undefined` like this is a bad idea as `undefined` works
-very differently. In Javascript, values can be checked for being undefined,
+very differently. In JavaScript, values can be checked for being undefined,
 whereas in Zig, an undefined value is impossible to detect. Usage of undefined
 values is not safe. Zig's undefined is "undefined" as in "undefined behaviour",
 and should not be used as a stand-in for an optional.

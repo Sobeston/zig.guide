@@ -18,7 +18,7 @@ const defaultProps = {
       id="theme.admonition.js"
       description="The default label used for the Js admonition (:::js)"
     >
-      Coming from Javascript?
+      Coming from JavaScript?
     </Translate>
   ),
 };
