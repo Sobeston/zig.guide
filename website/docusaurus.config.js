@@ -4,7 +4,9 @@
 // There are various equivalent ways to declare your Docusaurus config.
 // See: https://docusaurus.io/docs/api/docusaurus-config
 
-import { themes as prismThemes } from 'prism-react-renderer';
+import {
+  themes as prismThemes
+} from 'prism-react-renderer';
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
@@ -34,22 +36,22 @@ const config = {
     locales: ['en'],
   },
 
-  scripts: [
-    {
-      src: '//gc.zgo.at/count.js',
-      async: true,
-      "data-goatcounter": "https://ziglearn.goatcounter.com/count",
-    },
-  ],
+  scripts: [{
+    src: '//gc.zgo.at/count.js',
+    async: true,
+    "data-goatcounter": "https://ziglearn.goatcounter.com/count",
+  },],
 
-  plugins: [[require.resolve('docusaurus-lunr-search'), {
-    indexBaseUrl: true,
-    maxHits: 7,
-    disableVersioning: true,
-    excludeRoutes: [
-      '/master/**/*', '/0.11/**/*', '/0.12/**/*',
-    ],
-  }]],
+  plugins: [
+    [require.resolve('docusaurus-lunr-search'), {
+      indexBaseUrl: true,
+      maxHits: 7,
+      disableVersioning: true,
+      excludeRoutes: [
+        '/master/**/*', '/0.11/**/*', '/0.12/**/*',
+      ],
+    }]
+  ],
   presets: [
     [
       'classic',
@@ -61,8 +63,7 @@ const config = {
           sidebarPath: './sidebars.js',
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
-          editUrl:
-            'https://github.com/Sobeston/zig.guide/tree/master/website/',
+          editUrl: 'https://github.com/Sobeston/zig.guide/tree/master/website/',
           showLastUpdateAuthor: true,
           showLastUpdateTime: true,
           lastVersion: "0.13",
@@ -90,8 +91,9 @@ const config = {
           showReadingTime: true,
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
-          editUrl:
-            'https://github.com/Sobeston/zig.guide/tree/master/website/',
+          editUrl: 'https://github.com/Sobeston/zig.guide/tree/master/website/',
+          showLastUpdateAuthor: true,
+          showLastUpdateTime: true,
         },
         theme: {
           customCss: './src/css/custom.css',
@@ -108,9 +110,10 @@ const config = {
         disableSwitch: false,
         respectPrefersColorScheme: true,
       },
-      metadata: [
-        { name: 'keywords', content: 'programming, zig, guide, tutorial, ziglang, learn, ziglearn, language, install, book' },
-      ],
+      metadata: [{
+        name: 'keywords',
+        content: 'programming, zig, guide, tutorial, ziglang, learn, ziglearn, language, install, book'
+      },],
       // Replace with your project's social card
       image: 'img/docusaurus-social-card.jpg',
       navbar: {
@@ -119,63 +122,74 @@ const config = {
           alt: 'zig.guide Logo',
           src: 'img/logo.svg',
         },
-        items: [
-          {
-            type: 'docSidebar',
-            sidebarId: 'tutorialSidebar',
-            position: 'left',
-            label: 'Guide',
-          },
-          { to: '/posts', label: 'Posts', position: 'left' },
-          {
-            href: 'https://github.com/sobeston/zig.guide',
-            label: 'GitHub',
-            position: 'right',
-          },
-          {
-            type: 'docsVersionDropdown',
-            position: 'right',
-            dropdownActiveClassDisabled: true,
-          },
+        items: [{
+          type: 'docSidebar',
+          sidebarId: 'tutorialSidebar',
+          position: 'left',
+          label: 'Guide',
+        },
+        {
+          to: '/posts',
+          label: 'Posts',
+          position: 'left'
+        },
+        {
+          type: 'html',
+          position: 'right',
+          value: '<a rel="me" href="https://hachyderm.io/@sobeston" style="display: none;">Mastodon</a>',
+        },
+        {
+          href: 'https://github.com/sobeston/zig.guide',
+          label: 'GitHub',
+          position: 'right',
+        },
+        {
+          type: 'docsVersionDropdown',
+          position: 'right',
+          dropdownActiveClassDisabled: true,
+        },
         ],
       },
       footer: {
         style: 'dark',
-        links: [
-          {
-            title: 'Community',
-            items: [
-              {
-                label: 'GitHub',
-                href: 'https://github.com/sobeston/zig.guide',
-              },
-              {
-                label: 'Mastodon',
-                href: 'https://hachyderm.io/@sobeston',
-              },
-              {
-                label: 'Sponsor zig.guide',
-                href: 'https://github.com/sponsors/Sobeston',
-              },
-            ],
+        links: [{
+          title: 'Community',
+          items: [{
+            label: 'GitHub',
+            href: 'https://github.com/sobeston/zig.guide',
           },
-        ],
+          {
+            label: 'Mastodon',
+            href: 'https://hachyderm.io/@sobeston',
+          },
+          {
+            label: 'Sponsor zig.guide',
+            href: 'https://github.com/sponsors/Sobeston',
+          },
+          ],
+        },],
       },
       prism: {
         theme: prismThemes.github,
         darkTheme: prismThemes.dracula,
         additionalLanguages: ['powershell', 'zig'],
-        magicComments: [
-          {
-            className: 'theme-code-block-highlighted-line',
-            line: 'highlight-next-line',
-            block: { start: 'highlight-start', end: 'highlight-end' },
+        magicComments: [{
+          className: 'theme-code-block-highlighted-line',
+          line: 'highlight-next-line',
+          block: {
+            start: 'highlight-start',
+            end: 'highlight-end'
           },
-          {
-            className: 'code-block-hidden',
-            line: 'hide-next-line',
-            block: { start: 'hide-start', end: 'hide-end' },
-          }],
+        },
+        {
+          className: 'code-block-hidden',
+          line: 'hide-next-line',
+          block: {
+            start: 'hide-start',
+            end: 'hide-end'
+          },
+        }
+        ],
       },
     }),
 };

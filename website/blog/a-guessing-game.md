@@ -1,7 +1,11 @@
 ---
 authors: sobeston
 date: 2021-09-13
+tags:
+  - Zig 0.13.0
 ---
+
+<meta name="fediverse:creator" content="@sobeston@hachyderm.io" />
 
 # A Guessing Game
 
@@ -9,7 +13,9 @@ We are going to make a program that randomly picks a number from 1 to 100 and as
 
 ### Getting a Random Number
 
-As Zig does not have a runtime, it does not manage a PRNG (pseudorandom number generator) for us. This means that we'll have to create our PRNG and initialise it with a source of entropy. Let's start with a file called *a_guessing_game.zig*.
+As Zig does not have a runtime, it does not manage a PRNG (pseudorandom number generator) for us. This means that we'll have to create our PRNG and initialise it with a source of entropy. Let's start with a file called _a_guessing_game.zig_.
+
+<!-- truncate -->
 
 ```zig
 const std = @import("std");
@@ -19,7 +25,7 @@ pub fn main() !void {
 
 ```
 
-Let's initialise *std.rand.DefaultPrng* with a 64 bit unsigned integer (`u64`). Our `rand` here allows us to access many useful utilities for our PRNG. Here we're asking our PRNG for a random number from 1 to 100, however, if our PRNG is initialised with the same number every time our program will always print out the same number.
+Let's initialise _std.rand.DefaultPrng_ with a 64 bit unsigned integer (`u64`). Our `rand` here allows us to access many useful utilities for our PRNG. Here we're asking our PRNG for a random number from 1 to 100, however, if our PRNG is initialised with the same number every time our program will always print out the same number.
 
 ```zig
     var prng = std.rand.DefaultPrng.init(1625953);
@@ -31,7 +37,7 @@ Let's initialise *std.rand.DefaultPrng* with a 64 bit unsigned integer (`u64`). 
     );
 ```
 
-For a good source of entropy, it is best to initialise our PRNG with random bytes provided by the OS. Let's ask the OS for some. As Zig doesn't let us declare a variable without a value we've had to give our seed variable the value of `undefined`, which is a special value that coerces to any type. The function *std.posix.getrandom* takes in a *slice* of bytes, where a slice is a pointer to a buffer whose length is known at run time. Because of this we've used *std.mem.asBytes* to turn our pointer to a `u64` into a slice of bytes. If *getrandom* succeeds it will fill our seed variable with a random value which we can then initialise the PRNG with.
+For a good source of entropy, it is best to initialise our PRNG with random bytes provided by the OS. Let's ask the OS for some. As Zig doesn't let us declare a variable without a value we've had to give our seed variable the value of `undefined`, which is a special value that coerces to any type. The function _std.posix.getrandom_ takes in a _slice_ of bytes, where a slice is a pointer to a buffer whose length is known at run time. Because of this we've used _std.mem.asBytes_ to turn our pointer to a `u64` into a slice of bytes. If _getrandom_ succeeds it will fill our seed variable with a random value which we can then initialise the PRNG with.
 
 ```zig
     var seed: u64 = undefined;
@@ -59,7 +65,7 @@ pub fn main() !void {
 
 ```
 
-As we'll be printing and taking in user input until the correct value is guessed, let's start by making a while loop with `stdin` and `stdout`. Note how we've obtained an `stdin` *reader*.
+As we'll be printing and taking in user input until the correct value is guessed, let's start by making a while loop with `stdin` and `stdout`. Note how we've obtained an `stdin` _reader_.
 
 ```zig
     while (true) {
@@ -67,7 +73,7 @@ As we'll be printing and taking in user input until the correct value is guessed
         const stdout = std.io.getStdOut().writer();
 ```
 
-To get a line of user's input, we have to read `stdin` until we encounter a newline character, which is represented by `\n`. What is read will need to be copied into a buffer, so here we're asking *readUntilDelimiterAlloc* to allocate a buffer up to 8KiB using *std.heap.page_allocator* until it reaches the `\n` character.
+To get a line of user's input, we have to read `stdin` until we encounter a newline character, which is represented by `\n`. What is read will need to be copied into a buffer, so here we're asking _readUntilDelimiterAlloc_ to allocate a buffer up to 8KiB using _std.heap.page_allocator_ until it reaches the `\n` character.
 
 ```zig
         const bare_line = try stdin.readUntilDelimiterAlloc(
@@ -86,7 +92,7 @@ Because of legacy reasons newlines in many places in Windows are represented by 
 
 ### Guessing
 
-Let's continue from here. We're expecting the user to input an integer number here, so the next step is to parse a number from `line`. 
+Let's continue from here. We're expecting the user to input an integer number here, so the next step is to parse a number from `line`.
 
 ```zig
 const std = @import("std");
@@ -115,7 +121,7 @@ pub fn main() !void {
 
 ```
 
-This can be achieved by passing the buffer to *std.fmt.parseInt*, where the last parameter is the base of the number in the string. So far we've only handled errors with `try`, which returns the error if encountered, but here we'll want to `catch` the error so that we can process it without returning it. If there's an error we'll print a friendly error message and `continue`, so that the user can re-enter their number.
+This can be achieved by passing the buffer to _std.fmt.parseInt_, where the last parameter is the base of the number in the string. So far we've only handled errors with `try`, which returns the error if encountered, but here we'll want to `catch` the error so that we can process it without returning it. If there's an error we'll print a friendly error message and `continue`, so that the user can re-enter their number.
 
 ```zig
         const guess = std.fmt.parseInt(u8, line, 10) catch |err| switch (err) {
@@ -144,7 +150,7 @@ Now all we have to do is decide what to do with the user's guess. It's important
 Let's try playing our game.
 
 ```console
-$ zig run a_guessing_game.zig 
+$ zig run a_guessing_game.zig
 45
 Too Big!
 20
