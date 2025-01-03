@@ -1,0 +1,46 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches: [$default-branch]
+  pull_request:
+    branches: [$default-branch]
+
+jobs:
+  zig-tests:
+    runs-on: ubuntu-latest
+    name: zig build test (multi version)
+    strategy:
+      matrix:
+        zig-version: [master, 0.13.0, 0.12.1, 0.11.0]
+      fail-fast: false
+    steps:
+      - uses: actions/checkout@v3
+      - uses: mlugg/setup-zig@v1.2.1
+        with:
+          version: ${{ matrix.zig-version }}
+      - run: |
+          echo "Testing with Zig version: ${{ matrix.zig-version }}"
+          zig version
+          zig build test --summary all
+
+  docusaurus-build:
+    runs-on: ubuntu-latest
+    name: docusaurus build
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v4.1.0
+        with:
+          node-version: "23"
+
+      - name: "npm install"
+        run: npm install
+        working-directory: website
+
+      - name: "npm run build"
+        run: npm run build
+        working-directory: website
+
+      - name: "Verify built site"
+        run: test website/build

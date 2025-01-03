@@ -1,3 +1,6 @@
+//! This build.zig is a bit cursed, namely as it attempts to be compatible with all versions of Zig
+//! used within the guide.
+
 const std = @import("std");
 const zig_version = @import("builtin").zig_version;
 
@@ -153,27 +156,52 @@ const DebugDirLogger = struct {
                 .id = .custom,
                 .name = "debug-dir-logger",
                 .owner = owner,
-                .makeFn = if (zig_version.minor >= 14) makeZig0_14 else makeZig0_13,
+                .makeFn = switch (zig_version.minor) {
+                    11 => makeZig0_11,
+                    12 => makeZig0_12,
+                    13 => makeZig0_13,
+                    else => makeZig0_14,
+                },
             }),
         };
         return ds;
     }
 
-    fn makeZig0_13(step: *std.Build.Step, _: std.Progress.Node) !void {
+    /// Bad hack to work on 0.11 and later major versions
+    /// We can't use the real @fieldParentPtr in this file as its parameters
+    /// changed in 0.12.
+    fn fieldParentPtr(step: *std.Build.Step) *WriteFileStep {
+        return @ptrFromInt(@intFromPtr(step) - @offsetOf(WriteFileStep, "step"));
+    }
+
+    fn makeZig0_11(step: *std.Build.Step, _: *std.Progress.Node) !void {
         const dependency = step.dependencies.items[0];
         if (dependency.id != .write_file) unreachable; // DebugDirLogger only supports a WriteFileStep dependency
+
         std.log.debug(
             "test-dir at {s}",
-            .{@as(*WriteFileStep, @fieldParentPtr("step", dependency)).generated_directory.path.?},
+            .{fieldParentPtr(dependency).generated_directory.path.?},
         );
     }
 
+    fn makeZig0_12(step: *std.Build.Step, _: *std.Progress.Node) !void {
+        try makeZig(step);
+    }
+
+    fn makeZig0_13(step: *std.Build.Step, _: std.Progress.Node) !void {
+        try makeZig(step);
+    }
+
     fn makeZig0_14(step: *std.Build.Step, _: std.Build.Step.MakeOptions) !void {
+        try makeZig(step);
+    }
+
+    fn makeZig(step: *std.Build.Step) !void {
         const dependency = step.dependencies.items[0];
         if (dependency.id != .write_file) unreachable; // DebugDirLogger only supports a WriteFileStep dependency
         std.log.debug(
             "test-dir at {s}",
-            .{@as(*WriteFileStep, @fieldParentPtr("step", dependency)).generated_directory.path.?},
+            .{fieldParentPtr(dependency).generated_directory.path.?},
         );
     }
 };

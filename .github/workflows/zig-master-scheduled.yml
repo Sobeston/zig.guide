@@ -1,0 +1,16 @@
+name: Zig Master Scheduled
+
+on:
+  schedule:
+    - cron: "0 0 */2 * *" # Every 2 days at midnight
+
+jobs:
+  zig-master-test:
+    runs-on: ubuntu-latest
+    name: zig build test (scheduled master)
+    steps:
+      - uses: actions/checkout@v3
+      - uses: mlugg/setup-zig@v1.2.1
+        with:
+          version: master
+      - run: zig build test --summary all
