@@ -19,10 +19,13 @@ jobs:
       - uses: mlugg/setup-zig@v1.2.1
         with:
           version: ${{ matrix.zig-version }}
-      - run: |
-          echo "Testing with Zig version: ${{ matrix.zig-version }}"
-          zig version
-          zig build test --summary all
+
+      - name: zig build test (${{ matrix.zig-version }})
+        run: zig build test --summary all
+
+      - name: display zig version
+        run: zig version
+        if: failure()
 
   docusaurus-build:
     runs-on: ubuntu-latest
