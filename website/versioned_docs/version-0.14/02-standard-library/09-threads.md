@@ -47,10 +47,9 @@ const Thread = std.Thread;
 
 var line_counter:u8 = 0;
 
-fn sleepy(name:[]const u8, steps:u8, mut:*Thread.Mutex, wg:*Thread.WaitGroup) void {
+fn ticker(name:[]const u8, steps:u8, mut:*Thread.Mutex, wg:*Thread.WaitGroup) void {
     var i:u8 = 0;
 
-    wg.start();
     defer wg.finish();
 
     while (i < steps) {
@@ -95,14 +94,21 @@ pub fn main() !void {
     // A mutex to ensure we don't write the counter simultaneously
     var mut:Thread.Mutex = undefined;
 
-    // Use OS Thread spawning, pass in a function, and the arguments to pass
-    //   down to it in an anonymous struct
-    _ = try std.Thread.spawn(.{}, sleepy, .{"One", 1, &mut, &wg});
-    _ = try std.Thread.spawn(.{}, sleepy, .{"Two", 2, &mut, &wg});
+    const Param = struct { name:[]const u8, count:u8  };
+    const params:[2]Param = .{
+        Param{.name="One", .count=1},
+        Param{.name="Two", .count=2},
+    };
 
-    // Wait a little for a thread to call .start() - sometimes we get to the waitgroup
-    //   here and see it empty... before any thread acquires it ...!!
-    std.time.sleep(1 * std.time.ns_per_s);
+    for(params) |p| {
+        // We add a `wg.start()` call in the main thread to ensure it applies before the below `waitAndWork(&wg)` is reached
+        wg.start();
+
+        // Use OS Thread spawning, pass in a function, and the arguments to pass
+        //   down to it in an anonymous struct
+        _ = try std.Thread.spawn(.{}, ticker, .{p.name, p.count, &mut, &wg});
+    }
+
     pool.waitAndWork(&wg);
 
     std.debug.print("Finished.\n", .{});
