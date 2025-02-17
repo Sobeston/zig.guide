@@ -9,4 +9,5 @@ test "while with continue expression" {
         sum += i;
     }
     try expect(sum == 55);
+    try expect(i == 11);
 }
