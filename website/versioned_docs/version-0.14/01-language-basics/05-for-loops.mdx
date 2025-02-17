@@ -1,12 +1,22 @@
 import CodeBlock from "@theme/CodeBlock";
 
 import For from "!!raw-loader!./05.for.zig";
+import ForIndex from "!!raw-loader!./05.for-index.zig";
+import ForMultipleIterables from "!!raw-loader!./05.for-multiple-iterables.zig";
 
 # For loops
 
 For loops are used to iterate over arrays (and other types, to be discussed
-later). For loops follow this syntax. Like while, for loops can use `break` and
-`continue`. Here, we've had to assign values to `_`, as Zig does not allow us to
-have unused values.
+later). Like while, for loops can use `break` and `continue`.
 
 <CodeBlock language="zig">{For}</CodeBlock>
+
+Iterating over multiple arrays is possible using a single for loop, as long as
+all arrays are the same size.
+
+<CodeBlock language="zig">{ForMultipleIterables}</CodeBlock>
+
+To extract the index while iterating, use `0..` to indicate an unbounded range
+starting at zero.
+
+<CodeBlock language="zig">{ForIndex}</CodeBlock>
