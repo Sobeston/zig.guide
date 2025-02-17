@@ -4,12 +4,12 @@ const expect = @import("std").testing.expect;
 // hide-end
 test "for" {
     const vals = [_]u8{ 10, 20, 30, 40 };
-    var valSum: u32 = 0;
-    var indexSum: usize = 0;
+    var val_sum: u32 = 0;
+    var index_sum: usize = 0;
     for (vals, 0..) |num, index| {
-        valSum += num;
-        indexSum += index;
+        val_sum += num;
+        index_sum += index;
     }
-    try expect(indexSum == 6);
-    try expect(valSum == 100);
+    try expect(index_sum == 6);
+    try expect(val_sum == 100);
 }
