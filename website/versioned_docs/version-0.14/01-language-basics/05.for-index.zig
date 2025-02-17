@@ -3,7 +3,7 @@ const expect = @import("std").testing.expect;
 
 // hide-end
 test "for" {
-    const vals = [_]u8{ 10, 20, 30, 40 };
+    const vals = [4]u8{ 10, 20, 30, 40 };
     var val_sum: u32 = 0;
     var index_sum: usize = 0;
     for (vals, 0..) |num, index| {
