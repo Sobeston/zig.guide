@@ -22,7 +22,7 @@ test "stack" {
         if (char == '(') try stack.append(i);
         if (char == ')')
             try pairs.append(.{
-                .open = stack.pop(),
+                .open = stack.pop().?,
                 .close = i,
             });
     }
