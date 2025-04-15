@@ -1,0 +1,38 @@
+---
+pagination_next: build-system/build-modes
+---
+
+import CodeBlock from "@theme/CodeBlock";
+
+import Position from "!!raw-loader!./15.advanced-formatting-position.zig";
+import FillAlignmentWidth from "!!raw-loader!./15.advanced-formatting-fill-alignment-width.zig";
+import Precision from "!!raw-loader!./15.advanced-formatting-precision.zig";
+
+# Advanced Formatting
+
+So far we have only covered formatting specifiers. Format strings actually
+follow this format, where between each pair of square brackets is a parameter
+you have to replace with something.
+
+`{[position][specifier]:[fill][alignment][width].[precision]}`
+
+| Name      | Meaning                                                                          |
+| --------- | -------------------------------------------------------------------------------- |
+| Position  | The index of the argument that should be inserted                                |
+| Specifier | A type-dependent formatting option                                               |
+| Fill      | A single character used for padding                                              |
+| Alignment | One of three characters < ^ or >; these are for left, middle and right alignment |
+| Width     | The total width of the field (characters)                                        |
+| Precision | How many decimals a formatted number should have                                 |
+
+Position usage.
+
+<CodeBlock language="zig">{Position}</CodeBlock>
+
+Fill, alignment and width being used.
+
+<CodeBlock language="zig">{FillAlignmentWidth}</CodeBlock>
+
+Using a specifier with precision.
+
+<CodeBlock language="zig">{Precision}</CodeBlock>

@@ -5,7 +5,7 @@ const std = @import("std");
 const zig_version = @import("builtin").zig_version;
 
 // Used for any unversioned content (for now just /blog)
-const current_minor_version = 13;
+const current_minor_version = 14;
 
 const version_path = std.fmt.comptimePrint(
     "website/versioned_docs/version-0.{}/",

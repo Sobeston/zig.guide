@@ -1,0 +1,55 @@
+import CodeBlock from "@theme/CodeBlock";
+
+import Fmt from "!!raw-loader!./05.formatting-fmt.zig";
+import Print from "!!raw-loader!./05.formatting-print.zig";
+import ArrayPrint from "!!raw-loader!./05.formatting-array-print.zig";
+import Custom from "!!raw-loader!./05.formatting-custom.zig";
+
+# Formatting
+
+[`std.fmt`](https://ziglang.org/documentation/master/std/#std.fmt) provides
+ways to format data to and from strings.
+
+A basic example of creating a formatted string. The format string must be
+compile-time known. The `d` here denotes that we want a decimal number.
+
+<CodeBlock language="zig">{Fmt}</CodeBlock>
+
+Writers conveniently have a `print` method, which works similarly.
+
+<CodeBlock language="zig">{Print}</CodeBlock>
+
+Take a moment to appreciate that you now know from top to bottom how printing
+Hello World works.
+[`std.debug.print`](https://ziglang.org/documentation/master/std/#std.debug.print)
+works the same, except it writes to stderr and is protected by a mutex.
+
+{/* Code snippet not tested as it uses stdin/stdout */}
+
+```zig
+// hide-start
+const std = @import("std");
+const expect = std.testing.expect;
+const eql = std.mem.eql;
+// hide-end
+test "hello world" {
+    const out_file = std.io.getStdOut();
+    try out_file.writer().print(
+        "Hello, {s}!\n",
+        .{"World"},
+    );
+}
+```
+
+We have used the `{s}` format specifier up until this point to print strings.
+Here, we will use `{any}`, which gives us the default formatting.
+
+<CodeBlock language="zig">{ArrayPrint}</CodeBlock>
+
+Let's create a type with custom formatting by giving it a `format` function.
+This function must be marked as `pub` so that std.fmt can access it (more on
+packages later). You may notice the usage of `{s}` instead of `{}` - this is the
+format specifier for strings (more on format specifiers later). This is used
+here as `{}` defaults to array printing over string printing.
+
+<CodeBlock language="zig">{Custom}</CodeBlock>

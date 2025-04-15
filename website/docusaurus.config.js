@@ -48,7 +48,7 @@ const config = {
       maxHits: 7,
       disableVersioning: true,
       excludeRoutes: [
-        '/master/**/*', '/0.11/**/*', '/0.12/**/*',
+        '/master/**/*', '/0.11/**/*', '/0.12/**/*', '/0.13/**/*',
       ],
     }]
   ],
@@ -66,19 +66,23 @@ const config = {
           editUrl: 'https://github.com/Sobeston/zig.guide/tree/master/website/',
           showLastUpdateAuthor: true,
           showLastUpdateTime: true,
-          lastVersion: "0.13",
+          lastVersion: "0.14",
           admonitions: {
             keywords: ['cpp', 'go', 'js'],
             extendDefaults: true
           },
           versions: {
-            "0.14": {
-              label: 'Zig 0.14.0 (dev)',
+            "0.15": {
+              label: 'Zig 0.15.0 (dev)',
               path: 'master',
+            },
+            "0.14": {
+              label: 'Zig 0.14.0',
+              path: '/',
             },
             "0.13": {
               label: 'Zig 0.13.0',
-              path: '/',
+              path: '/0.13',
             },
             "0.12": {
               label: 'Zig 0.12.0',
