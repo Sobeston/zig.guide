@@ -14,10 +14,10 @@ of 12, meaning it will take up 12 bits in the packed struct). Bools also take up
 
 ```zig
 const MovementState = packed struct {
-    running: bool,
-    crouching: bool,
-    jumping: bool,
-    in_air: bool,
+    running: bool = false,
+    crouching: bool = false,
+    jumping: bool = false,
+    in_air: bool = false,
 };
 
 test "packed struct size" {
@@ -30,5 +30,24 @@ test "packed struct size" {
         .in_air = true,
     };
     _ = state;
+}
+```
+
+## Binary Bitwise Expressions
+
+You can perform binary bitwise operations on integers, but not on packed structs.
+
+```zig
+test "packed struct binary OR" {
+    var state = MovementState{ .jumping = true };
+
+    // Convert to bits and perform the binary operation
+    const backing_type = @typeInfo(MovementState).@"struct".backing_integer.?;
+    const new_state_bits = @as(backing_type, @bitCast(state)) | @as(backing_type, @bitCast(MovementState{ .running = true }));
+
+    // Convert back to original type
+    state = @bitCast(new_state_bits);
+
+    try expect(state == MovementState{ .jumping = true, .running = true });
 }
 ```
