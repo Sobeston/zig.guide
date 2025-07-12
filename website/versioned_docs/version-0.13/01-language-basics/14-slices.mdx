@@ -62,7 +62,7 @@ Let's again compare our pointer types.
 
 | Feature         | `*T`              | `*[N]T`            | `[*]T`                           | `[]T`               |
 | --------------- | ----------------- | ------------------ | -------------------------------- | ------------------- |
-| Dereferenceable | Yes, e.g. `ptr.*` | No                 | No                               | No                  |
+| Dereferenceable | Yes, e.g. `ptr.*` | Yes                 | No                               | No                  |
 | Indexable       | No                | Yes                | Yes                              | Yes                 |
 | Sliceable       | No                | Yes                | Yes                              | Yes                 |
 | Element Count   | Always 1          | Compile-time known | Unknown                          | Runtime known       |
