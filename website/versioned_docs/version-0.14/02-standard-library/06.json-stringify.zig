@@ -10,13 +10,11 @@ test "json stringify" {
         .lat = 51.997664,
         .long = -0.740687,
     };
-
-    var buf: [100]u8 = undefined;
+    var buf: [1000]u8 = undefined;
     var fba = std.heap.FixedBufferAllocator.init(&buf);
-    var string = std.ArrayList(u8).init(fba.allocator());
-    try std.json.stringify(x, .{}, string.writer());
+    const jsonStr = try std.json.stringifyAlloc(fba.allocator(), x, .{});
 
-    try expect(eql(u8, string.items,
+    try expect(eql(u8, jsonStr,
         \\{"lat":5.199766540527344e1,"long":-7.406870126724243e-1}
     ));
 }

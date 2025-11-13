@@ -73,7 +73,7 @@ const config = {
           },
           versions: {
             "0.14": {
-              label: 'Zig 0.14.0 (dev)',
+              label: 'Zig 0.14.1',
               path: 'master',
             },
             "0.13": {
