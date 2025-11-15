@@ -30,7 +30,7 @@ const config = {
 
   // Even if you don't use internationalization, you can use this field to set
   // useful metadata like html lang. For example, if your site is Chinese, you
-  // may want to replace "en" with "zh-Hans".
+  // may want to replace 'en' with 'zh-Hans'.
   i18n: {
     defaultLocale: 'en',
     locales: ['en'],
@@ -39,7 +39,7 @@ const config = {
   scripts: [{
     src: '//gc.zgo.at/count.js',
     async: true,
-    "data-goatcounter": "https://ziglearn.goatcounter.com/count",
+    'data-goatcounter': 'https://ziglearn.goatcounter.com/count',
   },],
 
   plugins: [
@@ -47,8 +47,12 @@ const config = {
       indexBaseUrl: true,
       maxHits: 7,
       disableVersioning: true,
+      // Search only in latest release
       excludeRoutes: [
-        '/master/**/*', '/0.11/**/*', '/0.12/**/*',
+        '/0.14/**/*',
+        '/0.13/**/*',
+        '/0.12/**/*',
+        '/0.11/**/*',
       ],
     }]
   ],
@@ -62,30 +66,34 @@ const config = {
           routeBasePath: '/', // Serve the docs at the site's root
           sidebarPath: './sidebars.js',
           // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
+          // Remove this to remove the 'edit this page' links.
           editUrl: 'https://github.com/Sobeston/zig.guide/tree/master/website/',
           showLastUpdateAuthor: true,
           showLastUpdateTime: true,
-          lastVersion: "0.13",
+          lastVersion: '0.15',
           admonitions: {
             keywords: ['cpp', 'go', 'js'],
             extendDefaults: true
           },
           versions: {
-            "0.14": {
-              label: 'Zig 0.14.1',
-              path: 'master',
-            },
-            "0.13": {
-              label: 'Zig 0.13.0',
+            '0.15': {
+              label: 'Zig 0.15.2',
               path: '/',
             },
-            "0.12": {
+            '0.14': {
+              label: 'Zig 0.14.1',
+              path: '/0.14',
+            },
+            '0.13': {
+              label: 'Zig 0.13.0',
+              path: '/0.13',
+            },
+            '0.12': {
               label: 'Zig 0.12.0',
               path: '/0.12',
             },
-            "0.11": {
-              label: "Zig 0.11.0",
+            '0.11': {
+              label: 'Zig 0.11.0',
               path: '/0.11',
             }
           },
@@ -94,7 +102,7 @@ const config = {
           routeBasePath: 'posts',
           showReadingTime: true,
           // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
+          // Remove this to remove the 'edit this page' links.
           editUrl: 'https://github.com/Sobeston/zig.guide/tree/master/website/',
           showLastUpdateAuthor: true,
           showLastUpdateTime: true,
