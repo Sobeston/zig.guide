@@ -1,0 +1,50 @@
+import CodeBlock from "@theme/CodeBlock";
+
+import Pointers from "!!raw-loader!./11.pointers.zig";
+
+# Pointers
+
+Normal pointers in Zig cannot have 0 or null as a value. They follow the syntax
+`*T`, where `T` is the child type.
+
+Referencing is done with `&variable`, and dereferencing is done with
+`variable.*`.
+
+<CodeBlock language="zig">{Pointers}</CodeBlock>
+
+Trying to set a `*T` to the value 0 is detectable illegal behaviour.
+
+```zig
+test "naughty pointer" {
+    var x: u16 = 5;
+    x -= 5;
+    var y: *u8 = @ptrFromInt(x);
+    y = y;
+}
+```
+
+```
+Test [23/126] test.naughty pointer... thread 21598 panic: cast causes pointer to be null
+./test-c1.zig:252:18: 0x260a91 in test.naughty pointer (test)
+    var y: *u8 = @ptrFromInt(x);
+                 ^
+```
+
+Zig also has const pointers, which cannot be used to modify the referenced data.
+Referencing a const variable will yield a const pointer.
+
+```zig
+test "const pointers" {
+    const x: u8 = 1;
+    var y = &x;
+    y.* += 1;
+}
+```
+
+```
+error: cannot assign to constant
+    y.* += 1;
+        ^
+```
+
+A `*T` coerces to a `*const T`.

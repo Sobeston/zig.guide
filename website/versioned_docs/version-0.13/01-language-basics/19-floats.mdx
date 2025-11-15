@@ -1,0 +1,34 @@
+import CodeBlock from "@theme/CodeBlock";
+
+import FloatsWidening from "!!raw-loader!./19.floats-widening.zig";
+import FloatsLiterals from "!!raw-loader!./19.floats-literals.zig";
+import FloatsHexUnderscores from "!!raw-loader!./19.floats-hex-underscores.zig";
+import FloatsConversion from "!!raw-loader!./19.floats-conversion.zig";
+
+# Floats
+
+Zig's floats are strictly IEEE-compliant unless
+[`@setFloatMode(.Optimized)`](https://ziglang.org/documentation/master/#setFloatMode)
+is used, which is equivalent to GCC's `-ffast-math`. Floats coerce to larger
+float types.
+
+<CodeBlock language="zig">{FloatsWidening}</CodeBlock>
+
+Floats support multiple kinds of literal.
+
+<CodeBlock language="zig">{FloatsLiterals}</CodeBlock>
+
+Underscores may also be placed between digits.
+
+<CodeBlock language="zig">{FloatsHexUnderscores}</CodeBlock>
+
+Integers and floats may be converted using the built-in functions
+[`@floatFromInt`](https://ziglang.org/documentation/0.12.0/#floatFromInt) and
+[`@intFromFloat`](https://ziglang.org/documentation/0.12.0/#intFromFloat).
+[`@floatFromInt`](https://ziglang.org/documentation/0.12.0/#floatFromInt) is
+always safe, whereas
+[`@intFromFloat`](https://ziglang.org/documentation/0.12.0/#intFromFloat) is
+detectable illegal behaviour if the float value cannot fit in the integer
+destination type.
+
+<CodeBlock language="zig">{FloatsConversion}</CodeBlock>

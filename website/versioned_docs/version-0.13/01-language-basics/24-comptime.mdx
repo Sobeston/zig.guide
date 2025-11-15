@@ -1,0 +1,84 @@
+import CodeBlock from "@theme/CodeBlock";
+
+import ComptimeBlocks from "!!raw-loader!./24.comptime-blocks.zig";
+import ComptimeInts from "!!raw-loader!./24.comptime-ints.zig";
+import ComptimeTypeBranching from "!!raw-loader!./24.comptime-type-branching.zig";
+import ComptimeReturningType from "!!raw-loader!./24.comptime-returning-type.zig";
+import ComptimeTypeinfo from "!!raw-loader!./24.comptime-typeinfo.zig";
+import ComptimeType from "!!raw-loader!./24.comptime-type.zig";
+import ComptimeReturnStruct from "!!raw-loader!./24.comptime-return-struct.zig";
+import ComptimeAnytype from "!!raw-loader!./24.comptime-anytype.zig";
+import ComptimeConcatRepeat from "!!raw-loader!./24.comptime-concat-repeat.zig";
+
+# Comptime
+
+Blocks of code may be forcibly executed at compile time using the
+[`comptime`](https://ziglang.org/documentation/master/#comptime) keyword. In
+this example, the variables x and y are equivalent.
+
+<CodeBlock language="zig">{ComptimeBlocks}</CodeBlock>
+
+Integer literals are of the type `comptime_int`. These are special in a way that
+they have no size (they cannot be used at runtime!), and they have arbitrary
+precision. `comptime_int` values coerce to any integer type that can hold them.
+They also coerce to floats. Character literals are of this type.
+
+<CodeBlock language="zig">{ComptimeInts}</CodeBlock>
+
+`comptime_float` is also available, which internally is an `f128`. These cannot
+be coerced to integers, even if they hold an integer value.
+
+Types in Zig are values of the type `type`. These are available at compile time.
+We have previously encountered them by checking
+[`@TypeOf`](https://ziglang.org/documentation/master/#TypeOf) and comparing with
+other types, but we can do more.
+
+<CodeBlock language="zig">{ComptimeTypeBranching}</CodeBlock>
+
+Function parameters in Zig can be tagged as being
+[`comptime`](https://ziglang.org/documentation/master/#comptime). This means
+that the value passed to that function parameter must be known at compile time.
+Let's make a function that returns a type. Notice how this function is
+PascalCase, as it returns a type.
+
+<CodeBlock language="zig">{ComptimeReturningType}</CodeBlock>
+
+We can reflect upon types using the built-in
+[`@typeInfo`](https://ziglang.org/documentation/master/#typeInfo), which takes
+in a `type` and returns a tagged union. This tagged union type can be found in
+[`std.builtin.Type`](https://ziglang.org/documentation/master/std/#std.builtin.Type)
+(info on how to make use of imports and std later).
+
+<CodeBlock language="zig">{ComptimeTypeinfo}</CodeBlock>
+
+We can use the [`@Type`](https://ziglang.org/documentation/master/#Type)
+function to create a type from a
+[`@typeInfo`](https://ziglang.org/documentation/master/#typeInfo).
+[`@Type`](https://ziglang.org/documentation/master/#Type) is implemented for
+most types but is notably unimplemented for enums, unions, functions, and
+structs.
+
+Here anonymous struct syntax is used with `.{}`, because the `T` in `T{}` can be
+inferred. Anonymous structs will be covered in detail later. In this example we
+will get a compile error if the `Int` tag isn't set.
+
+<CodeBlock language="zig">{ComptimeType}</CodeBlock>
+
+Returning a struct type is how you make generic data structures in Zig. The
+usage of [`@This`](https://ziglang.org/documentation/master/#This) is required
+here, which gets the type of the innermost struct, union, or enum. Here
+[`std.mem.eql`](https://ziglang.org/documentation/master/std/#std;mem.eql) is
+also used which compares two slices.
+
+<CodeBlock language="zig">{ComptimeReturnStruct}</CodeBlock>
+
+The types of function parameters can also be inferred by using `anytype` in
+place of a type. [`@TypeOf`](https://ziglang.org/documentation/master/#TypeOf)
+can then be used on the parameter.
+
+<CodeBlock language="zig">{ComptimeAnytype}</CodeBlock>
+
+Comptime also introduces the operators `++` and `**` for concatenating and
+repeating arrays and slices. These operators do not work at runtime.
+
+<CodeBlock language="zig">{ComptimeConcatRepeat}</CodeBlock>

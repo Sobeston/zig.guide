@@ -1,0 +1,37 @@
+import CodeBlock from "@theme/CodeBlock";
+
+import ManyItemPointers from "!!raw-loader!./13.many-item-pointers.zig";
+
+# Many-item Pointers
+
+Most programs need to keep track of buffers which don't have compile-time known
+lengths. Many-item pointers are used for these. These act similarly to their
+single-item counterparts, using the syntax `[*]T` instead of `*T`.
+
+Here's a rundown of the differences between single and multi-item pointers.
+
+|                               | Single-item pointers        | Multi-item pointers              |
+| ----------------------------- | --------------------------- | -------------------------------- |
+| Dereferenceable               | Yes, e.g. `ptr.*`           | No                               |
+| Indexable                     | No                          | Yes, e.g. `ptr[0]`               |
+| Supports Arithmetic           | No                          | Yes, e.g. `ptr + 1` or `ptr - 1` |
+| Item size                     | Any size, including unknown | Must be known                    |
+| Coerces from an array pointer | No                          | Yes                              |
+
+Many-item pointers can have all of the same attributes, such as `const`, as
+single-item pointers.
+
+In this example code, we've written a function that can take in a buffer of any
+length. Notice how a single-item pointer to an array of bytes coerces into a
+many-item pointer of bytes.
+
+<CodeBlock language="zig">{ManyItemPointers}</CodeBlock>
+
+Think about what might happen if you passed that function the incorrect
+`byte_count`. The programmer is expected to keep track of (or otherwise know)
+the length of these buffers. It's worth noting that this function is effectively
+trusting us to pass us a valid length for the given buffer.
+
+We can convert from a many-item pointer to a single-item pointer by either
+indexing an element and dereferencing that, or by using `@ptrCast` to cast the
+pointer type. This is only valid when the buffer has a length of at least 1.

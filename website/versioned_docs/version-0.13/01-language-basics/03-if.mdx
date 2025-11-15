@@ -1,0 +1,17 @@
+import CodeBlock from "@theme/CodeBlock";
+
+import Expect from "!!raw-loader!./03.expect.zig";
+import IfExpression from "!!raw-loader!./03.if-expression.zig";
+
+# If Expressions
+
+Zig's if statements accept `bool` values (i.e. `true` or `false`). Unlike languages
+like C or JavaScript, there are no values that implicitly coerce to bool values.
+
+Ternary conditional operators (cond ? a : b) do not exist in zig.
+
+<CodeBlock language="zig">{Expect}</CodeBlock>
+
+If statements also work as expressions.
+
+<CodeBlock language="zig">{IfExpression}</CodeBlock>
