@@ -7,9 +7,9 @@ const ArrayList = std.ArrayList;
 const test_allocator = std.testing.allocator;
 
 test "io writer usage" {
-    var list = ArrayList(u8).init(test_allocator);
-    defer list.deinit();
-    const bytes_written = try list.writer().write(
+    var list: ArrayList(u8) = .empty;
+    defer list.deinit(test_allocator);
+    const bytes_written = try list.writer(test_allocator).write(
         "Hello World!",
     );
     try expect(bytes_written == 12);

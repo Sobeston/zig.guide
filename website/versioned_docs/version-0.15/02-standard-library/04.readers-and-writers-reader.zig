@@ -16,11 +16,8 @@ test "io reader usage" {
     try file.writeAll(message);
     try file.seekTo(0);
 
-    const contents = try file.reader().readAllAlloc(
-        test_allocator,
-        message.len,
-    );
-    defer test_allocator.free(contents);
+    var buf: [1000]u8 = undefined;
+    const len = try file.readAll(buf[0..]);
 
-    try expect(eql(u8, contents, message));
+    try expect(eql(u8, buf[0..len], message));
 }

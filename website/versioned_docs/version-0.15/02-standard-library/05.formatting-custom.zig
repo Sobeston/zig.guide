@@ -8,15 +8,7 @@ const Person = struct {
     name: []const u8,
     birth_year: i32,
     death_year: ?i32,
-    pub fn format(
-        self: Person,
-        comptime fmt: []const u8,
-        options: std.fmt.FormatOptions,
-        writer: anytype,
-    ) !void {
-        _ = fmt;
-        _ = options;
-
+    pub fn format(self: Person, writer: *std.Io.Writer) !void {
         try writer.print("{s} ({}-", .{
             self.name, self.birth_year,
         });
@@ -38,7 +30,7 @@ test "custom fmt" {
 
     const john_string = try std.fmt.allocPrint(
         test_allocator,
-        "{s}",
+        "{f}",
         .{john},
     );
     defer test_allocator.free(john_string);
@@ -57,7 +49,7 @@ test "custom fmt" {
 
     const claude_string = try std.fmt.allocPrint(
         test_allocator,
-        "{s}",
+        "{f}",
         .{claude},
     );
     defer test_allocator.free(claude_string);

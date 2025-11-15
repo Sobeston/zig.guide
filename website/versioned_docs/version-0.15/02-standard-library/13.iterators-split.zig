@@ -5,7 +5,7 @@ const expect = std.testing.expect;
 // hide-end
 test "split iterator" {
     const text = "robust, optimal, reusable, maintainable, ";
-    var iter = std.mem.split(u8, text, ", ");
+    var iter = std.mem.splitSequence(u8, text, ", ");
     try expect(eql(u8, iter.next().?, "robust"));
     try expect(eql(u8, iter.next().?, "optimal"));
     try expect(eql(u8, iter.next().?, "reusable"));

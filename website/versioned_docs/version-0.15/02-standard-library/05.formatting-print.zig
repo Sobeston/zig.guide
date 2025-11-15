@@ -5,9 +5,9 @@ const eql = std.mem.eql;
 const test_allocator = std.testing.allocator;
 // hide-end
 test "print" {
-    var list = std.ArrayList(u8).init(test_allocator);
-    defer list.deinit();
-    try list.writer().print(
+    var list: std.ArrayList(u8) = .empty;
+    defer list.deinit(test_allocator);
+    try list.writer(test_allocator).print(
         "{} + {} = {}",
         .{ 9, 10, 19 },
     );

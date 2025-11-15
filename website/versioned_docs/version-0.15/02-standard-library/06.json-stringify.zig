@@ -11,11 +11,9 @@ test "json stringify" {
 
     var buf: [1000]u8 = undefined;
     var fba = std.heap.FixedBufferAllocator.init(&buf);
-    const jsonStr = try std.json.stringifyAlloc(fba.allocator(), x, .{});
+    const jsonStr = try std.json.Stringify.valueAlloc(fba.allocator(), x, .{});
 
-    try std.testing.expectEqualSlices(
-        u8,
-        "{\"lat\":5.199766540527344e1,\"long\":-7.406870126724243e-1}",
-        jsonStr,
-    );
+    try std.testing.expectEqualSlices(u8,
+        \\{"lat":51.99766540527344,"long":-0.7406870126724243}
+    , jsonStr);
 }

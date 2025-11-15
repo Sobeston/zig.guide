@@ -12,14 +12,26 @@ const version_path = std.fmt.comptimePrint(
     .{zig_version.minor},
 );
 
+const max_files: usize = 2048;
+const max_path_len: usize = 512;
+var path_storage: [max_files][max_path_len]u8 = undefined;
+var test_file_paths_store: [max_files][]const u8 = undefined;
+
+fn storePath(src: []const u8, path_count: usize) !void {
+    if (path_count >= max_files)
+        return error.TooManyFiles;
+    if (src.len >= max_path_len)
+        return error.PathTooLong;
+
+    std.mem.copyForwards(u8, &path_storage[path_count], src);
+    test_file_paths_store[path_count] = path_storage[path_count][0..src.len];
+}
+
 /// Returns paths to all files inside version_path with a .zig extension.
 /// Also tests /blog when current_minor_version is detected.
 fn getAllTestPaths(root_dir: std.fs.Dir, allocator: std.mem.Allocator) ![][]const u8 {
-    var test_file_paths = std.ArrayList([]const u8).init(allocator);
-    errdefer {
-        for (test_file_paths.items) |test_path| allocator.free(test_path);
-        test_file_paths.deinit();
-    }
+    var path_count: usize = 0;
+
     {
         var dirs = try switch (zig_version.minor) {
             11 => root_dir.openIterableDir(version_path, .{}),
@@ -36,7 +48,8 @@ fn getAllTestPaths(root_dir: std.fs.Dir, allocator: std.mem.Allocator) ![][]cons
                 &[_][]const u8{ version_path, entry.path },
             );
 
-            try test_file_paths.append(qualified_path);
+            try storePath(qualified_path, path_count);
+            path_count += 1;
         }
     }
 
@@ -65,27 +78,34 @@ fn getAllTestPaths(root_dir: std.fs.Dir, allocator: std.mem.Allocator) ![][]cons
                 &[_][]const u8{ blog_path, entry.path },
             );
 
-            try test_file_paths.append(qualified_path);
+            try storePath(qualified_path, path_count);
+            path_count += 1;
         }
     }
 
-    return test_file_paths.toOwnedSlice();
+    return test_file_paths_store[0..path_count];
 }
 
+const max_output = 200_000;
+var main_test_file_buf: [max_output]u8 = undefined;
+
 /// Returns a generated file as an entrypoint for testing
-fn generateMainTestFile(allocator: std.mem.Allocator, test_file_paths: [][]const u8) ![]u8 {
-    var out_file = std.ArrayList(u8).init(allocator);
-
-    try out_file.appendSlice("const std = @import(\"std\");\n");
+fn generateMainTestFile(test_file_paths: [][]const u8) ![]u8 {
+    var used: usize = 0;
+    const import_line = "const std = @import(\"std\");\n";
+    std.mem.copyForwards(u8, main_test_file_buf[used..], import_line);
+    used += import_line.len;
     for (test_file_paths) |test_path| {
-        try out_file.writer().print(
-            "pub const A{X} = @import(\"{s}\");\n",
-            .{ std.hash.Wyhash.hash(0, test_path), test_path },
-        );
+        var fbs = std.io.fixedBufferStream(main_test_file_buf[used..]);
+        try fbs.writer().print("pub const A{X} = @import(\"{s}\");\n", .{ std.hash.Wyhash.hash(0, test_path), test_path });
+        const written = fbs.getWritten().len;
+        used += written;
     }
-    try out_file.appendSlice("comptime { std.testing.refAllDecls(@This()); }\n");
 
-    return out_file.toOwnedSlice();
+    const ending_line = "comptime { std.testing.refAllDecls(@This()); }\n";
+    std.mem.copyForwards(u8, main_test_file_buf[used..], ending_line);
+    used += ending_line.len;
+    return main_test_file_buf[0..used];
 }
 
 pub fn build(b: *std.Build) !void {
@@ -95,12 +115,7 @@ pub fn build(b: *std.Build) !void {
     const optimize = b.standardOptimizeOption(.{});
 
     const test_file_paths = try getAllTestPaths(b.build_root.handle, b.allocator);
-    defer {
-        for (test_file_paths) |test_path| b.allocator.free(test_path);
-        b.allocator.free(test_file_paths);
-    }
-    const out_file = try generateMainTestFile(b.allocator, test_file_paths);
-    defer b.allocator.free(out_file);
+    const out_file = try generateMainTestFile(test_file_paths);
 
     // write out our main testing file to zig-cache
     const write_files = b.addWriteFiles();
@@ -113,11 +128,11 @@ pub fn build(b: *std.Build) !void {
         _ = write_files.addCopyFile(.{ .cwd_relative = path }, path);
     }
 
-    const unit_tests = b.addTest(.{
+    const unit_tests = b.addTest(.{ .root_module = b.createModule(.{
         .root_source_file = test_lazypath,
         .target = target,
         .optimize = optimize,
-    });
+    }) });
 
     const run_unit_tests = b.addRunArtifact(unit_tests);
 
@@ -160,7 +175,9 @@ const DebugDirLogger = struct {
                     11 => makeZig0_11,
                     12 => makeZig0_12,
                     13 => makeZig0_13,
-                    else => makeZig0_14,
+                    14 => makeZig0_14,
+                    15 => makeZig0_15,
+                    else => makeZig0_15,
                 },
             }),
         };
@@ -193,6 +210,10 @@ const DebugDirLogger = struct {
     }
 
     fn makeZig0_14(step: *std.Build.Step, _: std.Build.Step.MakeOptions) !void {
+        try makeZig(step);
+    }
+
+    fn makeZig0_15(step: *std.Build.Step, _: std.Build.Step.MakeOptions) !void {
         try makeZig(step);
     }
 
