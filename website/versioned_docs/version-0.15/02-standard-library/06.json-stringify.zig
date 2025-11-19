@@ -1,8 +1,7 @@
 // hide-start
 const std = @import("std");
-// hide-end
 const Place = struct { lat: f32, long: f32 };
-
+// hide-end
 test "json stringify" {
     const x = Place{
         .lat = 51.997664,
