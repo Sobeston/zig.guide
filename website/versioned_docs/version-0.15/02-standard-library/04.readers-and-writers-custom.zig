@@ -1,35 +1,41 @@
 // hide-start
 const std = @import("std");
 // hide-end
+// Don't create a type like this! Use an
+// arraylist with a fixed buffer allocator
 const MyByteList = struct {
     data: [100]u8 = undefined,
     items: []u8 = &[_]u8{},
 
-    fn appendWrite(self: *MyByteList, buf: []const u8) !usize {
-        if (self.items.len + buf.len > self.data.len) {
+    const Writer = std.io.GenericWriter(
+        *MyByteList,
+        error{EndOfBuffer},
+        appendWrite,
+    );
+
+    fn appendWrite(
+        self: *MyByteList,
+        data: []const u8,
+    ) error{EndOfBuffer}!usize {
+        if (self.items.len + data.len > self.data.len) {
             return error.EndOfBuffer;
         }
-
-        std.mem.copyForwards(u8, self.data[self.items.len .. self.items.len + buf.len], buf);
-        self.items = self.data[0 .. self.items.len + buf.len];
-        return buf.len;
+        @memcpy(
+            self.data[self.items.len..][0..data.len],
+            data,
+        );
+        self.items = self.data[0 .. self.items.len + data.len];
+        return data.len;
     }
 
-    pub fn writer(self: *MyByteList) std.io.GenericWriter(
-        *MyByteList,
-        error{EndOfBuffer}, // <-- REQUIRED NOW
-        appendWrite,
-    ) {
+    fn writer(self: *MyByteList) Writer {
         return .{ .context = self };
     }
 };
 
 test "custom writer" {
     var bytes = MyByteList{};
-
-    const w = bytes.writer();
-    try w.writeAll("Hello");
-    try w.writeAll(" Writer!");
-
+    _ = try bytes.writer().write("Hello");
+    _ = try bytes.writer().write(" Writer!");
     try std.testing.expectEqualSlices(u8, bytes.items, "Hello Writer!");
 }
