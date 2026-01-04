@@ -14,7 +14,7 @@ const version_path = switch (zig_version.minor) {
     13 => base_version_path ++ "0.13.0",
     // 14
     15 => base_version_path ++ "0.15.x",
-    16 => base_version_path ++ "master",
+    16 => base_version_path ++ "0.16.x",
     else => @compileError("Unknown version"),
 };
 
