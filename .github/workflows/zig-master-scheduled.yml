@@ -11,7 +11,7 @@ jobs:
     name: zig build test (scheduled master)
     steps:
       - uses: actions/checkout@v3
-      - uses: mlugg/setup-zig@v1.2.1
+      - uses: mlugg/setup-zig@v2
         with:
           version: master
       - run: zig build test --summary all
