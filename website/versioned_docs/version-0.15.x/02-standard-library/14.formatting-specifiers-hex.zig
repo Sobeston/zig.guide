@@ -27,8 +27,6 @@ test "hex" {
 
     try expectEqualStrings(
         "5a696721",
-        try bufPrint(&b, "{}", .{
-            std.fmt.fmtSliceHexLower("Zig!"),
-        }),
+        try bufPrint(&b, "{x}", .{"Zig!"}),
     );
 }

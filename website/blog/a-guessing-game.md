@@ -28,7 +28,7 @@ pub fn main() !void {
 Let's initialise _std.rand.DefaultPrng_ with a 64 bit unsigned integer (`u64`). Our `rand` here allows us to access many useful utilities for our PRNG. Here we're asking our PRNG for a random number from 1 to 100, however, if our PRNG is initialised with the same number every time our program will always print out the same number.
 
 ```zig
-    var prng = std.rand.DefaultPrng.init(1625953);
+    var prng: std.Random.DefaultPrng = .init(seed);(1625953);
     const rand = prng.random();
 
     try stdout.print(
@@ -43,7 +43,7 @@ For a good source of entropy, it is best to initialise our PRNG with random byte
     var seed: u64 = undefined;
     try std.posix.getrandom(std.mem.asBytes(&seed));
 
-    var prng = std.rand.DefaultPrng.init(seed);
+    var prng: std.Random.DefaultPrng = .init(seed);(seed);
     const rand = prng.random();
 ```
 
@@ -58,7 +58,7 @@ pub fn main() !void {
     var seed: u64 = undefined;
     try std.posix.getrandom(std.mem.asBytes(&seed));
 
-    var prng = std.rand.DefaultPrng.init(seed);
+    var prng: std.Random.DefaultPrng = .init(seed);(seed);
     const rand = prng.random();
 
     const target_number = rand.intRangeAtMost(u8, 1, 100);
@@ -101,7 +101,7 @@ pub fn main() !void {
     var seed: u64 = undefined;
     try std.posix.getrandom(std.mem.asBytes(&seed));
 
-    var prng = std.rand.DefaultPrng.init(seed);
+    var prng: std.Random.DefaultPrng = .init(seed);(seed);
     const rand = prng.random();
 
     const target_number = rand.intRangeAtMost(u8, 1, 100);
