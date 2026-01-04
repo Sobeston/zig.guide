@@ -2,7 +2,7 @@
 authors: sobeston
 date: 2021-09-13
 tags:
-  - Zig 0.13.0
+  - Zig 0.15.x
 ---
 
 # A Guessing Game
