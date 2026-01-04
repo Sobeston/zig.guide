@@ -11,18 +11,19 @@ pub fn main() !void {
 
     const target_number = rand.intRangeAtMost(u8, 1, 100);
 
-    var stdin_buf: [1024]u8 = undefined;
     var stdout_buf: [1024]u8 = undefined;
+    var stdout_writer = std.fs.File.stdout().writer(&stdout_buf);
+    const stdout: *std.io.Writer = &stdout_writer.interface;
+
+    var stdin_buf: [1024]u8 = undefined;
+    var stdin_reader = std.fs.File.stdin().reader(&stdin_buf);
+    const stdin: *std.io.Reader = &stdin_reader.interface;
 
     while (true) {
-        var stdin_reader = std.fs.File.stdin().reader(&stdin_buf);
-        const stdin = &stdin_reader.interface;
-
-        var stdout_writer = std.fs.File.stdout().writer(&stdout_buf);
-        const stdout = &stdout_writer.interface;
         defer stdout.flush() catch {};
 
-        const line = try stdin.takeDelimiterExclusive('\n');
+        const bare_line = try stdin.takeDelimiter('\n') orelse unreachable;
+        const line = std.mem.trim(u8, bare_line, "\r");
 
         const guess = std.fmt.parseInt(u8, line, 10) catch |err| {
             const err_string = switch (err) {

@@ -19,7 +19,10 @@ Let's start by making a file called _fahrenheit_to_celsius.zig_. Here we'll agai
 const std = @import("std");
 
 pub fn main() !void {
-    const stdout = std.io.getStdOut().writer();
+    var stdout_buf: [1024]u8 = undefined;
+    var stdout_writer = std.fs.File.stdout().writer(&stdout_buf);
+    const stdout = &stdout_writer.interface;
+    defer stdout.flush() catch {};
 ```
 
 <!-- truncate -->
@@ -33,16 +36,9 @@ Now let's obtain our process' arguments. To get arguments in a cross-platform ma
 The _argsAlloc_ function, after unwrapping the error, gives us a _slice_. We can iterate over this with `for`, "capturing" the values and indexes. Let's use this to print all of the arguments.
 
 ```zig
-const std = @import("std");
-
-pub fn main() !void {
-    const stdout = std.io.getStdOut().writer();
-    const args = try std.process.argsAlloc(std.heap.page_allocator);
-
     for (args, 0..) |arg, i| {
         try stdout.print("arg {}: {s}\n", .{ i, arg });
     }
-}
 ```
 
 This program will print something like this when run with `zig run fahrenheit_to_celsius.zig`.
@@ -68,10 +64,6 @@ zig run fahrenheit_to_celsius.zig -- first_argument second_argument ...
 Let's have our program skip the 0th argument, and make sure that there's a first argument.
 
 ```zig
-const std = @import("std");
-
-pub fn main() !void {
-    const stdout = std.io.getStdOut().writer();
     const args = try std.process.argsAlloc(std.heap.page_allocator);
 
     if (args.len < 2) return error.ExpectedArgument;
@@ -98,7 +90,10 @@ Now that we know how to get the process' arguments, let's start performing the c
 const std = @import("std");
 
 pub fn main() !void {
-    const stdout = std.io.getStdOut().writer();
+    var stdout_buf: [1024]u8 = undefined;
+    var stdout_writer = std.fs.File.stdout().writer(&stdout_buf);
+    const stdout = &stdout_writer.interface;
+    defer stdout.flush() catch {};
 
     const args = try std.process.argsAlloc(std.heap.page_allocator);
     defer std.process.argsFree(std.heap.page_allocator, args);
@@ -134,20 +129,9 @@ $ zig run fahrenheit_to_celsius.zig -- 100
 By changing the _format specifier_ from `{}` to `{d}`, we can print in decimal form. We can also reduce the precision of the output by using `{d:.x}`, where _x_ is the amount of decimal places.
 
 ```zig
-const std = @import("std");
-
-pub fn main() !void {
-    const stdout = std.io.getStdOut().writer();
-
-    const args = try std.process.argsAlloc(std.heap.page_allocator);
-    defer std.process.argsFree(std.heap.page_allocator, args);
-
-    if (args.len < 2) return error.ExpectedArgument;
-
     const f = try std.fmt.parseFloat(f32, args[1]);
     const c = (f - 32) * (5.0 / 9.0);
     try stdout.print("{d:.1}c\n", .{c});
-}
 ```
 
 This yields a much more friendly output.

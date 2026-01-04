@@ -21,7 +21,9 @@ As Zig does not have a runtime, it does not manage a PRNG (pseudorandom number g
 const std = @import("std");
 
 pub fn main() !void {
-    const stdout = std.io.getStdOut().writer();
+    var stdout_buf: [1024]u8 = undefined;
+    var stdout_writer = std.fs.File.stdout().writer(&stdout_buf);
+    const stdout: *std.io.Writer = &stdout_writer.interface;
 
 ```
 
@@ -68,20 +70,23 @@ pub fn main() !void {
 As we'll be printing and taking in user input until the correct value is guessed, let's start by making a while loop with `stdin` and `stdout`. Note how we've obtained an `stdin` _reader_.
 
 ```zig
+    var stdout_buf: [1024]u8 = undefined;
+    var stdout_writer = std.fs.File.stdout().writer(&stdout_buf);
+    const stdout: *std.io.Writer = &stdout_writer.interface;
+
+    var stdin_buf: [1024]u8 = undefined;
+    var stdin_reader = std.fs.File.stdin().reader(&stdin_buf);
+    const stdin: *std.io.Reader = &stdin_reader.interface;
+
     while (true) {
-        const stdin = std.io.getStdIn().reader();
-        const stdout = std.io.getStdOut().writer();
+        defer stdout.flush() catch {};
 ```
 
-To get a line of user's input, we have to read `stdin` until we encounter a newline character, which is represented by `\n`. What is read will need to be copied into a buffer, so here we're asking _readUntilDelimiterAlloc_ to allocate a buffer up to 8KiB using _std.heap.page_allocator_ until it reaches the `\n` character.
+To get a line of user's input, we have to read `stdin` until we encounter a newline character, which is represented by `\n`. What is read will be copied into the buffer
+of our reader.
 
 ```zig
-        const bare_line = try stdin.readUntilDelimiterAlloc(
-            std.heap.page_allocator,
-            '\n',
-            8192,
-        );
-        defer std.heap.page_allocator.free(bare_line);
+        const bare_line = try stdin.takeDelimiter('\n') orelse unreachable;
 ```
 
 Because of legacy reasons newlines in many places in Windows are represented by the two-character sequence `\r\n`, which means that we must strip `\r` from the line that we've read. Without this our program will behave incorrectly on Windows.
@@ -101,38 +106,36 @@ pub fn main() !void {
     var seed: u64 = undefined;
     try std.posix.getrandom(std.mem.asBytes(&seed));
 
-    var prng: std.Random.DefaultPrng = .init(seed);(seed);
+    var prng: std.Random.DefaultPrng = .init(seed);
     const rand = prng.random();
 
     const target_number = rand.intRangeAtMost(u8, 1, 100);
 
+    var stdout_buf: [1024]u8 = undefined;
+    var stdout_writer = std.fs.File.stdout().writer(&stdout_buf);
+    const stdout: *std.io.Writer = &stdout_writer.interface;
+
+    var stdin_buf: [1024]u8 = undefined;
+    var stdin_reader = std.fs.File.stdin().reader(&stdin_buf);
+    const stdin: *std.io.Reader = &stdin_reader.interface;
+
     while (true) {
-        const stdin = std.io.getStdIn().reader();
-        const stdout = std.io.getStdOut().writer();
+        defer stdout.flush() catch {};
 
-        const bare_line = try stdin.readUntilDelimiterAlloc(
-            std.heap.page_allocator,
-            '\n',
-            8192,
-        );
-        defer std.heap.page_allocator.free(bare_line);
-
+        const bare_line = try stdin.takeDelimiter('\n') orelse unreachable;
         const line = std.mem.trim(u8, bare_line, "\r");
-
 ```
 
 This can be achieved by passing the buffer to _std.fmt.parseInt_, where the last parameter is the base of the number in the string. So far we've only handled errors with `try`, which returns the error if encountered, but here we'll want to `catch` the error so that we can process it without returning it. If there's an error we'll print a friendly error message and `continue`, so that the user can re-enter their number.
 
 ```zig
-        const guess = std.fmt.parseInt(u8, line, 10) catch |err| switch (err) {
-            error.Overflow => {
-                try stdout.writeAll("Please enter a small positive number\n");
-                continue;
-            },
-            error.InvalidCharacter => {
-                try stdout.writeAll("Please enter a valid number\n");
-                continue;
-            },
+        const guess = std.fmt.parseInt(u8, line, 10) catch |err| {
+            const err_string = switch (err) {
+                error.Overflow => "Please enter a small positive number\n",
+                error.InvalidCharacter => "Please enter a valid number\n",
+            };
+            try stdout.writeAll(err_string);
+            continue;
         };
 ```
 
