@@ -1,24 +1,30 @@
-//! This build.zig is a bit cursed, namely as it attempts to be compatible with all versions of Zig
-//! used within the guide.
+// TODO: redo this build.zig, it originally supported every compiler version. I can't be bothered
+// with that anymore.
 
 const std = @import("std");
 const zig_version = @import("builtin").zig_version;
 
 // Used for any unversioned content (for now just /blog)
-const current_minor_version = 13;
+const current_minor_version = 15;
 
-const version_path = std.fmt.comptimePrint(
-    "website/versioned_docs/version-0.{}/",
-    .{zig_version.minor},
-);
+const base_version_path = "website/versioned_docs/version-";
+const version_path = switch (zig_version.minor) {
+    11 => base_version_path ++ "0.11.0",
+    12 => base_version_path ++ "0.12.1",
+    13 => base_version_path ++ "0.13.0",
+    // 14
+    15 => base_version_path ++ "0.15.x",
+    16 => base_version_path ++ "master",
+    else => @compileError("Unknown version"),
+};
 
 /// Returns paths to all files inside version_path with a .zig extension.
 /// Also tests /blog when current_minor_version is detected.
 fn getAllTestPaths(root_dir: std.fs.Dir, allocator: std.mem.Allocator) ![][]const u8 {
-    var test_file_paths = std.ArrayList([]const u8).init(allocator);
+    var test_file_paths: std.ArrayList([]const u8) = .empty;
     errdefer {
         for (test_file_paths.items) |test_path| allocator.free(test_path);
-        test_file_paths.deinit();
+        test_file_paths.deinit(allocator);
     }
     {
         var dirs = try switch (zig_version.minor) {
@@ -36,7 +42,7 @@ fn getAllTestPaths(root_dir: std.fs.Dir, allocator: std.mem.Allocator) ![][]cons
                 &[_][]const u8{ version_path, entry.path },
             );
 
-            try test_file_paths.append(qualified_path);
+            try test_file_paths.append(allocator, qualified_path);
         }
     }
 
@@ -65,27 +71,28 @@ fn getAllTestPaths(root_dir: std.fs.Dir, allocator: std.mem.Allocator) ![][]cons
                 &[_][]const u8{ blog_path, entry.path },
             );
 
-            try test_file_paths.append(qualified_path);
+            try test_file_paths.append(allocator, qualified_path);
         }
     }
 
-    return test_file_paths.toOwnedSlice();
+    return test_file_paths.toOwnedSlice(allocator);
 }
 
 /// Returns a generated file as an entrypoint for testing
 fn generateMainTestFile(allocator: std.mem.Allocator, test_file_paths: [][]const u8) ![]u8 {
-    var out_file = std.ArrayList(u8).init(allocator);
+    var out_file: std.ArrayList(u8) = .empty;
 
-    try out_file.appendSlice("const std = @import(\"std\");\n");
+    try out_file.appendSlice(allocator, "const std = @import(\"std\");\n");
     for (test_file_paths) |test_path| {
-        try out_file.writer().print(
+        try out_file.print(
+            allocator,
             "pub const A{X} = @import(\"{s}\");\n",
             .{ std.hash.Wyhash.hash(0, test_path), test_path },
         );
     }
-    try out_file.appendSlice("comptime { std.testing.refAllDecls(@This()); }\n");
+    try out_file.appendSlice(allocator, "comptime { std.testing.refAllDecls(@This()); }\n");
 
-    return out_file.toOwnedSlice();
+    return out_file.toOwnedSlice(allocator);
 }
 
 pub fn build(b: *std.Build) !void {
@@ -114,9 +121,11 @@ pub fn build(b: *std.Build) !void {
     }
 
     const unit_tests = b.addTest(.{
-        .root_source_file = test_lazypath,
-        .target = target,
-        .optimize = optimize,
+        .root_module = b.addModule("tests", .{
+            .root_source_file = test_lazypath,
+            .target = target,
+            .optimize = optimize,
+        }),
     });
 
     const run_unit_tests = b.addRunArtifact(unit_tests);
