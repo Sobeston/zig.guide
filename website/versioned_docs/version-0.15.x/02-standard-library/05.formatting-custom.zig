@@ -26,7 +26,7 @@ const Person = struct {
 };
 
 test "custom fmt" {
-    const john = Person{
+    const john: Person = .{
         .name = "John Carmack",
         .birth_year = 1970,
         .death_year = null,
@@ -45,7 +45,7 @@ test "custom fmt" {
         "John Carmack (1970-)",
     ));
 
-    const claude = Person{
+    const claude: Person = .{
         .name = "Claude Shannon",
         .birth_year = 1916,
         .death_year = 2001,

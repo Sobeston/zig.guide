@@ -10,7 +10,7 @@ const Info = union(enum) {
 };
 
 test "switch capture" {
-    const b = Info{ .a = 10 };
+    const b: Info = .{ .a = 10 };
     const x = switch (b) {
         .b => |str| blk: {
             try expect(@TypeOf(str) == []const u8);

@@ -11,9 +11,7 @@ Let's put some values in a hash map.
 test "hashing" {
     const Point = struct { x: i32, y: i32 };
 
-    var map = std.AutoHashMap(u32, Point).init(
-        test_allocator,
-    );
+    var map: std.AutoHashMap(u32, Point) = .init(test_allocator);
     defer map.deinit();
 
     try map.put(1525, .{ .x = 1, .y = -4 });
@@ -41,9 +39,7 @@ previously a value for that key.
 
 ```zig
 test "fetchPut" {
-    var map = std.AutoHashMap(u8, f32).init(
-        test_allocator,
-    );
+    var map: std.AutoHashMap(u8, f32) = .init(test_allocator);
     defer map.deinit();
 
     try map.put(255, 10);
@@ -59,9 +55,7 @@ is also provided for when you need strings as keys.
 
 ```zig
 test "string hashmap" {
-    var map = std.StringHashMap(enum { cool, uncool }).init(
-        test_allocator,
-    );
+    var map: std.StringHashMap(enum { cool, uncool }) = .init(test_allocator);
     defer map.deinit();
 
     try map.put("loris", .uncool);

@@ -6,7 +6,7 @@ const test_allocator = std.testing.allocator;
 const Place = struct { lat: f32, long: f32 };
 // hide-end
 test "json stringify" {
-    const x = Place{
+    const x: Place = .{
         .lat = 51.997664,
         .long = -0.740687,
     };
