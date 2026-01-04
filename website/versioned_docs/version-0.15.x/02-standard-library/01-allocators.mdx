@@ -8,7 +8,8 @@ import AllocatorsAlloc from "!!raw-loader!./01.allocators-alloc.zig";
 import AllocatorsFba from "!!raw-loader!./01.allocators-fba.zig";
 import AllocatorsArena from "!!raw-loader!./01.allocators-arena.zig";
 import AllocatorsCreate from "!!raw-loader!./01.allocators-create.zig";
-import AllocatorsGpa from "!!raw-loader!./01.allocators-gpa.zig";
+import AllocatorsDebug from "!!raw-loader!./01.allocators-debug.zig";
+import AllocatorsSmp from "!!raw-loader!./01.allocators-smp.zig";
 
 # Allocators
 
@@ -17,7 +18,7 @@ the programmer to choose precisely how memory allocations are done within the
 standard library - no allocations happen behind your back in the standard
 library.
 
-The most basic allocator is
+The most fundamental allocator is
 [`std.heap.page_allocator`](https://ziglang.org/documentation/master/std/#std.heap.page_allocator).
 Whenever this allocator makes an allocation, it will ask your OS for entire
 pages of memory; an allocation of a single byte will likely reserve multiple
@@ -50,18 +51,24 @@ once. Here, `.deinit()` is called on the arena, which frees all memory. Using
 
 <CodeBlock language="zig">{AllocatorsCreate}</CodeBlock>
 
-The Zig standard library also has a general-purpose allocator. This is a safe
+The Zig standard library also has a general-purpose debug allocator. This is a safe
 allocator that can prevent double-free, use-after-free and can detect leaks.
 Safety checks and thread safety can be turned off via its configuration struct
-(left empty below). Zig's GPA is designed for safety over performance, but may
+(left empty below). Zig's DebugAllocator is designed for safety over performance, but may
 still be many times faster than page_allocator.
 
-<CodeBlock language="zig">{AllocatorsGpa}</CodeBlock>
+<CodeBlock language="zig">{AllocatorsDebug}</CodeBlock>
 
-For high performance (but very few safety features!),
-[`std.heap.c_allocator`](https://ziglang.org/documentation/master/std/#std.heap.c_allocator)
-may be considered. This,however, has the disadvantage of requiring linking Libc,
-which can be done with `-lc`.
+For high performance (but very few safety features!), the Zig standard library offers
+[`std.heap.SmpAllocator`](https://ziglang.org/documentation/master/std/#std.heap.SmpAllocator).
+This is a general-purpose allocator designed for [maximum performance](https://ziglang.org/download/0.14.0/release-notes.html#SmpAllocator)
+on multithreaded machines.
+
+<CodeBlock language="zig">{AllocatorsSmp}</CodeBlock>
+
+As an alternative when SmpAllocator is not available or desired, the libc allocator
+[`std.heap.c_allocator`](https://ziglang.org/documentation/master/std/#std.heap.c_allocator) may be considered.
+This, however, has the disadvantage of requiring linking Libc, which can be done with `-lc`.
 
 Benjamin Feng's talk
 [_What's a Memory Allocator Anyway?_](https://www.youtube.com/watch?v=vHWiDx_l4V0)
