@@ -13,7 +13,7 @@ const expect = @import("std").testing.expect;
 const Data = extern struct { a: i32, b: u8, c: f32, d: bool, e: bool };
 
 test "hmm" {
-    const x = Data{
+    const x: Data = .{
         .a = 10005,
         .b = 42,
         .c = -10.5,

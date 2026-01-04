@@ -4,7 +4,7 @@ const expect = std.testing.expect;
 
 // hide-end
 test "GPA" {
-    var gpa = std.heap.GeneralPurposeAllocator(.{}).init;
+    var gpa: std.heap.GeneralPurposeAllocator(.{}) = .init;
     const allocator = gpa.allocator();
     defer {
         const deinit_status = gpa.deinit();

@@ -7,15 +7,11 @@ creating a list of matched brackets.
 ```zig
 test "stack" {
     const string = "(()())";
-    var stack = std.ArrayList(usize).init(
-        test_allocator,
-    );
+    var stack: std.ArrayList(usize) = .init(test_allocator);
     defer stack.deinit();
 
     const Pair = struct { open: usize, close: usize };
-    var pairs = std.ArrayList(Pair).init(
-        test_allocator,
-    );
+    var pairs: std.ArrayList(Pair) = .init(test_allocator);
     defer pairs.deinit();
 
     for (string, 0..) |char, i| {

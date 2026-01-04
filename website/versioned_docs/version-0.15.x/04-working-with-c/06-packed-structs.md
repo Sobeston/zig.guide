@@ -23,7 +23,7 @@ const MovementState = packed struct {
 test "packed struct size" {
     try expect(@sizeOf(MovementState) == 1);
     try expect(@bitSizeOf(MovementState) == 4);
-    const state = MovementState{
+    const state: MovementState = .{
         .running = true,
         .crouching = true,
         .jumping = true,

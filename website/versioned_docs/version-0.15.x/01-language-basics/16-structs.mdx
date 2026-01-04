@@ -18,7 +18,7 @@ Struct fields cannot be implicitly uninitialised:
 
 ```zig
 test "missing struct field" {
-    const my_vector = Vec3{
+    const my_vector: Vec3 = .{
         .x = 0,
         .z = 50,
     };
@@ -28,7 +28,7 @@ test "missing struct field" {
 
 ```
 error: missing field: 'y'
-    const my_vector = Vec3{
+    const my_vector: Vec3 = .{
                         ^
 ```
 

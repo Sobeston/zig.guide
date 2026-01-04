@@ -4,7 +4,7 @@ const expect = std.testing.expect;
 
 // hide-end
 test "arena allocator" {
-    var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
+    var arena: std.heap.ArenaAllocator = .init(std.heap.page_allocator);
     defer arena.deinit();
     const allocator = arena.allocator();
 
