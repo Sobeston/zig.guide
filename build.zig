@@ -9,18 +9,21 @@ const current_minor_version = 15;
 
 const base_version_path = "website/versioned_docs/version-";
 const version_path = switch (zig_version.minor) {
-    11 => base_version_path ++ "0.11.0",
-    12 => base_version_path ++ "0.12.1",
-    13 => base_version_path ++ "0.13.0",
+    11 => base_version_path ++ "0.11",
+    12 => base_version_path ++ "0.12",
+    13 => base_version_path ++ "0.13",
     // 14
     15 => base_version_path ++ "0.15.x",
     16 => base_version_path ++ "0.16.x",
     else => @compileError("Unknown version"),
 };
 
+const Dir = if (zig_version.minor >= 16) std.Io.Dir else std.fs.Dir;
+const Io = if (zig_version.minor >= 16) std.Io else void;
+
 /// Returns paths to all files inside version_path with a .zig extension.
 /// Also tests /blog when current_minor_version is detected.
-fn getAllTestPaths(root_dir: std.fs.Dir, allocator: std.mem.Allocator) ![][]const u8 {
+fn getAllTestPaths(root_dir: Dir, allocator: std.mem.Allocator, io: Io) ![][]const u8 {
     var test_file_paths: std.ArrayList([]const u8) = .empty;
     errdefer {
         for (test_file_paths.items) |test_path| allocator.free(test_path);
@@ -29,11 +32,17 @@ fn getAllTestPaths(root_dir: std.fs.Dir, allocator: std.mem.Allocator) ![][]cons
     {
         var dirs = try switch (zig_version.minor) {
             11 => root_dir.openIterableDir(version_path, .{}),
-            else => root_dir.openDir(version_path, .{ .iterate = true }),
+            12...15 => root_dir.openDir(version_path, .{ .iterate = true }),
+            else => root_dir.openDir(io, version_path, .{ .iterate = true }),
         };
-        defer dirs.close();
+        defer if (zig_version.minor >= 16) dirs.close(io) else dirs.close();
+
         var walker = try dirs.walk(allocator);
-        while (try walker.next()) |entry| {
+        while (try if (zig_version.minor >= 16)
+            walker.next(io)
+        else
+            walker.next()) |entry|
+        {
             if (entry.kind != .file) continue;
             if (!std.mem.endsWith(u8, entry.path, ".zig")) continue;
 
@@ -101,7 +110,9 @@ pub fn build(b: *std.Build) !void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
 
-    const test_file_paths = try getAllTestPaths(b.build_root.handle, b.allocator);
+    const io = if (zig_version.minor >= 16) b.graph.io else {};
+
+    const test_file_paths = try getAllTestPaths(b.build_root.handle, b.allocator, io);
     defer {
         for (test_file_paths) |test_path| b.allocator.free(test_path);
         b.allocator.free(test_file_paths);
@@ -139,78 +150,9 @@ pub fn build(b: *std.Build) !void {
     const fmt_step = b.step("fmt", "Test all files for correct formatting");
     fmt_step.dependOn(&fmt.step);
 
-    const dir_logger = DebugDirLogger.create(b);
-    dir_logger.step.dependOn(&write_files.step);
-
     const test_with_fmt = b.step("test-with-fmt", "Run unit tests & test all files for correct formatting");
     test_with_fmt.dependOn(test_step);
     test_with_fmt.dependOn(fmt_step);
-    test_with_fmt.dependOn(&dir_logger.step);
 
     b.default_step = test_with_fmt;
 }
-
-const WriteFileStep = switch (zig_version.minor) {
-    11 => std.build.WriteFileStep,
-    else => std.Build.Step.WriteFile,
-};
-
-/// Logs the output directory of its WriteFileStep dependency.
-const DebugDirLogger = struct {
-    step: std.Build.Step,
-    pub fn create(owner: *std.Build) *DebugDirLogger {
-        const ds = owner.allocator.create(DebugDirLogger) catch @panic("OOM");
-        ds.* = .{
-            .step = std.Build.Step.init(.{
-                .id = .custom,
-                .name = "debug-dir-logger",
-                .owner = owner,
-                .makeFn = switch (zig_version.minor) {
-                    11 => makeZig0_11,
-                    12 => makeZig0_12,
-                    13 => makeZig0_13,
-                    else => makeZig0_14,
-                },
-            }),
-        };
-        return ds;
-    }
-
-    /// Bad hack to work on 0.11 and later major versions
-    /// We can't use the real @fieldParentPtr in this file as its parameters
-    /// changed in 0.12.
-    fn fieldParentPtr(step: *std.Build.Step) *WriteFileStep {
-        return @ptrFromInt(@intFromPtr(step) - @offsetOf(WriteFileStep, "step"));
-    }
-
-    fn makeZig0_11(step: *std.Build.Step, _: *std.Progress.Node) !void {
-        const dependency = step.dependencies.items[0];
-        if (dependency.id != .write_file) unreachable; // DebugDirLogger only supports a WriteFileStep dependency
-
-        std.log.debug(
-            "test-dir at {s}",
-            .{fieldParentPtr(dependency).generated_directory.path.?},
-        );
-    }
-
-    fn makeZig0_12(step: *std.Build.Step, _: *std.Progress.Node) !void {
-        try makeZig(step);
-    }
-
-    fn makeZig0_13(step: *std.Build.Step, _: std.Progress.Node) !void {
-        try makeZig(step);
-    }
-
-    fn makeZig0_14(step: *std.Build.Step, _: std.Build.Step.MakeOptions) !void {
-        try makeZig(step);
-    }
-
-    fn makeZig(step: *std.Build.Step) !void {
-        const dependency = step.dependencies.items[0];
-        if (dependency.id != .write_file) unreachable; // DebugDirLogger only supports a WriteFileStep dependency
-        std.log.debug(
-            "test-dir at {s}",
-            .{fieldParentPtr(dependency).generated_directory.path.?},
-        );
-    }
-};
