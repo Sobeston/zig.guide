@@ -5,17 +5,17 @@ const expect = std.testing.expect;
 // hide-end
 const eql = std.mem.eql;
 const ArrayList = std.ArrayList;
-const test_allocator = std.testing.allocator;
+const allocator = std.testing.allocator;
 
 test "arraylist" {
-    var list = ArrayList(u8).init(test_allocator);
-    defer list.deinit();
-    try list.append('H');
-    try list.append('e');
-    try list.append('l');
-    try list.append('l');
-    try list.append('o');
-    try list.appendSlice(" World!");
+    var list: ArrayList(u8) = .empty;
+    defer list.deinit(allocator);
+    try list.append(allocator, 'H');
+    try list.append(allocator, 'e');
+    try list.append(allocator, 'l');
+    try list.append(allocator, 'l');
+    try list.append(allocator, 'o');
+    try list.appendSlice(allocator, " World!");
 
     try expect(eql(u8, list.items, "Hello World!"));
 }

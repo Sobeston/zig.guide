@@ -16,7 +16,10 @@ test "io reader usage" {
     try file.writeAll(message);
     try file.seekTo(0);
 
-    const contents = try file.reader().readAllAlloc(
+    var file_buffer: [1024]u8 = undefined;
+    var file_reader = file.reader(&file_buffer);
+
+    const contents = try file_reader.interface.readAlloc(
         test_allocator,
         message.len,
     );

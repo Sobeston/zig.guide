@@ -1,7 +1,3 @@
----
-pagination_next: async/introduction
----
-
 # Zig cc, Zig c++
 
 The Zig executable comes with Clang embedded inside it alongside libraries and

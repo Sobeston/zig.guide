@@ -11,12 +11,12 @@ test "json stringify" {
         .long = -0.740687,
     };
 
-    var buf: [100]u8 = undefined;
-    var fba = std.heap.FixedBufferAllocator.init(&buf);
-    var string = std.ArrayList(u8).init(fba.allocator());
-    try std.json.stringify(x, .{}, string.writer());
+    var string: std.io.Writer.Allocating = .init(test_allocator);
+    defer string.deinit();
 
-    try expect(eql(u8, string.items,
-        \\{"lat":5.199766540527344e1,"long":-7.406870126724243e-1}
-    ));
+    try string.writer.print("{f}", .{std.json.fmt(x, .{})});
+
+    try std.testing.expectEqualStrings(
+        \\{"lat":51.99766540527344,"long":-0.7406870126724243}
+    , string.written());
 }

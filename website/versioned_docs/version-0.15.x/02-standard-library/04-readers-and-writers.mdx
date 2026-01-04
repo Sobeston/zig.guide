@@ -65,12 +65,3 @@ test "read until next line" {
     );
 }
 ```
-
-An
-[`std.io.Writer`](https://ziglang.org/documentation/master/std/#std.io.Writer)
-type consists of a context type, error set, and a write function. The write
-function must take in the context type and a byte slice. The write function must
-also return an error union of the Writer type's error set and the number of
-bytes written. Let's create a type that implements a writer.
-
-<CodeBlock language="zig">{Custom}</CodeBlock>
