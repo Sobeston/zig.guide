@@ -33,5 +33,5 @@ the length of these buffers. It's worth noting that this function is effectively
 trusting us to pass us a valid length for the given buffer.
 
 We can convert from a many-item pointer to a single-item pointer by either
-indexing an element and dereferencing that, or by using `@ptrCast` to cast the
+indexing an element and referencing that, or by using `@ptrCast` to cast the
 pointer type. This is only valid when the buffer has a length of at least 1.
