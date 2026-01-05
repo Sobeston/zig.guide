@@ -30,7 +30,7 @@ Some operating systems you can cross-compile for:
 
 Many other targets are available for compilation but aren't as well tested as
 of now. See
-[Zig's support table](https://ziglang.org/learn/overview/#wide-range-of-targets-supported)
+[Zig's support table](https://ziglang.org/download/0.15.1/release-notes.html#Support-Table)
 for more information; the list of well-tested targets is slowly expanding.
 
 As Zig compiles for your specific CPU by default, these binaries may not run on
@@ -49,4 +49,13 @@ we can use `native` in place of our CPU or OS, to use our system's.
 Details on what architectures, OSes, CPUs, and ABIs (details on ABIs in the next
 chapter) are available can be found by running `zig targets`. Note: the output
 is long, and you may want to pipe it to a file, e.g.
-`zig targets > targets.json`.
+`zig targets > targets.zon`. Alternativly since the output is in the **ZON** format you can use [zq](https://codeberg.org/tensorush/zq)
+
+```sh
+zig targets | zq -q .arch
+zig targets | zq -q .os
+zig targets | zq -q .abi
+zig targets | zq -q .libc
+```
+
+
