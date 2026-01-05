@@ -9,7 +9,7 @@ tags:
 
 <meta name="fediverse:creator" content="@sobeston@hachyderm.io" />
 
-We are going to make a program that randomly picks a number from 1 to 100 and asks us to guess it, telling us if our number is too big or two small.
+We are going to make a program that randomly picks a number from 1 to 100 and asks us to guess it, telling us if our number is too big or too small.
 
 ### Getting a Random Number
 
@@ -39,7 +39,7 @@ Let's initialise _std.rand.DefaultPrng_ with a 64 bit unsigned integer (`u64`). 
     );
 ```
 
-For a good source of entropy, it is best to initialise our PRNG with random bytes provided by the OS. Let's ask the OS for some. As Zig doesn't let us declare a variable without a value we've had to give our seed variable the value of `undefined`, which is a special value that coerces to any type. The function _std.posix.getrandom_ takes in a _slice_ of bytes, where a slice is a pointer to a buffer whose length is known at run time. Because of this we've used _std.mem.asBytes_ to turn our pointer to a `u64` into a slice of bytes. If _getrandom_ succeeds it will fill our seed variable with a random value which we can then initialise the PRNG with.
+For a good source of entropy, it is best to initialise our PRNG with random bytes provided by the OS. Let's ask the OS for some. As Zig doesn't let us declare a variable without a value we've had to give our seed variable the value of `undefined`, which is a special value that coerces to any type. The function _std.posix.getrandom_ takes in a _slice_ of bytes, where a slice is a pointer to a buffer whose length is known at runtime. Because of this we've used _std.mem.asBytes_ to turn our pointer to a `u64` into a slice of bytes. If _getrandom_ succeeds it will fill our seed variable with a random value which we can then initialise the PRNG with.
 
 ```zig
     var seed: u64 = undefined;
