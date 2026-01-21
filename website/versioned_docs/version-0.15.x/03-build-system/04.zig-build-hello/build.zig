@@ -5,7 +5,7 @@ pub fn build(b: *std.Build) void {
         .name = "hello",
         .root_module = b.createModule(.{
             .root_source_file = b.path("src/main.zig"),
-            .target = b.standardTargetOptions(.{},
+            .target = b.standardTargetOptions(.{}),
             .optimize = b.standardOptimizeOption(.{}),
         }),
     });
