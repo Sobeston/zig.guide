@@ -12,7 +12,7 @@ import {
 const config = {
   title: 'zig.guide',
   tagline: 'Dinosaurs are cool',
-  favicon: 'img/favicon.ico',
+  favicon: 'img/favicon.png',
 
   // Set the production url of your site here
   url: 'https://zig.guide',
