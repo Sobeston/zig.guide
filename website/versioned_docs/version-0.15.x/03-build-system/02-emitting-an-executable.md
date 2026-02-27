@@ -15,12 +15,28 @@ Some common arguments:
 Let's create a tiny hello world. Save this as `tiny-hello.zig`, and run
 `zig build-exe tiny-hello.zig -O ReleaseSmall -fstrip -fsingle-threaded`.
 
+We'll print "Hello World" using Zig's wrappers around the OS write syscall
+
+Linux:
+
 ```zig
 const std = @import("std");
 
 pub fn main() void {
-    std.io.getStdOut().writeAll(
-        "Hello World!",
-    ) catch unreachable;
+    const msg = "Hello World\n";
+    _ = std.os.linux.write(1, msg, msg.len);
+}
+
+```
+
+Windows:
+
+```zig
+const std = @import("std");
+
+pub fn main() void {
+    const msg = "Hello World\n";
+    const handle = std.os.windows.GetStdHandle(std.os.windows.STD_OUTPUT_HANDLE) catch return;
+    _ = std.os.windows.WriteFile(handle, msg, null) catch return;
 }
 ```
