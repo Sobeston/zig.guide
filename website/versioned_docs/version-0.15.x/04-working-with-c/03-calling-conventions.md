@@ -10,7 +10,7 @@ conventions available may be found in
 Here we make use of the cdecl calling convention.
 
 ```zig
-fn add(a: u32, b: u32) callconv(.C) u32 {
+fn add(a: u32, b: u32) callconv(.c) u32 {
     return a + b;
 }
 ```
