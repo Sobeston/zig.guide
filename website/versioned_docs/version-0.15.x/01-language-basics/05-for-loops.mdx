@@ -8,7 +8,7 @@ For loops are used to iterate over arrays (and other types, to be discussed
 later). For loops follow this syntax. Like while, for loops can use `break` and
 `continue`. Here, we've had to assign values to `_`, as Zig does not allow us to
 have unused values.
-Ranges in Zig are defined by `0..` when they are infinite, and `0..x` when ranges are finite, including zero and x in the range.
-`0..` simply means from zero to infinite. But when it is in a for loop, it means from zero to the length of the collection in the first parameter of the for loop.
+Ranges in Zig can be bounded (e.g. `0..x`) or unbounded (e.g. `0..`). A bounded range is half-open: it includes the start and excludes the end.
+In a `for` loop, `0..` is commonly paired with a collection (e.g. `for (items, 0..) |item, i|`) to produce indices; iteration stops when the shortest iterator ends, so the indices run `0..items.len`.
 
 <CodeBlock language="zig">{For}</CodeBlock>
