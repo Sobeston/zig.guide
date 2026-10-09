@@ -2,13 +2,13 @@
 const expect = @import("std").testing.expect;
 
 // hide-end
-fn doubleAllManypointer(buffer: [*]u8, byte_count: usize) void {
+fn doubleAllManypointer(many_ptr: [*]u8, byte_count: usize) void {
     var i: usize = 0;
-    while (i < byte_count) : (i += 1) buffer[i] *= 2;
+    while (i < byte_count) : (i += 1) many_ptr[i] *= 2;
 }
 
 test "many-item pointers" {
-    var buffer: [100]u8 = [_]u8{1} ** 100;
+    var buffer: [100]u8 = @splat(1); // initialize each element to 1
     const buffer_ptr: *[100]u8 = &buffer;
 
     const buffer_many_ptr: [*]u8 = buffer_ptr;
